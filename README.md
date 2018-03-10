@@ -6,7 +6,7 @@ Headers for AI API
 [Handling Complexity in the Halo 2 AI](https://www.gamasutra.com/view/feature/130663/gdc_2005_proceeding_handling_.php)
 <br />
 [Behavior Trees for AI How They Work](https://www.gamasutra.com/blogs/ChrisSimpson/20140717/221339/Behavior_trees_for_AI_How_they_work.php)
-[]
+[Understanding Behavior Trees](http://aigamedev.com/open/article/bt-overview/)
 <br />
 ### Path Finding
 [A* Search Algorithm Reference](http://theory.stanford.edu/~amitp/GameProgramming/)
