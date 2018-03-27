@@ -1,5 +1,5 @@
-#ifndef __CU_Grid_Node_h__
-#define __CU_Grid_Node_h__
+#ifndef __CU_GRID_NODE_H__
+#define __CU_GRID_NODE_H__
 
 #include <cugl/math/CURect.h>
 #include <cugl/2d/physics/CUObstacle.h>
@@ -7,7 +7,7 @@
 namespace cugl {
 
 /**
- *  This class describes the individual nodes of the grid.
+ * This class describes the individual nodes of the pathfinding grid.
  */
 class GridNode {
 public:
@@ -71,14 +71,14 @@ public:
      * 
      * @return the bounds of this grid node.
      */
-    const Rect& getBounds() const { return _bounds; }
+    const Rect& getBounds() { return _bounds; }
 
     /**
      * Returns the index of this grid node
      * 
      * @return the index of this grid node. 
      */
-    const std::pair<int, int>&  getIndex() const { return _index; }
+    const std::pair<int, int>&  getIndex() { return _index; }
 
     /**
      * Returns the heuristic of this grid node
