@@ -67,14 +67,14 @@ public:
 	/**
 	 * Initializes a composite node with the given name.
 	 *
-	 * @param name  The name of the coposite node.
+	 * @param name  The name of the composite node.
 	 *
 	 * @return true if initialization was successful.
 	 */
 	bool init(const std::string& name);
 	
 	/**
-	 * Initializes a composite node with the given name and the given children.
+	 * Initializes a composite node with the given name and children.
 	 *
 	 * @param name  The name of the composite node.
 	 * @param children The children of the composite node.
@@ -268,6 +268,32 @@ public:
  */
 class PriorityNode : public CompositeNode {
 	/**
+	 * Returns a newly allocated PriorityNode with the given name.
+	 *
+	 * @param name  The name of the composite node.
+	 *
+	 * @return a newly allocated PriorityNode with the given name.
+	 */
+	static std::shared_ptr<PriorityNode> alloc(const std::string& name) {
+		std::shared_ptr<PriorityNode> result = std::make_shared<PriorityNode>();
+		return (result->init(name) ? result : nullptr);
+	}
+	
+	/**
+	 * Returns a newly allocated PriorityNode with the given name and children.
+	 *
+	 * @param name  The name of the composite node.
+	 * @param children The children of the composite node.
+	 *
+	 * @return a newly allocated PriorityNode with the given name and children.
+	 */
+	static std::shared_ptr<PriorityNode> alloc(const std::string& name,
+											   const std::vector<std::shared_ptr<BehaviorNode>>& children) {
+		std::shared_ptr<PriorityNode> result = std::make_shared<PriorityNode>();
+		return (result->init(name, children) ? result : nullptr);
+	}
+	
+	/**
 	 * Returns the BehaviorNode::State of the priority node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
@@ -294,6 +320,32 @@ class PriorityNode : public CompositeNode {
  * if all children running in sequence succeed. The node is running in the meantime.
  */
 class SequenceNode : public CompositeNode {
+	/**
+	 * Returns a newly allocated SequenceNode with the given name.
+	 *
+	 * @param name  The name of the composite node.
+	 *
+	 * @return a newly allocated SequenceNode with the given name.
+	 */
+	static std::shared_ptr<SequenceNode> alloc(const std::string& name) {
+		std::shared_ptr<SequenceNode> result = std::make_shared<SequenceNode>();
+		return (result->init(name) ? result : nullptr);
+	}
+	
+	/**
+	 * Returns a newly allocated SequenceNode with the given name and children.
+	 *
+	 * @param name  The name of the composite node.
+	 * @param children The children of the composite node.
+	 *
+	 * @return a newly allocated SequenceNode with the given name and children.
+	 */
+	static std::shared_ptr<SequenceNode> alloc(const std::string& name,
+											   const std::vector<std::shared_ptr<BehaviorNode>>& children) {
+		std::shared_ptr<SequenceNode> result = std::make_shared<SequenceNode>();
+		return (result->init(name, children) ? result : nullptr);
+	}
+	
 	/**
 	 * Returns the BehaviorNode::State of the sequence node.
 	 *
@@ -323,6 +375,32 @@ class SequenceNode : public CompositeNode {
  * then the SelectorNode has failed. It is running in the meantime.
  */
 class SelectorNode : public CompositeNode {
+	/**
+	 * Returns a newly allocated SelectorNode with the given name.
+	 *
+	 * @param name  The name of the composite node.
+	 *
+	 * @return a newly allocated SelectorNode with the given name.
+	 */
+	static std::shared_ptr<SelectorNode> alloc(const std::string& name) {
+		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
+		return (result->init(name) ? result : nullptr);
+	}
+	
+	/**
+	 * Returns a newly allocated SelectorNode with the given name and children.
+	 *
+	 * @param name  The name of the composite node.
+	 * @param children The children of the composite node.
+	 *
+	 * @return a newly allocated SelectorNode with the given name and children.
+	 */
+	static std::shared_ptr<SelectorNode> alloc(const std::string& name,
+											   const std::vector<std::shared_ptr<BehaviorNode>>& children) {
+		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
+		return (result->init(name, children) ? result : nullptr);
+	}
+	
 	/**
 	 * Returns the BehaviorNode::State of the selector node.
 	 *
