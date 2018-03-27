@@ -19,6 +19,12 @@ Headers for AI API
 [Hierarchical Pathfinding and AI-Based Learning Approach in Strategy Game Design](https://www.hindawi.com/journals/ijcgt/2008/873913/)
 <br />
 [Toward More Realistic Pathfinding](https://www.gamasutra.com/view/feature/3096/toward_more_realistic_pathfinding.php)
+<br />
+[Hierarchical Annotated A* Search](http://aigamedev.com/open/tutorial/clearance-based-pathfinding/)
+<br />
+[Hierarchical Annotated A* Search Paper](https://harablog.files.wordpress.com/2009/01/haa.pdf)
+<br />
+[D* Lite](http://idm-lab.org/bib/abstracts/papers/aaai02b.pdf)
 
 ### Assorted
 [Libgdx AI Repository](https://github.com/libgdx/gdx-ai)
