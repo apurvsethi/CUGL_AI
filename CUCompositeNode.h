@@ -240,6 +240,36 @@ public:
 	void removeAllChildren();
 	
 	/**
+	 * Sets the child node's position in the ordering below this composite node
+	 * to the given position. Ordering is 0-indexed, and nodes at or below
+	 * the given position are moved down in order to accomodate the change.
+	 *
+	 * @param originalPos	The position of the child node being moved.
+	 * @param newPos		The new position to which the child node is moved.
+	 */
+	void setChildPosition(unsigned int originalPos, unsigned int newPos);
+	
+	/**
+	 * Sets the child node's position in the ordering below this composite node
+	 * to the given position. Ordering is 0-indexed, and nodes at or below
+	 * the given position are moved down in order to accomodate the change.
+	 *
+	 * @param child		The child node being moved.
+	 * @param newPos	The position to which the child node is moved.
+	 */
+	void setChildPosition(const std::shared_ptr<BehaviorNode> child, unsigned int newPos);
+	
+	/**
+	 * Sets the child node's position in the ordering below this composite node
+	 * to the given position. Ordering is 0-indexed, and nodes at or below
+	 * the given position are moved down in order to accomodate the change.
+	 *
+	 * @param childName	The name of the child node being moved.
+	 * @param newPos	The position to which the child node is moved.
+	 */
+	void setChildPosition(const std::string& childName, unsigned int newPos);
+	
+	/**
 	 * Returns the BehaviorNode::State of the composite node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
