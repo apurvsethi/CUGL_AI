@@ -8,11 +8,36 @@ namespace cugl {
 
 /**
  * This class describes the individual nodes of the pathfinding grid.
+ * 
+ * Each grid node corresponds to a square in the world. A grid node is a 
+ * container for the computed cost of the path to this grid node and 
+ * whether this node is obstructed. These values should be updated by a
+ * path finding agent.
  */
 class GridNode {
-public:
+#pragma mark Values
+private:
+    /** The bounds of this grid node */
+    Rect _bounds;
 
-#pragma mark -
+    /** Index of this node in the grid */
+    std::pair<int, int> _index;
+    
+    /** The cost of the path to this node in a Pathfinding search */
+    float _heuristic;
+    
+    /** The priority of this node, to be set in a D* search */
+    float _priority;
+
+    /** The clearance value of this node. */
+    Uint32 _clearance;
+
+    /** Whether this node is obstructed by an obstacle */
+    bool _obstructed;
+
+    /** The neighbors of this node */
+    std::set<std::shared_pointer<GridNode>> _neighbors;
+public:
 #pragma mark Constructors
     /**
      * Creates a new grid node.
@@ -49,7 +74,6 @@ public:
      */
     bool init(const Size& size, int x_index, int y_index);
 
-#pragma mark -
 #pragma mark Static Constructors
 
     /**
@@ -63,7 +87,6 @@ public:
      */
     static std::shared_ptr<GridNode> alloc(const Size& size, int x_index, int y_index);
 
-#pragma mark -
 #pragma mark Attributes
 
     /**
@@ -122,8 +145,6 @@ public:
      */
     void setClearance(float clearance) { _clearance = clearance; }
 
-
-#pragma mark -
 #pragma mark Neighbors
 
     /**
@@ -141,7 +162,6 @@ public:
      */
     void addNeighbor(const std::shared_pointer<GridNode>& neighbor) { _neighbors.insert(neighbor); }
 
-#pragma mark -
 #pragma mark Obstructed
 
     /**
@@ -168,28 +188,6 @@ public:
      * @return whether this obstacle is overlapping the grid node.
      */
     bool checkObstruction(const std::shared_pointer<Obstacle>& obstacle);
-
-private:
-    /** The bounds of this grid node */
-    Rect _bounds;
-
-    /** Index of this node in the grid */
-    std::pair<int, int> _index;
-    
-    /** The cost of the path to this node in a Pathfinding search */
-    float _heuristic;
-    
-    /** The priority of this node, to be set in a D* search */
-    float _priority;
-
-    /** The clearance value of this node. */
-    uint32_t _clearance;
-
-    /** Whether this node is obstructed by an obstacle */
-    bool _obstructed;
-
-    /** The neighbors of this node */
-    std::set<std::shared_pointer<GridNode>> _neighbors;
 };
 
 }

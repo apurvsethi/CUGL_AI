@@ -8,12 +8,26 @@
 namespace cugl {
 
 /**
- * A grid representation the world for path finding. 
+ * This class provides a grid representation the world for path finding.
+ * 
+ * Each node of this grid can be indexed by (row, column). This class does not
+ * update itself, and must be updated using a path finder.
  */
 class Grid {
-public:
 
-#pragma mark -
+#pragma mark Values
+private:
+    /** The nodes of this grid. */
+    std::vector<std::shared_pointer<GridNode> _nodes;
+
+    /** The number of rows of this grid. */
+    Uint32 _nrows;
+
+    /** The number of columns of this grid. */
+    Uint32 _ncols;
+};
+
+public:
 #pragma mark Constructors
 
     /**
@@ -51,7 +65,6 @@ public:
      */
     bool init(const Rect& bounds, Uint32 rows, Uint32 cols);
 
-#pragma mark -
 #pragma mark Static Constructors
 
     /**
@@ -65,7 +78,6 @@ public:
      */
     static std::shared_pointer<Grid> alloc(const Rect& bounds, Uint32 rows, Uint32 cols);
 
-#pragma mark -
 #pragma mark Attributes
 
     /**
@@ -81,6 +93,8 @@ public:
      * @return the number of columns of this grid.
      */
     Uint32 getColumns() { return _gwidth; }
+
+#pragma mark GridNodes
 
     /**
      * Return the nodes of this grid.
@@ -107,18 +121,6 @@ public:
      * @return the node at the specified location.
      */
     const std::shared_pointer<GridNode> getNodeAtLocation(Vec2 location);
-
-
-private:
-    /** The nodes of this grid. */
-    std::vector<std::shared_pointer<GridNode> _nodes;
-
-    /** The number of rows of this grid. */
-    Uint32 _nrows;
-
-    /** The number of columns of this grid. */
-    Uint32 _ncols;
-};
 
 }
 
