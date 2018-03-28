@@ -86,6 +86,18 @@ public:
      * @return a newly allocated grid node.
      */
     static std::shared_ptr<GridNode> alloc(const Size& size, int x_index, int y_index);
+	
+#pragma mark Identifiers
+	
+	/**
+	 * Returns a string representation of this grid node for debugging purposes.
+	 *
+	 * @return a string representation of this grid node for debugging purposes.
+	 */
+	virtual std::string toString() const;
+	
+	/** Cast from a GridNode to a string. */
+	operator std::string() const { return toString(); }
 
 #pragma mark Attributes
 
