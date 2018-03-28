@@ -78,6 +78,18 @@ public:
      */
     static std::shared_pointer<Grid> alloc(const Rect& bounds, Uint32 rows, Uint32 cols);
 
+#pragma mark Identifiers
+	
+	/**
+	 * Returns a string representation of this grid for debugging purposes.
+	 *
+	 * @return a string representation of this grid for debugging purposes.
+	 */
+	virtual std::string toString() const;
+	
+	/** Cast from a Grid to a string. */
+	operator std::string() const { return toString(); }
+
 #pragma mark Attributes
 
     /**
