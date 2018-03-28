@@ -10,7 +10,7 @@
 //  abstract class, it has no allocators.  It only has an initializer.
 //
 //  Author: Apurv Sethi
-//  Version: 3/27/2018
+//  Version: 3/28/2018
 //
 
 #ifndef __CU_BEHAVIOR_NODE_H__
@@ -123,6 +123,23 @@ public:
 	void setName(const std::string& name) { _name = name; }
 	
 	/**
+	 * Returns a string representation of this node for debugging purposes.
+	 *
+	 * If verbose is true, the string will include class information.  This
+	 * allows us to unambiguously identify the class.
+	 *
+	 * @param verbose Whether to include class information
+	 *
+	 * @return a string representation of this node for debuggging purposes.
+	 */
+	virtual std::string toString(bool verbose = false) const;
+	
+	/** Cast from a BehaviorNode to a string. */
+	operator std::string() const { return toString(); }
+	
+#pragma mark -
+#pragma mark Behavior Trees
+	/**
 	 * Returns a float that signifies the priority of the behavior node.
 	 *
 	 * This priority value is used to determine the relevance of a node in
@@ -142,23 +159,6 @@ public:
 	 */
 	BehaviorNode::State getState() const { return _state; }
 	
-	/**
-	 * Returns a string representation of this node for debugging purposes.
-	 *
-	 * If verbose is true, the string will include class information.  This
-	 * allows us to unambiguously identify the class.
-	 *
-	 * @param verbose Whether to include class information
-	 *
-	 * @return a string representation of this node for debuggging purposes.
-	 */
-	virtual std::string toString(bool verbose = false) const;
-	
-	/** Cast from a BehaviorNode to a string. */
-	operator std::string() const { return toString(); }
-	
-#pragma mark -
-#pragma mark Behavior Trees
 	/**
 	 * Returns a (weak) pointer to the parent node.
 	 *
@@ -217,4 +217,3 @@ private:
 	
 }
 #endif /* __CU_BEHAVIOR_NODE_H__ */
-
