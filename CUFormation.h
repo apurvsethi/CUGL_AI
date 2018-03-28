@@ -68,6 +68,13 @@ private:
     ~Formation();
 
     /**
+	 * Disposes all of the resources used by this formation.
+	 *
+	 * A disposed Formation can be safely reinitialized.
+	 */
+	virtual void dispose();
+
+    /**
      * Initializes an empty formation.
      * 
      * @param centroid the center of this formation.
@@ -145,6 +152,13 @@ private:
     Formation::State getState() const;
 
     /**
+     *  Return the number of units of this formation.
+     * 
+     * @return the number of units of this formation. 
+     */
+    size_t getSize() const;
+
+    /**
      *  Return the units of this formation.
      * 
      * @return the units of this formation. 
@@ -152,7 +166,28 @@ private:
     const std::vector<std::shared_pointer<Obstacle>>& getUnits() const;
 
     /**
-     *  Add a unit to this formation, if it is not already present.
+     *  Return the velocity of this formation.
+     * 
+     * @return the velocity of this formation. 
+     */
+    const Vec2& getVelocity() const;
+
+    /**
+     * Sets the y-velocity for this physics body
+     *
+     * @param value  the y-velocity for this physics body
+     */
+    virtual float setVY(float value) override;
+    
+    /**
+     * Sets the x-velocity for this physics body
+     *
+     * @param value  the x-velocity for this physics body
+     */
+    virtual void setVX(float value) override;
+
+    /**
+     * Add a unit to this formation, if it is not already present.
      * 
      * @param unit the unit to add to this formation.
      * 
@@ -161,29 +196,50 @@ private:
     bool addUnit(std::shared_pointer<Obstacle>& unit);
 
     /**
-     *   
+     * Remove a unit from this formation, if it is already present.
      * 
+     * @param unit the unit to remove from the string.
+     * 
+     * @return whether the unit is removed from the formation.
      */
+    bool removeUnit(std::shared_pointer<Obstacle>& unit);
+
+    /**
+     * Return whether this unit is part of this formation.
+     * 
+     * @param unit the unit to check for contain.
+     * 
+     * @return true if the formation contains the unit, else false.
+     */
+    bool containsUnit(std::shared_pointer<Obstacle>& unit);
 
 #pragma mark -
-#pragma mark Scene Graph Internals
+#pragma mark Forming
+
     /**
-     * Creates the outline of the physics fixtures in the debug wireframe
-     *
-     * The debug wireframe is use to outline the fixtures attached to this object.
-     * This is very useful when the fixtures have a very different shape than
-     * the texture (e.g. a circular shape attached to a square texture).
+     * Sets the units of the formation to their default relative positions and
+     * orientations.
+     * 
+     * @return whether this formation was formed successfully.
      */
-    virtual void resetDebug() override;
-    
+    virtual bool formFormation();
+
     /**
-     * Repositions the debug wireframe so that it agrees with the physics object.
-     *
-     * The debug wireframe is use to outline the fixtures attached to this object.
-     * This is very useful when the fixtures have a very different shape than
-     * the texture (e.g. a circular shape attached to a square texture).
+     * Breaks the formation.
      */
-    virtual void updateDebug() override;
+    virtual void breakFormation();
+
+    /**
+     * Runs an update function, meant to be used on each tick, for the
+	 * formation.
+     * 
+     * The update method will update the settings of each unit for the
+     * formation based on the current state, position and orientation
+     * of the formation.
+     * 
+     * @return the current state of the path finder. 
+     */
+    virtual Formation::State update() override;
 
 };
 
