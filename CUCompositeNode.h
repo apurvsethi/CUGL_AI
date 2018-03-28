@@ -9,7 +9,7 @@
 //  abstract class, it has no allocators.  It only has an initializer.
 //
 //  Author: Apurv Sethi
-//  Version: 3/27/2018
+//  Version: 3/28/2018
 //
 
 #ifndef __CU_COMPOSITE_NODE_H__
@@ -17,6 +17,7 @@
 
 #include <string>
 #include <vector>
+#include <cugl/ai/behaviorTree/CUBehaviorNode.h>
 
 namespace cugl {
 	
@@ -62,7 +63,7 @@ public:
 	 * It is unsafe to call this on a CompositeNode that is still currently
 	 * inside of a running behavior tree.
 	 */
-	void dispose();
+	void dispose() override;
 	
 	/**
 	 * Initializes a composite node with the given name.
@@ -71,7 +72,7 @@ public:
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool init(const std::string& name);
+	bool init(const std::string& name) override;
 	
 	/**
 	 * Initializes a composite node with the given name and children.
@@ -86,21 +87,6 @@ public:
 	
 #pragma mark -
 #pragma mark Behavior Tree
-	/**
-	 * Returns the BehaviorNode::State of the composite node.
-	 *
-	 * Runs an update function, meant to be used on each tick, for the
-	 * composite node (and all nodes below this node in the tree).
-	 * The state for this node is derived from the state of the running
-	 * or most recently run node.
-	 *
-	 * The priority value of the node is updated within this function, based
-	 * on the priority values of the nodes below the given node.
-	 *
-	 * @return the BehaviorNode::State of the composite node.
-	 */
-	virtual BehaviorNode::State update() = 0;
-	
 	/**
 	 * Returns the number of children of this composite node.
 	 *
@@ -252,49 +238,9 @@ public:
 	 * Removes all children from this Node.
 	 */
 	void removeAllChildren();
-};
-
-/**
- * This class provides a priority composite node for a behavior tree.
- *
- * A priority node is a composite node which is designed to run the nodes below
- * it with the highest priority values. A child node that is running may be
- * interrupted by another child node that has a higher priority value during the
- * update function.
- *
- * A priority node's state is directly based upon the child node currently running
- * or the child node that has finished running. Only one child node will finish
- * running as part of the PriorityNode.
- */
-class PriorityNode : public CompositeNode {
-	/**
-	 * Returns a newly allocated PriorityNode with the given name.
-	 *
-	 * @param name  The name of the composite node.
-	 *
-	 * @return a newly allocated PriorityNode with the given name.
-	 */
-	static std::shared_ptr<PriorityNode> alloc(const std::string& name) {
-		std::shared_ptr<PriorityNode> result = std::make_shared<PriorityNode>();
-		return (result->init(name) ? result : nullptr);
-	}
 	
 	/**
-	 * Returns a newly allocated PriorityNode with the given name and children.
-	 *
-	 * @param name  The name of the composite node.
-	 * @param children The children of the composite node.
-	 *
-	 * @return a newly allocated PriorityNode with the given name and children.
-	 */
-	static std::shared_ptr<PriorityNode> alloc(const std::string& name,
-											   const std::vector<std::shared_ptr<BehaviorNode>>& children) {
-		std::shared_ptr<PriorityNode> result = std::make_shared<PriorityNode>();
-		return (result->init(name, children) ? result : nullptr);
-	}
-	
-	/**
-	 * Returns the BehaviorNode::State of the priority node.
+	 * Returns the BehaviorNode::State of the composite node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
 	 * composite node (and all nodes below this node in the tree).
@@ -304,121 +250,11 @@ class PriorityNode : public CompositeNode {
 	 * The priority value of the node is updated within this function, based
 	 * on the priority values of the nodes below the given node.
 	 *
-	 * @return the BehaviorNode::State of the priority node.
+	 * @return the BehaviorNode::State of the composite node.
 	 */
-	BehaviorNode::State update();
-};
-
-/**
- * This class provides a sequence composite node for a behavior tree.
- *
- * A sequence node is a composite node which is designed to run the nodes below
- * it in order, on the basis of success for previous nodes.
- *
- * The first child is run, and if it is successful, then the next child is run.
- * If any child fails, then the SequenceNode fails, while the SequenceNode succeeds
- * if all children running in sequence succeed. The node is running in the meantime.
- */
-class SequenceNode : public CompositeNode {
-	/**
-	 * Returns a newly allocated SequenceNode with the given name.
-	 *
-	 * @param name  The name of the composite node.
-	 *
-	 * @return a newly allocated SequenceNode with the given name.
-	 */
-	static std::shared_ptr<SequenceNode> alloc(const std::string& name) {
-		std::shared_ptr<SequenceNode> result = std::make_shared<SequenceNode>();
-		return (result->init(name) ? result : nullptr);
-	}
-	
-	/**
-	 * Returns a newly allocated SequenceNode with the given name and children.
-	 *
-	 * @param name  The name of the composite node.
-	 * @param children The children of the composite node.
-	 *
-	 * @return a newly allocated SequenceNode with the given name and children.
-	 */
-	static std::shared_ptr<SequenceNode> alloc(const std::string& name,
-											   const std::vector<std::shared_ptr<BehaviorNode>>& children) {
-		std::shared_ptr<SequenceNode> result = std::make_shared<SequenceNode>();
-		return (result->init(name, children) ? result : nullptr);
-	}
-	
-	/**
-	 * Returns the BehaviorNode::State of the sequence node.
-	 *
-	 * Runs an update function, meant to be used on each tick, for the
-	 * composite node (and all nodes below this node in the tree).
-	 * The state for this node is derived from the state of the running
-	 * or most recently run node.
-	 *
-	 * The priority value of the node is updated within this function, based
-	 * on the priority values of the nodes below the given node.
-	 *
-	 * @return the BehaviorNode::State of the sequence node.
-	 */
-	BehaviorNode::State update();
-};
-
-/**
- * This class provides a selector composite node for a behavior tree.
- *
- * A selector node is a composite node which is designed to run the nodes below
- * it in order, on the basis of failure for previous nodes. SelectorNode "selects"
- * one of the nodes below it as the option taken based on failure of the options
- * given as child nodes before it.
- *
- * The first node is run and if it is successful, then the SelectorNode's state
- * is set to success. Otherwise, the next node is run. If all child nodes fail,
- * then the SelectorNode has failed. It is running in the meantime.
- */
-class SelectorNode : public CompositeNode {
-	/**
-	 * Returns a newly allocated SelectorNode with the given name.
-	 *
-	 * @param name  The name of the composite node.
-	 *
-	 * @return a newly allocated SelectorNode with the given name.
-	 */
-	static std::shared_ptr<SelectorNode> alloc(const std::string& name) {
-		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
-		return (result->init(name) ? result : nullptr);
-	}
-	
-	/**
-	 * Returns a newly allocated SelectorNode with the given name and children.
-	 *
-	 * @param name  The name of the composite node.
-	 * @param children The children of the composite node.
-	 *
-	 * @return a newly allocated SelectorNode with the given name and children.
-	 */
-	static std::shared_ptr<SelectorNode> alloc(const std::string& name,
-											   const std::vector<std::shared_ptr<BehaviorNode>>& children) {
-		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
-		return (result->init(name, children) ? result : nullptr);
-	}
-	
-	/**
-	 * Returns the BehaviorNode::State of the selector node.
-	 *
-	 * Runs an update function, meant to be used on each tick, for the
-	 * composite node (and all nodes below this node in the tree).
-	 * The state for this node is derived from the state of the running
-	 * or most recently run node.
-	 *
-	 * The priority value of the node is updated within this function, based
-	 * on the priority values of the nodes below the given node.
-	 *
-	 * @return the BehaviorNode::State of the selector node.
-	 */
-	BehaviorNode::State update();
+	virtual BehaviorNode::State update() override = 0;
 };
 	
 	
 }
 #endif /* __CU_COMPOSITE_NODE_H__ */
-
-
