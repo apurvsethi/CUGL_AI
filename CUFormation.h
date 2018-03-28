@@ -46,8 +46,11 @@ private:
     /** The target positions of the units relative to the center */
     std::vector<Vec2> _positions;
 
-    /** The target angles for the orientation of each of the units */
+    /** The target angles for the orientation of each of the units  relative to the center. */
     std::vector<float> _angles;
+
+    /** The orientation angle of this formation. */
+    float _orientation;
 
 #pragma mark -
 #pragma mark Constructors
@@ -93,6 +96,72 @@ private:
 #pragma mark Static Constructors
 
     /**
+     * Allocates an empty formation.
+     * 
+     * @param centroid the center of this formation.
+     * @param orientation the orientation of this formation.
+     * 
+     * @return a newly allocated empty formation.
+     */
+    static alloc(const Vec2& centroid, float orientation);
+
+    /**
+     * Allocates a formation with given units. 
+     * 
+     * The target relative positions and orientations of these units are their
+     * current relative positions and orientations.
+     * 
+     * @param units the units for this formation.
+     * @param centroid the center of this formation.
+     * @param orientation the orientation of this formation.
+     * 
+     * @returns a newly allocated formation.
+     */
+    static alloc(const std::vector<std::shared_pointer<Obstacle>& units, 
+                 const Vec2& centroid, float orientation);
+
+#pragma mark -
+#pragma mark Identifiers
+
+    /**
+     * Return the center of this formation.
+     * 
+     * @return the center of this formation 
+     */
+    const Vec2& getCetroid() const;
+
+    /**
+     *  Return the orientation of this formation.
+     * 
+     * @return the orientation of this formation. 
+     */
+    float getOrientation() const;
+
+    /**
+     * Return the state of this formation.
+     * 
+     * @return the state of this formation. 
+     */
+    Formation::State getState() const;
+
+    /**
+     *  Return the units of this formation.
+     * 
+     * @return the units of this formation. 
+     */
+    const std::vector<std::shared_pointer<Obstacle>>& getUnits() const;
+
+    /**
+     *  Add a unit to this formation, if it is not already present.
+     * 
+     * @param unit the unit to add to this formation.
+     * 
+     * @return whether the unit is added to the formation. 
+     */
+    bool addUnit(std::shared_pointer<Obstacle>& unit);
+
+    /**
+     *   
      * 
      */
 
