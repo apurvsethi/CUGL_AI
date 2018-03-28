@@ -130,7 +130,7 @@ public:
 	 *
 	 * @param verbose Whether to include class information
 	 *
-	 * @return a string representation of this node for debuggging purposes.
+	 * @return a string representation of this node for debugging purposes.
 	 */
 	virtual std::string toString(bool verbose = false) const;
 	
