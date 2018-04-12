@@ -4,10 +4,6 @@
 //
 //  This module provides support for a composite behavior node.
 //
-//  You should never instantiate an object of this class.  Instead, you should
-//  use one of the concrete subclasses of CompositeNode. Because this is an
-//  abstract class, it has no allocators.  It only has an initializer.
-//
 //  Author: Apurv Sethi
 //  Version: 3/28/2018
 //
@@ -25,17 +21,24 @@ namespace cugl {
  * This class provides a composite behavior node for a behavior tree.
  *
  * A composite node within a behavior tree refers to the set of nodes that have
- * multiple children under them and run the children in some order. There are rules
- * specific to each type of composite node defining how many children are run,
- * the sequence in which they are run, and the definition of sucess or failure.
- *
- * The three concrete subclasses for a CompositeNode are: PriorityNode,
- * SequenceNode, and SelectorNode. While similar in structure, each class has key
- * differences defining how they run in relation to their child nodes.
+ * multiple children under them and run the children in some order. If a child
+ * successfully finishes running, the composite node will return.
+ * 
+ * A composite node can be either a priority node, a selector node, or a random
+ * selector node. A priority node will run in descending order of priority, where
+ * higher priority children can interrupt lower priority chidren, until one runs
+ * successfully. A selector node will the children in order until it finds a child
+ * with a nonzero priority. A random selector will choose a random active child 
+ * node and returns that child priority on finish.
  */
 class CompositeNode : public BehaviorNode {
 #pragma mark Values
+public:
+
 protected:
+	/** The type of this composite node. */
+	CompositeNode::Type _type;
+
 	/** The array of children for this composite node. */
 	std::vector<std::shared_ptr<BehaviorNode>> _children;
 	
@@ -45,8 +48,8 @@ public:
 	/**
 	 * Creates an uninitialized composite node.
 	 *
-	 * This constructor should never be called directly, as this is an abstract
-	 * class.
+     * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
+     * the heap, use one of the static constructors instead.
 	 */
 	CompositeNode();
 	
@@ -75,6 +78,15 @@ public:
 	bool init(const std::string& name) override;
 	
 	/**
+	 * Initializes a composite node with the given name and priority function.
+	 *
+	 * @param name The name of the composite node.
+	 * @param priority The 
+	 */
+	virtual bool initWithPriority(const std::string& name, 
+								  const std::function<float()>& priority) override;
+
+	/**
 	 * Initializes a composite node with the given name and children.
 	 *
 	 * @param name  The name of the composite node.
@@ -82,18 +94,86 @@ public:
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool initWithChildren(const std::string& name,
+	bool initWithChildren(const std::string& name, 
 						  const std::vector<std::shared_ptr<BehaviorNode>>& children);
-	
+
+	/**
+	 * Initializes a composite node with the given name, children, and priority
+	 * function.
+	 * 
+	 * @param name	The name of the composite node.
+	 * @param children 	The children of the composite node.
+	 * @param priority	The priority function of the composite node.
+	 * 
+	 * @return true if  initialization was successful.
+	 */
+
+#pragma mark -
+#pragma mark Static Constructors
+
+	/**
+	 *  Allocates a composite node with a given name.
+	 * 
+	 * @param name 	The name of the composite node.
+	 * @param type  The type of the composite node.
+	 * 
+	 * @return  The composite node with the given name and type.
+	 */
+	static std::shared_pointer<CompositeNode> alloc(const std::string& name, CompositeNode::Type type);
+
+	/**
+	 *	Allocates a composite node with the given name, type and children.
+	 *
+	 * @param name	The name of the composite node.
+	 * @param children The children of the composite node.
+	 * @param type	The type of the composite node.
+	 * 
+	 * @return The composite node with the given name, type and children.
+	 */
+	static std::shared_pointer<CompositeNode> alloc(const std::string& name,
+													const std::vector<std::shared_pointer<BehaviorNode>>& children,
+													CompositeNode::Type type);
+
 #pragma mark -
 #pragma mark Behavior Tree
+	/**
+	 *	Returns the type of this behavior node.
+	 *	
+	 * 	@return The type of the behavior node. 
+	 */
+	CompositeNode::Type getType() const { return _type; }
+
 	/**
 	 * Returns the number of children of this composite node.
 	 *
 	 * @return The number of children of this composite node.
 	 */
 	size_t getChildCount() const { return _children.size(); }
-	
+
+	/**
+	 * Returns the child with the given priority index.
+	 *
+	 * A child with a specific priority index i is the child with the ith
+	 * highest priority. Ties are broken arbitrarily.
+	 * 
+	 * @param index 	The child's priority index.
+	 * 
+	 * @return the child with the given priority index.
+	 */
+	std::shared_pointer<BehaviorNode> getChildWithPriorityIndex(unsigned int index);
+
+	/**
+	 * Returns the child with the given priority index.
+	 *
+	 * A child with a specific priority index i is the child with the ith
+	 * highest priority. Ties are broken arbitrarily.
+	 * 
+	 * @param index 	The child's priority index.
+	 * 
+	 * @return the child with the given priority index.
+	 */
+	const std::shared_pointer<BehaviorNode> getChildWithPriorityIndex(unsigned int index) const;
+
 	/**
 	 * Returns the child at the given position.
 	 *
@@ -175,7 +255,7 @@ public:
 	 *
 	 * @return the list of the node's children.
 	 */
-	std::vector<std::shared_ptr<BehaviorNode>> getChildren() { return _children; }
+	std::vector<std::shared_ptr<BehaviorNode>> getChildren() const { return _children; }
 	
 	/**
 	 * Returns the list of the node's children.
@@ -202,6 +282,8 @@ public:
 		child->setName(name);
 	}
 	
+	//TODO: Delete Children Nodes.
+
 	/**
 	 * Removes the child at the given position from this CompositeNode.
 	 *
@@ -239,6 +321,8 @@ public:
 	 */
 	void removeAllChildren();
 	
+	//TODO: Remove child by priority.
+
 	/**
 	 * Sets the child node's position in the ordering below this composite node
 	 * to the given position. Ordering is 0-indexed, and nodes at or below
@@ -269,6 +353,8 @@ public:
 	 */
 	void setChildPosition(const std::string& childName, unsigned int newPos);
 	
+
+
 	/**
 	 * Returns the BehaviorNode::State of the composite node.
 	 *
@@ -282,7 +368,7 @@ public:
 	 *
 	 * @return the BehaviorNode::State of the composite node.
 	 */
-	virtual BehaviorNode::State update() override = 0;
+	virtual BehaviorNode::State update() override;
 };
 	
 	

@@ -39,14 +39,12 @@ class BehaviorNode {
 public:
 	/** The current state of the node. */
 	enum class State : unsigned int {
-		/** The node is finished with an action, which has succeeded. */
-		SUCCESS = 0,
-		/** The node is finished with an action, which has failed. */
-		FAILURE = 1,
+		/** The node is finished with an action. */
+		FINISHED = 0,
 		/** The node is currently running and has yet to succeed or fail. */
-		RUNNING = 2,
+		RUNNING = 1,
 		/** The node has not yet been run. */
-		UNINITIALIZED = 3
+		UNINITIALIZED = 2
 	};
 
 protected:
@@ -55,6 +53,9 @@ protected:
 	
 	/** A weaker pointer to the parent (or null if root). */
 	BehaviorNode* _parent;
+
+	/** The current state of this node. */
+	BehaviorNode::State _state;
 	
 	/**
 	 * The current priority, or relevance of this node.
@@ -63,9 +64,24 @@ protected:
 	 * update() function runs for any given behavior node.
 	 */
 	float _priority;
-	
-	/** The current state of this node. */
-	BehaviorNode::State _state;
+
+	/**
+	 * The current priority function for this behavior node.
+	 *
+	 * This should return a value between 0 and 1 representing the priority.
+	 * This function can be user defined, and the default values can be defined
+	 * by the subclasses.
+	 */
+	std::function<float()> priority;
+
+	/**
+	 * Whether the behavior tree containing this behavior node is currently
+	 * running. 
+	 * 
+	 * If the behavior tree is currently executing, then this node cannot be
+	 * modified by any external sources.
+	 */
+	bool _active;
 	
 #pragma mark -
 #pragma mark Constructors
@@ -102,6 +118,17 @@ public:
 	 */
 	virtual bool init(const std::string& name);
 	
+	/**
+	 * Initializing a node with the given name and priority.
+	 * 
+	 * @param name 	The name of the behavior node.
+	 * @param priority 	The priority function of this behavior node.
+	 * 
+	 * @return true if this initialization was successful.
+	 */
+	bool initWithPriority(const std::string& name,
+						 const std::function<float()>& priority);
+
 #pragma mark -
 #pragma mark Identifiers
 	/**
@@ -140,6 +167,15 @@ public:
 #pragma mark -
 #pragma mark Behavior Trees
 	/**
+	 * Returns whether this behavior node is currently active.
+	 * 
+	 * An active behavior node cannot be modified by any external sources.
+	 * 
+	 * @returns true if this behavior node is currently active, else false.
+	 */
+	bool isActive() const { return _active; }
+
+	/**
 	 * Returns a float that signifies the priority of the behavior node.
 	 *
 	 * This priority value is used to determine the relevance of a node in
@@ -149,6 +185,16 @@ public:
 	 */
 	float getPriority() const { return _priority; }
 	
+	/**
+	 * Sets the priority function of this behavior node if this node is
+	 * not active.
+	 * 
+	 * @param priority The function to set as the priority function.
+	 * 
+	 * @return whether the behavior tree was modified.
+	 */
+	bool setPriorityFunction(const std::function<float()>& priority);
+
 	/**
 	 * Returns a BehaviorNode::State that represents the node state.
 	 *
@@ -183,18 +229,20 @@ public:
 	 * Removes this node from its parent node.
 	 *
 	 * If the node has no parent, nothing happens.
+	 * 
+	 * @return whether the behavior tree was modified.
 	 */
-	void removeFromParent();
+	bool removeFromParent();
 	
 	/**
-	 * Returns the BehaviorNode::State of the behavior node.
+	 * Returns the BehaviorNode::State of the composite node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
 	 * behavior node (and all nodes below this node in the tree).
 	 *
 	 * The priority value of the node is updated within this function, based
-	 * on either a priority function provided to the node (in the case of a
-	 * LeafNode), or the priority values of the nodes below the given node.
+	 * on either a priority function provided to the node or the default
+	 * priority function.
 	 *
 	 * @return the BehaviorNode::State of the behavior node.
 	 */
