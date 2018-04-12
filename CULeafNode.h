@@ -11,7 +11,6 @@
 #ifndef __CU_LEAF_NODE_H__
 #define __CU_LEAF_NODE_H__
 
-#include <functional>
 #include <string>
 #include <vector>
 #include <cugl/ai/behaviorTree/CUBehaviorNode.h>
@@ -22,23 +21,20 @@ namespace cugl {
  * This class provides a leaf behavior node for a behavior tree.
  *
  * A leaf node within a behavior tree refers to the base nodes that perform actions
- * based on conditionals. set of nodes that have
- * multiple children under them and run the children in some order. There are rules
- * specific to each type of composite node defining how many children are run,
- * the sequence in which they are run, and the definition of sucess or failure.
- *
- * The three concrete subclasses for a CompositeNode are: PriorityNode,
- * SequenceNode, and SelectorNode. While similar in structure, each class has key
- * differences defining how they run in relation to their child nodes.
+ * based on conditionals. Each leaf node has a user defined priority function which
+ * it will call each update tick to set its priority. Additionally, each leaf node
+ * also has a provided action which (TODO: Write interaction with the AI Manager.).
  */
 class LeafNode : public BehaviorNode {
 #pragma mark Values
 protected:
-	/** The priority function used to obtain the priority of this leaf node. */
-	std::function<float()> priority;
-	
-	/** The action represented by this leaf node. */
-	std::function<bool()> action;
+	/** The state of the behavior node. 
+	 * 
+	 *	This function will find the current status of this leaf node.
+	 *
+	 *  TODO: Change to integrate with AIManager.
+	 */
+	std::function<BehaviorNode::State()> currentState;
 	
 #pragma mark -
 #pragma mark Constructors
@@ -78,56 +74,72 @@ public:
 	bool init(const std::string& name) override;
 	
 	/**
-	 * Initializes a leaf node with the given name, priority function,
-	 * and action function.
+	 * Initializes a leaf node with the given name and action.
 	 *
 	 * @param name  	The name of the leaf node.
-	 * @param priority	The priority function of the leaf node.
-	 * @param action	The action function of the leaf node.
+	 * @param action	The action of the leaf node.
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool initWithFunctions(const std::string& name, std::function<float()> priority,
-						   std::function<bool()> action);
-	
+	bool initWithAction(const std::string& name, const BehaviorAction& action);
+
+	/**
+	 * Initializes a leaf node with the given name, action, and priority
+	 * function.
+	 *
+	 * @param name 		The name of the leaf node.
+	 * @param action 	The action of the leaf node.
+	 * @param priority 	The priority function of the leaf node.
+	 */
+	bool initWithActionAndPriority(const std::string& name, const BehaviorAction& action, 
+								   const std::function<float()>& priority);
+
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Returns a newly allocated LeafNode with the given name.
+	 * Allocates a leaf node with the given name.
 	 *
 	 * @param name  The name of the leaf node.
 	 *
-	 * @return a newly allocated LeafNode with the given name.
+	 * @return a newly allocated leaf node with the given name.
 	 */
-	static std::shared_ptr<LeafNode> alloc(const std::string& name) {
-		std::shared_ptr<LeafNode> result = std::make_shared<LeafNode>();
-		return (result->init(name) ? result : nullptr);
-	}
+	static std::shared_ptr<LeafNode> alloc(const std::string& name);
 	
 	/**
-	 * Returns a newly allocated LeafNode with the given name, priority function,
-	 * and action function.
+	 * Allocates a leaf node with the given name and action.
 	 *
 	 * @param name  	The name of the leaf node.
-	 * @param priority	The priority function of the leaf node.
-	 * @param action	The action function of the leaf node.
+	 * @param action	The action of the leaf node.
 	 *
-	 * @return a newly allocated LeafNode with the given name.
+	 * @return 	A newly allocated leaf node with the given name and action.
 	 */
-	static std::shared_ptr<LeafNode> allocWithFunctions(const std::string& name,
-														std::function<float()> priority,
-														std::function<bool()> action) {
-		std::shared_ptr<LeafNode> result = std::make_shared<LeafNode>();
-		return (result->initWithFunctions(name, priority, action) ? result : nullptr);
-	}
-	
+	static std::shared_pointer<LeafNode> allocWithAction(const std::string& name,
+														 const BehaviorAction& action);
+
+	/**
+	 * Initializes a leaf node with the given name, action, and priority
+	 * function.
+	 *
+	 * @param name 		The name of the leaf node.
+	 * @param action 	The action of the leaf node.
+	 * @param priority 	The priority of the leaf node.
+	 * 
+	 * @return 	A newly allocated leaf node with the given name, action, and 
+	 * 			priority function.
+	 */
+	static std::shared_ptr<LeafNode> allocWithActionAndPriority(
+								  	const std::string& name, 
+								  	const BehaviorAction& action, 
+									const std::function<float()>& priority);
+
+
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
-	 * Begins the action associated with leaf node through action function.
-	 * If the action function is not given, then nothing occurs.
+	 * Runs the action associated with leaf node through action function.
+	 * If the action is not given, then nothing occurs.
 	 */
-	void startAction();
+	void execute();
 	
 	/**
 	 * Returns the BehaviorNode::State of the leaf node.
