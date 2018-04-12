@@ -11,6 +11,7 @@
 #ifndef __CU_LEAF_NODE_H__
 #define __CU_LEAF_NODE_H__
 
+#include <functional>
 #include <string>
 #include <vector>
 #include <cugl/ai/behaviorTree/CUBehaviorNode.h>

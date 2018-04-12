@@ -187,7 +187,7 @@ public:
 	void removeFromParent();
 	
 	/**
-	 * Returns the BehaviorNode::State of the composite node.
+	 * Returns the BehaviorNode::State of the behavior node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
 	 * behavior node (and all nodes below this node in the tree).
