@@ -49,7 +49,7 @@ struct BehaviorActionDef {
 		_update = nullptr;
 		_terminate = nullptr;
 	}
-}
+};
 	
 /**
  * This class provides an action, used to represent actions in leaf nodes
