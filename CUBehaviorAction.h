@@ -19,6 +19,37 @@
 #include <string>
 
 namespace cugl {
+
+/**
+ * A def through which an action is constructed; a template to use in order to create
+ * an action, using BehaviorManager.createAction.
+ */
+struct BehaviorActionDef {
+	/**
+	 * The initialization function to begin running an action.
+	 */
+	std::function<void()> _initialize;
+	
+	/**
+	 * The update function processing the action over time.
+	 *
+	 * This return true if the action is finished and false otherwise.
+	 */
+	std::function<bool(float dt)> _update;
+	
+	/**
+	 * The terminate function to interrupt an action over time.
+	 *
+	 * This return true if the action is finished and false otherwise.
+	 */
+	std::function<void()> _terminate;
+	
+	BehaviorActionDef() {
+		_initialize = nullptr;
+		_update = nullptr;
+		_terminate = nullptr;
+	}
+}
 	
 /**
  * This class provides an action, used to represent actions in leaf nodes
@@ -92,29 +123,31 @@ public:
 	/**
 	 * Initializes an action with the given name.
 	 *
-	 * @param name  The name of the behavior node.
+	 * @param name 		The name of the action.
+	 * @param actionDef Def through which this Action is constructed.
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool init(const std::string& name);
+	bool init(const std::string& name,
+			  const std::shared_ptr<BehaviorActionDef>& actionDef);
 	
 #pragma mark -
 #pragma mark Identifiers
 	/**
-	 * Returns a string that is used to identify the node.
+	 * Returns a string that is used to identify the action.
 	 *
-	 * This name is used to identify nodes in the behavior tree.
+	 * This name is used to identify actions in a behavior tree.
 	 *
-	 * @return a string that is used to identify the node.
+	 * @return a string that is used to identify the action.
 	 */
 	const std::string& getName() const { return _name; }
 	
 	/**
-	 * Sets a string that is used to identify the node.
+	 * Sets a string that is used to identify the action.
 	 *
-	 * This name is used to identify nodes in the behavior tree.
+	 * This name is used to identify actions in a behavior tree.
 	 *
-	 * @param name  A string that is used to identify the node.
+	 * @param name  A string that is used to identify the action.
 	 */
 	void setName(const std::string& name) { _name = name; }
 	
