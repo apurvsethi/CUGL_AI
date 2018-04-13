@@ -75,7 +75,33 @@ public:
 		std::shared_ptr<PriorityNode> result = std::make_shared<PriorityNode>();
 		return (result->initWithChildren(name, children) ? result : nullptr);
 	}
-	
+
+	/**
+	 * Returns a newly allocated PriorityNode with given name and priority
+	 * function.
+	 * 
+	 * @param name The name of the priority node.
+	 * @param priority the priority function of the priority node.
+	 * 
+	 * @return a newly allocated PriorityNode with the given name and children. 
+	 */
+	static std::shared_ptr<PriorityNode> allocWithPriorty(const std::string& name,,
+														  const std::function<float()>& priority);
+
+    /**
+	 * Returns a newly allocated PriorityNode with given name, children and 
+	 * priority function.
+	 * 
+	 * @param name The name of the priority node.
+	 * @param children The children of the priority node.
+	 * @param priority the priority function of the priority node.
+	 * 
+	 * @return a newly allocated PriorityNode with the given name and children. 
+	 */
+	static std::shared_ptr<PriorityNode> allocWithChildrenAndPriority(const std::string& name,
+																	  const  std::vector<std::shared_ptr<BehaviorNode>>& children,
+																	  const std::function<float()>& priority);
+
 #pragma mark -
 #pragma mark Behavior Tree
 	/**

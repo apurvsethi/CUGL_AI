@@ -78,15 +78,6 @@ public:
 	bool init(const std::string& name) override;
 	
 	/**
-	 * Initializes a composite node with the given name and priority function.
-	 *
-	 * @param name The name of the composite node.
-	 * @param priority The 
-	 */
-	virtual bool initWithPriority(const std::string& name, 
-								  const std::function<float()>& priority) override;
-
-	/**
 	 * Initializes a composite node with the given name and children.
 	 *
 	 * @param name  The name of the composite node.
@@ -107,33 +98,9 @@ public:
 	 * 
 	 * @return true if  initialization was successful.
 	 */
-
-#pragma mark -
-#pragma mark Static Constructors
-
-	/**
-	 *  Allocates a composite node with a given name.
-	 * 
-	 * @param name 	The name of the composite node.
-	 * @param type  The type of the composite node.
-	 * 
-	 * @return  The composite node with the given name and type.
-	 */
-	static std::shared_pointer<CompositeNode> alloc(const std::string& name, CompositeNode::Type type);
-
-	/**
-	 *	Allocates a composite node with the given name, type and children.
-	 *
-	 * @param name	The name of the composite node.
-	 * @param children The children of the composite node.
-	 * @param type	The type of the composite node.
-	 * 
-	 * @return The composite node with the given name, type and children.
-	 */
-	static std::shared_pointer<CompositeNode> alloc(const std::string& name,
-													const std::vector<std::shared_pointer<BehaviorNode>>& children,
-													CompositeNode::Type type);
-
+	bool initWithChildrenAnPriority(const std::string& name, 
+						  			const std::vector<std::shared_ptr<BehaviorNode>>& children,
+									const std::function<float()> priority);
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
@@ -265,37 +232,46 @@ public:
 	const std::vector<std::shared_ptr<BehaviorNode>>& getChildren() const { return _children; }
 	
 	/**
-	 * Adds a child to this node.
+	 * Adds a child to this node if this node is not currently active.
 	 *
 	 * @param child A child node.
+	 * 
+	 * @return true if the child node was sucessfully added, else false.
 	 */
-	void addChild(std::shared_ptr<BehaviorNode> child);
+	bool addChild(std::shared_ptr<BehaviorNode> child);
 	
 	/**
-	 * Adds a child to this node with the given name.
+	 * Adds a child to this node with the given name if this node is not 
+	 * currently active.
 	 *
 	 * @param child A child node.
 	 * @param name  A string to identify the node.
+	 * 
+	 * @return true if the child node was sucessfully added, else false.
 	 */
-	void addChildWithName(const std::shared_ptr<BehaviorNode>& child, const std::string &name) {
-		addChild(child);
-		child->setName(name);
+	bool addChildWithName(const std::shared_ptr<BehaviorNode>& child, const std::string &name) {
+		  child->setName(name);
+		  return addChild(child);
 	}
 	
 	//TODO: Delete Children Nodes.
 
 	/**
-	 * Removes the child at the given position from this CompositeNode.
+	 * Removes the child at the given position from this CompositeNode if this
+	 * node is not currently active.
 	 *
 	 * Removing a child alters the position of every child after it.  Hence
 	 * it is unsafe to cache child positions.
 	 *
 	 * @param pos   The position of the child node which will be removed.
+	 * 
+	 * @return true if the child node was sucessfully removed, else false.
 	 */
-	void removeChild(unsigned int pos);
+	bool removeChild(unsigned int pos);
 	
 	/**
-	 * Removes a child from this CompositeNode.
+	 * Removes a child from this CompositeNode if this node is not currently
+	 * active.
 	 *
 	 * Removing a child alters the position of every child after it.  Hence
 	 * it is unsafe to cache child positions.
@@ -303,26 +279,32 @@ public:
 	 * If the child is not in this node, nothing happens.
 	 *
 	 * @param child The child node which will be removed.
+	 * 
+	 * @return true if the child node was sucessfully added, else false.
 	 */
-	void removeChild(const std::shared_ptr<BehaviorNode>& child);
+	bool removeChild(const std::shared_ptr<BehaviorNode>& child);
 	
 	/**
-	 * Removes a child from the CompositeNode by name.
+	 * Removes a child from this CompositeNode by name if this node is not
+	 * currently active.
 	 *
 	 * If there is more than one child of the given name, it removes the first
 	 * one that is found.
 	 *
 	 * @param name  A string to identify the node.
+	 * 
+	 * @return true if the child node was sucessfully added, else false.
 	 */
-	void removeChildByName(const std::string &name);
+	bool removeChildByName(const std::string &name);
 	
 	/**
-	 * Removes all children from this Node.
+	 * Removes all children from this Node if this node is not currently
+	 * active.
+	 * 
+	 * @return true if all children of this node are removed, else false.
 	 */
-	void removeAllChildren();
+	bool removeAllChildren();
 	
-	//TODO: Remove child by priority.
-
 	/**
 	 * Sets the child node's position in the ordering below this composite node
 	 * to the given position. Ordering is 0-indexed, and nodes at or below
@@ -352,8 +334,6 @@ public:
 	 * @param newPos	The position to which the child node is moved.
 	 */
 	void setChildPosition(const std::string& childName, unsigned int newPos);
-	
-
 
 	/**
 	 * Returns the BehaviorNode::State of the composite node.

@@ -72,6 +72,36 @@ public:
 		std::shared_ptr<InverterNode> result = std::make_shared<InverterNode>();
 		return (result->initWithChild(name, child) ? result : nullptr);
 	}
+
+	/**
+	 * Returns a newly allocated InverterNode with given name and priority function.
+	 * 
+	 * @param name The name of the inverter node.
+	 * @param priority The priority function of the inverter node.
+	 * 
+	 * @return a newly allocated InverterNode with the given name and priority function. 
+	 */
+	static std::shared_ptr<InverterNode> allocWithPriority(const std::string& name,
+														   const std::function<float()>& priority) {
+		std::shared_ptr<InverterNode> result = std::make_shared<InverterNode>();
+		return (result->initWithPriority(name, priority) ? result : nullptr);
+	}
+
+	/**
+	 * Returns a newly allocated InverterNode with given name, child and priority function.
+	 * 
+	 * @param name The name of the inverter node.
+	 * @param child the child of the inverter node.
+	 * @param priority The priority function of the inverter node.
+	 * 
+	 * @return a newly allocated InverterNode with the given name and priority function. 
+	 */
+	static std::shared_ptr<InverterNode> allocWithData(const std::string& name,
+													   const std::shared_ptr<BehaviorNode>& child,
+													   const std::function<float()>& priority) {
+		std::shared_ptr<InverterNode> result = std::make_shared<InverterNode>();
+		return (result->initWithData(name, child, priority) ? result : nullptr);
+	}
 	
 #pragma mark -
 #pragma mark Behavior Tree

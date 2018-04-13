@@ -2,14 +2,15 @@
 //  CURepeaterNode.h
 //  Cornell University Game Library (CUGL)
 //
-//  This module provides support for a repeater decorator behavior node.
+//  This module provides support for a decorator behavior node with a timed
+//  delay.
 //
 //  Author: Apurv Sethi
 //  Version: 3/28/2018
 //
 
-#ifndef __CU_REPEATER_NODE_H__
-#define __CU_REPEATER_NODE_H__
+#ifndef __CU_TIMED_DELAY_NODE_H__
+#define __CU_TIMED_DELAY_NODE_H__
 
 #include <string>
 #include <vector>
@@ -18,29 +19,28 @@
 namespace cugl {
 	
 /**
- * This class provides a repeater decorator node for a behavior tree.
+ * This class provides a decorator node  with a timed delay for a behavior tree.
  *
- * A repeater node is a decorator node which is designed to run its child node
- * repeatedly. The limit on the number of times the node is run can be provided.
+ * .
  *
  * A repeater node's priority is directly based upon the child node's priority.
  */
-class RepeaterNode : public DecoratorNode {
+class TimedDelayNode : public DecoratorNode {
 #pragma mark Values
 protected:
 	/** The number of times the child has run. */
-	float _numRuns;
+	unsigned int _numRuns;
 	
 	/** The limit on the number of times the child node runs. */
-	float _limit;
+	unsigned int _limit;
 	
 #pragma mark -
 #pragma mark Constructors
 public:
 	/**
-	 * Creates an uninitialized repeater node.
+	 * Creates an uninitialized TimedDelayNode.
 	 *
-	 * You must initialize this RepeaterNode before use.
+	 * You must initialize this TimedDelayNode before use.
 	 *
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
@@ -53,9 +53,9 @@ public:
 	~RepeaterNode() { dispose(); }
 	
 	/**
-	 * Initializes a repeater node with the given name and limit.
+	 * Initializes a TimedDelayNode node with the given name and limit.
 	 *
-	 * @param name  The name of the repeater node.
+	 * @param name  The name of the timed delay node.
 	 * @param limit The limit on the number of times the child node runs.
 	 *
 	 * @return true if initialization was successful.
@@ -66,13 +66,13 @@ public:
 	}
 	
 	/**
-	 * Initializes a repeater node with the given name, limit, child, and
-	 * priority function.
+	 * Initializes a TimedDelayNode node with the given name, limit, priority, 
+	 * and child.
 	 *
-	 * @param name  The name of the repeater node.
+	 * @param name  The name of the timed delay node.
 	 * @param limit The limit on the number of times the child node runs.
-	 * @param child The child of the repeater node.
-	 * @param priority the priority function for this repeater node.
+	 * @param child The child of the timed dealy node.
+	 * @param priority The priority function for the timed delay node.
 	 *
 	 * @return true if initialization was successful.
 	 */
@@ -88,73 +88,73 @@ public:
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Returns a newly allocated RepeaterNode with the given name.
+	 * Returns a newly allocated TimedDelayNode with the given name.
 	 *
-	 * @param name  The name of the repeater node.
+	 * @param name  The name of the timed delay node.
 	 *
-	 * @return a newly allocated RepeaterNode with the given name.
+	 * @return a newly allocated TimedDelayNode with the given name.
 	 */
-	static std::shared_ptr<RepeaterNode> alloc(const std::string& name) {
-		std::shared_ptr<RepeaterNode> result = std::make_shared<RepeaterNode>();
+	static std::shared_ptr<TimedDelayNode> alloc(const std::string& name) {
+		std::shared_ptr <TimedDelayNode> result = std::make_shared <TimedDelayNode>();
 		return (result->init(name) ? result : nullptr);
 	}
 	
 	/**
-	 * Returns a newly allocated RepeaterNode with the given name and child.
+	 * Returns a newly allocated TimedDelayNode with the given name and child.
 	 *
-	 * @param name  The name of the repeater node.
-	 * @param child The child of the repeater node.
+	 * @param name  The name of the timed delay node.
+	 * @param child The child of the timed delay node.
 	 *
-	 * @return a newly allocated RepeaterNode with the given name and child.
+	 * @return a newly allocated TimedDelayNode with the given name and child.
 	 */
-	static std::shared_ptr<RepeaterNode> allocWithChild(const std::string& name,
+	static std::shared_ptr <TimedDelayNode> allocWithChild(const std::string& name,
 														const std::shared_ptr<BehaviorNode>& child) {
-		std::shared_ptr<RepeaterNode> result = std::make_shared<RepeaterNode>();
+		std::shared_ptr <TimedDelayNode> result = std::make_shared <TimedDelayNode>();
 		return (result->initWithChild(name, child) ? result : nullptr);
 	}
 	
 	/**
-	 * Returns a newly allocated RepeaterNode with the given name and limit.
+	 * Returns a newly allocated TimedDelayNode with the given name and limit.
 	 *
-	 * @param name  The name of the repeater node.
+	 * @param name  The name of the timed delay node.
 	 * @param limit The limit on the number of times the child node runs.
 	 *
-	 * @return a newly allocated RepeaterNode with the given name and limit.
+	 * @return a newly allocated TimedDelayNode with the given name and limit.
 	 */
-	static std::shared_ptr<RepeaterNode> allocWithLimit(const std::string& name, unsigned int limit) {
-		std::shared_ptr<RepeaterNode> result = std::make_shared<RepeaterNode>();
+	static std::shared_ptr <TimedDelayNode> allocWithLimit(const std::string& name, unsigned limit) {
+		std::shared_ptr <TimedDelayNode> result = std::make_shared <TimedDelayNode>();
 		return (result->initWithLimit(name, limit) ? result : nullptr);
 	}
 
-		/**
-	 * Returns a newly allocated RepeaterNode with the given name and priority function.
-	 *
-	 * @param name  The name of the repeater node.
-	 * @param priority The limit on the number of times the child node runs.
-	 *
-	 * @return a newly allocated RepeaterNode with the given name and priority function.
+	/**
+	 * Returns a newly allocated TimedDelayNode with the given name and priority 
+	 * function.
+	 * 
+	 * @param name The name of the timed delay node.
+	 * @param priority The priority of the timed delay node.
+	 * 
+	 * @return a newly allocated TimedDelayNode with the given name and priorty function.
 	 */
-	static std::shared_ptr<RepeaterNode> allocWithLimit(const std::string& name, 
-														const std::function<float()>& priority) {
-		std::shared_ptr<RepeaterNode> result = std::make_shared<RepeaterNode>();
+	static std::shared_ptr <TimedDelayNode> allocWithLimit(const std::string& name, 
+														   const std::function<float()>& priority) {
+		std::shared_ptr <TimedDelayNode> result = std::make_shared <TimedDelayNode>();
 		return (result->initWithLimit(name, priority) ? result : nullptr);
 	}
 	
 	/**
-	 * Returns a newly allocated RepeaterNode with the given name, limit, and child.
+	 * Returns a newly allocated TimedDelayNode with the given name, limit, child, and priority function.
 	 *
 	 * @param name  The name of the repeater node.
 	 * @param limit The limit on the number of times the child node runs.
 	 * @param child The child of the repeater node.
-	 * @param priority The priority function of this repeater node.
+	 * @param priority The priority function of the repeater node.
 	 *
-	 * @return a newly allocated RepeaterNode with the given name, limit, child and 
-	 *         priority function.
+	 * @return a newly allocated TimedDelayNode with the given name and child.
 	 */
-	static std::shared_ptr<RepeaterNode> allocWithData(const std::string& name, unsigned int limit,
-													   const std::shared_ptr<BehaviorNode>& child,
-													   const std::function<float()>& priority) {
-		std::shared_ptr<RepeaterNode> result = std::make_shared<RepeaterNode>();
+	static std::shared_ptr <TimedDelayNode> allocWithData(const std::string& name, float limit,
+													      const std::shared_ptr<BehaviorNode>& child,
+														  const std::function<float()>& priority) {
+		std::shared_ptr <TimedDelayNode> result = std::make_shared <TimedDelayNode>();
 		return (result->initWithData(name, limit, child, priority) ? result : nullptr);
 	}
 	
@@ -165,7 +165,7 @@ public:
 	 *
 	 * @return the number of times the child has run.
 	 */
-	unsigned int getNumRuns() const { return _numRuns; }
+	float getNumRuns() const { return _numRuns; }
 	
 	/**
 	 * Returns the limit on the number of times the child node can run.
@@ -175,17 +175,18 @@ public:
 	 *
 	 * @return the limit on the number of times the child node can run.
 	 */
-	unsigned int getLimit() const { return _limit; }
+	float getLimit() const { return _limit; }
 	
 	/**
-	 * Sets the limit on the number of times the child node can run.
+	 * Sets the limit on the number of times the child node can run if this
+	 * node is not currently active.
 	 *
 	 * This limit is used to limit the maximum number of times a child node
 	 * can run.
 	 *
 	 * @param limit	A the limit on the number of times the child node can run.
 	 */
-	void setLimit(unsigned int limit) { _limit = limit; }
+	void setLimit(float limit);
 	
 	/**
 	 * Returns the BehaviorNode::State of the repeater node.

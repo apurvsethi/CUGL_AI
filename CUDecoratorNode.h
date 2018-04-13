@@ -31,9 +31,9 @@ namespace cugl {
  * state of the decorator given the state of the child node.
  *
  * The three concrete subclasses for a DecoratorNode are: InverterNode,
- * SucceederNode, FailerNode, RepeaterNode, RepeatUntilSuccessNode, and
- * RepeatUntilFailNode. While similar in structure, each class has key
- * differences defining how it runs in relation to its child node.
+ * RepeaterNode, and the TimedDelayNode.While similar in structure,
+ * each class has key differences defining how it runs in relation to its child
+ * node.
  */
 class DecoratorNode : public BehaviorNode {
 #pragma mark Values
@@ -88,6 +88,19 @@ public:
 		setChild(child);
 		return init(name);
 	}
+
+	/**
+	 * Initializes a decorator node with the given name, child, and priority
+	 * function.
+	 * 
+	 * @param name The name of the decorator node.
+	 * @param child The child of the decorator node.
+	 * @param priority The priority function of the decorator node.
+	 * 
+	 * @return true if initalization was successful.	 
+	 */
+	bool initWithData(const std::string& name, const std::shared_ptr<BehaviorNode>& child,
+					  const std::function<float()>& priority);
 	
 #pragma mark -
 #pragma mark Behavior Tree
@@ -121,27 +134,34 @@ public:
 	}
 	
 	/**
-	 * Sets the child of this node.
+	 * Sets the child of this node if this node is not currently active.
 	 *
 	 * @param child The child node.
+	 * 
+	 * @return true if this nodes' child was successfully set.
 	 */
-	void setChild(std::shared_ptr<BehaviorNode> child) { _child = child; }
+	bool setChild(std::shared_ptr<BehaviorNode> child) { _child = child; }
 	
 	/**
-	 * Sets the child of this node with the given name.
+	 * Sets the child of this node with the given name if this node is not
+	 * currently active.
 	 *
 	 * @param child The child node.
 	 * @param name  A string to identify the node.
+	 * 
+	 * @return true if this nodes' child was successfully set.
 	 */
-	void setChildWithName(const std::shared_ptr<BehaviorNode>& child, const std::string &name) {
-		setChild(child);
+	bool setChildWithName(const std::shared_ptr<BehaviorNode>& child, const std::string &name) {
 		child->setName(name);
+		return setChild(child);
 	}
 	
 	/**
-	 * Removes the child of this DecoratorNode.
+	 * Removes the child of this DecoratorNode if this node is not currently active.
+	 * 
+	 * @return true if this nodes' child was sucessfully removed.
 	 */
-	void removeChild() { _child = nullptr; }
+	bool removeChild();
 	
 	/**
 	 * Returns the BehaviorNode::State of the decorator node.
