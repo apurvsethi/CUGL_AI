@@ -213,4 +213,4 @@ public:
 	
 	
 }
-#endif /* __CU_REPEATER_NODE_H__ */
+#endif /* __CU_TIMED_DELAY_NODE_H__ */

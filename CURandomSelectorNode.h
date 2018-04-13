@@ -121,4 +121,4 @@ public:
 	
 	
 }
-#endif /* __CU_SELECTOR_NODE_H__ */
+#endif /* __CU_RANDOM_SELECTOR_NODE_H__ */
