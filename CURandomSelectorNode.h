@@ -111,10 +111,12 @@ public:
 	 * The priority value of the node is updated within this function or
 	 * based on the priority values of the children nodes if no priority 
 	 * function has been provided.
-	 *
+	 * 
+	 * @param dt The elapsed time since the last frame.
+	 * 
 	 * @return the BehaviorNode::State of the selector node.
 	 */
-	BehaviorNode::State update() override;
+	BehaviorNode::State update(float dt) override;
 };
 	
 	

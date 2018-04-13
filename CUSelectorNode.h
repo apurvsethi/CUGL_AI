@@ -99,9 +99,9 @@ public:
 	 * 
 	 * @return a newly allocated SelectorNode with the given name and children. 
 	 */
-	static std::shared_ptr<SelectorNode> allocWithChildrenAndPriority(const std::string& name,
-																	  const  std::vector<std::shared_ptr<BehaviorNode>>& children,
-																	  const std::function<float()>& priority);
+	static std::shared_ptr<SelectorNode> allocWithData(const std::string& name,
+													   const  std::vector<std::shared_ptr<BehaviorNode>>& children,
+													   sconst std::function<float()>& priority);
 
 #pragma mark -
 #pragma mark Behavior Tree
@@ -116,9 +116,11 @@ public:
 	 * The priority value of the node is updated within this function, based
 	 * on the priority values of the nodes below the given node.
 	 *
+	 * @param dt The elapsed time since the last frame.
+	 * 
 	 * @return the BehaviorNode::State of the selector node.
 	 */
-	BehaviorNode::State update() override;
+	BehaviorNode::State update(float dt) override;
 };
 	
 	

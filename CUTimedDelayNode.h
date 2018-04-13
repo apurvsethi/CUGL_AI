@@ -204,9 +204,11 @@ public:
 	 * based on the priority values of the child node if no priority function
 	 * has been provided.
 	 *
+	 * @param dt The elapsed time since the last frame.
+	 * 
 	 * @return the BehaviorNode::State of the child node.
 	 */
-	BehaviorNode::State update() override;
+	BehaviorNode::State update(float dt) override;
 };
 	
 	

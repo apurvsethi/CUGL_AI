@@ -339,9 +339,11 @@ public:
 	 * The priority value of the node is updated within this function, based
 	 * on the priority values of the nodes below the given node.
 	 *
+	 * @param dt The elapsed time since the last frame.
+	 *
 	 * @return the BehaviorNode::State of the composite node.
 	 */
-	virtual BehaviorNode::State update() override;
+	virtual BehaviorNode::State update(float dt) override;
 };
 	
 	
