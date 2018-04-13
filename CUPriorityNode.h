@@ -98,9 +98,9 @@ public:
 	 * 
 	 * @return a newly allocated PriorityNode with the given name and children. 
 	 */
-	static std::shared_ptr<PriorityNode> allocWithChildrenAndPriority(const std::string& name,
-																	  const  std::vector<std::shared_ptr<BehaviorNode>>& children,
-																	  const std::function<float()>& priority);
+	static std::shared_ptr<PriorityNode> allocWithData(const std::string& name,
+													   const  std::vector<std::shared_ptr<BehaviorNode>>& children,
+													   const std::function<float()>& priority);
 
 #pragma mark -
 #pragma mark Behavior Tree

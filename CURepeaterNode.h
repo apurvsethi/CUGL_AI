@@ -194,8 +194,9 @@ public:
 	 * repeater node (and all nodes below this node in the tree).
 	 * The state for this node is derived from the state of its child node.
 	 *
-	 * The priority value of the node is updated within this function, based
-	 * on the priority values of the child node.
+	 * The priority value of the node is updated within this function or
+	 * based on the priority values of the child node if no priority function
+	 * has been provided.
 	 *
 	 * @return the BehaviorNode::State of the child node.
 	 */

@@ -127,7 +127,7 @@ public:
 	 * @return true if this initialization was successful.
 	 */
 	bool initWithPriority(const std::string& name,
-						 const std::function<float()>& priority);
+						  const std::function<float()>& priority);
 
 #pragma mark -
 #pragma mark Identifiers

@@ -91,8 +91,8 @@ public:
 	 * @param action 	The action of the leaf node.
 	 * @param priority 	The priority function of the leaf node.
 	 */
-	bool initWithActionAndPriority(const std::string& name, const BehaviorAction& action, 
-								   const std::function<float()>& priority);
+	bool initWithData(const std::string& name, const BehaviorAction& action, 
+					  const std::function<float()>& priority);
 
 #pragma mark -
 #pragma mark Static Constructors
@@ -127,10 +127,9 @@ public:
 	 * @return 	A newly allocated leaf node with the given name, action, and 
 	 * 			priority function.
 	 */
-	static std::shared_ptr<LeafNode> allocWithActionAndPriority(
-								  	const std::string& name, 
-								  	const BehaviorAction& action, 
-									const std::function<float()>& priority);
+	static std::shared_ptr<LeafNode> allocWithData(const std::string& name, 
+								  				   const BehaviorAction& action, 
+												   const std::function<float()>& priority);
 
 
 #pragma mark -

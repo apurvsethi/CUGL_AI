@@ -19,20 +19,20 @@
 namespace cugl {
 	
 /**
- * This class provides a decorator node  with a timed delay for a behavior tree.
+ * This class provides a decorator node with a timed delay for a behavior tree.
  *
- * .
- *
- * A repeater node's priority is directly based upon the child node's priority.
+ * A timed delay decorator node will delay the execution of its
+ * child for a given amount of time. Until that time occurs, the priority of this
+ * node is 0.
  */
 class TimedDelayNode : public DecoratorNode {
 #pragma mark Values
 protected:
-	/** The number of times the child has run. */
-	unsigned int _numRuns;
-	
-	/** The limit on the number of times the child node runs. */
-	unsigned int _limit;
+	/** The delay before beginning executing in seconds. */
+	float _delay;
+
+	/** The current time that has been delayed. */
+	float _current_delay;
 	
 #pragma mark -
 #pragma mark Constructors
@@ -45,26 +45,38 @@ public:
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	RepeaterNode();
+	TimedDelayNode();
 	
 	/**
 	 * Deletes this node, disposing all resources.
 	 */
-	~RepeaterNode() { dispose(); }
+	~TimedDelayNode() { dispose(); }
 	
+
 	/**
-	 * Initializes a TimedDelayNode node with the given name and limit.
+	 * Initializes a TimedDelayNode node with the given name and.
 	 *
 	 * @param name  The name of the timed delay node.
-	 * @param limit The limit on the number of times the child node runs.
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool initWithLimit(const std::string& name, unsigned int limit) {
-		setLimit(limit);
+	bool init(const std::string& name) {
 		return init(name);
 	}
 	
+	/**
+	 * Initializes a TimedDelay node with a given name and delay.
+	 * 
+	 * @param name  The name of the timed delay node.
+	 * @param delay The limit on the number of times the child node runs.
+	 *
+	 * @return true if initialization was successful.
+	 */
+	bool initWithDelay(const std::string& name, float delay) {
+		setDelay(delay);
+		return init(name);
+	}
+
 	/**
 	 * Initializes a TimedDelayNode node with the given name, limit, priority, 
 	 * and child.
@@ -76,10 +88,10 @@ public:
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool initWithData(const std::string& name, unsigned int limit,
+	bool initWithData(const std::string& name, float delay,
 					  const std::shared_ptr<BehaviorNode>& child,
 					  const std::function<float()>& priority) {
-		setLimit(limit);
+		setDelay(delay);
 		setChild(child);
 		setPriorityFunction(priority);
 		return init(name);
@@ -114,16 +126,16 @@ public:
 	}
 	
 	/**
-	 * Returns a newly allocated TimedDelayNode with the given name and limit.
+	 * Returns a newly allocated TimedDelayNode with the given name and delay.
 	 *
 	 * @param name  The name of the timed delay node.
-	 * @param limit The limit on the number of times the child node runs.
+	 * @param delay The delay before the child will begin running.
 	 *
-	 * @return a newly allocated TimedDelayNode with the given name and limit.
+	 * @return a newly allocated TimedDelayNode with the given name and delay.
 	 */
-	static std::shared_ptr <TimedDelayNode> allocWithLimit(const std::string& name, unsigned limit) {
+	static std::shared_ptr <TimedDelayNode> allocWithDelay(const std::string& name, float delay) {
 		std::shared_ptr <TimedDelayNode> result = std::make_shared <TimedDelayNode>();
-		return (result->initWithLimit(name, limit) ? result : nullptr);
+		return (result->initWithDelay(name, delay) ? result : nullptr);
 	}
 
 	/**
@@ -135,8 +147,8 @@ public:
 	 * 
 	 * @return a newly allocated TimedDelayNode with the given name and priorty function.
 	 */
-	static std::shared_ptr <TimedDelayNode> allocWithLimit(const std::string& name, 
-														   const std::function<float()>& priority) {
+	static std::shared_ptr <TimedDelayNode> allocWithPriority(const std::string& name, 
+														      const std::function<float()>& priority) {
 		std::shared_ptr <TimedDelayNode> result = std::make_shared <TimedDelayNode>();
 		return (result->initWithLimit(name, priority) ? result : nullptr);
 	}
@@ -160,43 +172,37 @@ public:
 	
 #pragma mark -
 #pragma mark Behavior Tree
-	/**
-	 * Returns the number of times the child has run.
-	 *
-	 * @return the number of times the child has run.
-	 */
-	float getNumRuns() const { return _numRuns; }
 	
 	/**
-	 * Returns the limit on the number of times the child node can run.
+	 * Returns the number of seconds before the child node begins running.
 	 *
-	 * This limit is used to limit the maximum number of times a child node
-	 * can run.
+	 * The delay will prevent the child from returning for a certain
+	 * period of time.
 	 *
-	 * @return the limit on the number of times the child node can run.
+	 * @return the number of seconds before the child node begins running.
 	 */
-	float getLimit() const { return _limit; }
+	float getDelay() const { return _delay; }
 	
 	/**
-	 * Sets the limit on the number of times the child node can run if this
-	 * node is not currently active.
+	 * Sets the number of seconds before the child node begins running.
 	 *
-	 * This limit is used to limit the maximum number of times a child node
-	 * can run.
+	 * The delay will prevent the child from returning for a certain
+	 * period of time.
 	 *
-	 * @param limit	A the limit on the number of times the child node can run.
+	 * @param delay	the number of seconds before the child node begins running.
 	 */
-	void setLimit(float limit);
+	void setDelay(float delay);
 	
 	/**
-	 * Returns the BehaviorNode::State of the repeater node.
+	 * Returns the BehaviorNode::State of the timed delay node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
-	 * repeater node (and all nodes below this node in the tree).
+	 * timed delay node (and all nodes below this node in the tree).
 	 * The state for this node is derived from the state of its child node.
 	 *
-	 * The priority value of the node is updated within this function, based
-	 * on the priority values of the child node.
+	 * The priority value of the node is updated within this function or
+	 * based on the priority values of the child node if no priority function
+	 * has been provided.
 	 *
 	 * @return the BehaviorNode::State of the child node.
 	 */

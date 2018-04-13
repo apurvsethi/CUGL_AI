@@ -98,18 +98,11 @@ public:
 	 * 
 	 * @return true if  initialization was successful.
 	 */
-	bool initWithChildrenAnPriority(const std::string& name, 
-						  			const std::vector<std::shared_ptr<BehaviorNode>>& children,
-									const std::function<float()> priority);
+	bool initWithData(const std::string& name, 
+					  const std::vector<std::shared_ptr<BehaviorNode>>& children,
+					  const std::function<float()> priority);
 #pragma mark -
 #pragma mark Behavior Tree
-	/**
-	 *	Returns the type of this behavior node.
-	 *	
-	 * 	@return The type of the behavior node. 
-	 */
-	CompositeNode::Type getType() const { return _type; }
-
 	/**
 	 * Returns the number of children of this composite node.
 	 *

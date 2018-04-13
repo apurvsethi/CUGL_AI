@@ -140,7 +140,7 @@ public:
 	 * 
 	 * @return true if this nodes' child was successfully set.
 	 */
-	bool setChild(std::shared_ptr<BehaviorNode> child) { _child = child; }
+	bool setChild(std::shared_ptr<BehaviorNode> child);
 	
 	/**
 	 * Sets the child of this node with the given name if this node is not

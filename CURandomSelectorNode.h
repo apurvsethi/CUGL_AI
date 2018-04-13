@@ -94,10 +94,9 @@ public:
 	 * 
 	 * @return a newly allocated RandomSelectorNode with the given name and children. 
 	 */
-	static std::shared_ptr<RandomSelectorNode> allocWithChildrenAndPriority(
-		 															  const std::string& name,
-																	  const  std::vector<std::shared_ptr<BehaviorNode>>& children,
-																	  const std::function<float()>& priority);
+	static std::shared_ptr<RandomSelectorNode> allocWithData(const std::string& name,
+															 const std::vector<std::shared_ptr<BehaviorNode>>& children,
+															 const std::function<float()>& priority);
 
 #pragma mark -
 #pragma mark Behavior Tree
@@ -105,12 +104,13 @@ public:
 	 * Returns the BehaviorNode::State of the random selector node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
-	 * selector node (and all nodes below this node in the tree).
+	 * random selector node (and all nodes below this node in the tree).
 	 * The state for this node is derived from the state of the running
 	 * or most recently run node.
 	 *
-	 * The priority value of the node is updated within this function, based
-	 * on the priority values of the nodes below the given node.
+	 * The priority value of the node is updated within this function or
+	 * based on the priority values of the children nodes if no priority 
+	 * function has been provided.
 	 *
 	 * @return the BehaviorNode::State of the selector node.
 	 */
