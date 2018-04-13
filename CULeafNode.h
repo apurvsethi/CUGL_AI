@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <cugl/ai/behaviorTree/CUBehaviorNode.h>
+#include <cugl/ai/behaviorTree/CUBehaviorAction.h>
 
 namespace cugl {
 	
@@ -81,7 +82,10 @@ public:
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool initWithAction(const std::string& name, const BehaviorAction& action);
+	bool initWithAction(const std::string& name, const std::shared_ptr<BehaviorAction>& action) {
+		setAction(action);
+		return init(name);
+	}
 
 	/**
 	 * Initializes a leaf node with the given name, action, and priority
@@ -91,8 +95,12 @@ public:
 	 * @param action 	The action of the leaf node.
 	 * @param priority 	The priority function of the leaf node.
 	 */
-	bool initWithData(const std::string& name, const BehaviorAction& action, 
-					  const std::function<float()>& priority);
+	bool initWithData(const std::string& name, const std::shared_ptr<BehaviorAction>& action,
+					  const std::function<float()>& priority) {
+		setAction(action);
+		setPriorityFunction(priority);
+		return init(name);
+	}
 
 #pragma mark -
 #pragma mark Static Constructors
@@ -103,7 +111,10 @@ public:
 	 *
 	 * @return a newly allocated leaf node with the given name.
 	 */
-	static std::shared_ptr<LeafNode> alloc(const std::string& name);
+	static std::shared_ptr<LeafNode> alloc(const std::string& name) {
+		std::shared_ptr<LeafNode> result = std::make_shared<LeafNode>();
+		return (result->init(name) ? result : nullptr);
+	}
 	
 	/**
 	 * Allocates a leaf node with the given name and action.
@@ -113,8 +124,11 @@ public:
 	 *
 	 * @return 	A newly allocated leaf node with the given name and action.
 	 */
-	static std::shared_pointer<LeafNode> allocWithAction(const std::string& name,
-														 const BehaviorAction& action);
+	static std::shared_ptr<LeafNode> allocWithAction(const std::string& name,
+													 const std::shared_ptr<BehaviorAction>& action) {
+		std::shared_ptr<LeafNode> result = std::make_shared<LeafNode>();
+		return (result->initWithAction(name, action) ? result : nullptr);
+	}
 
 	/**
 	 * Initializes a leaf node with the given name, action, and priority
@@ -128,12 +142,25 @@ public:
 	 * 			priority function.
 	 */
 	static std::shared_ptr<LeafNode> allocWithData(const std::string& name, 
-								  				   const BehaviorAction& action, 
-												   const std::function<float()>& priority);
-
+												   const std::shared_ptr<BehaviorAction>& action,
+												   const std::function<float()>& priority) {
+		std::shared_ptr<LeafNode> result = std::make_shared<LeafNode>();
+		return (result->initWithData(name, action, priority) ? result : nullptr);
+	}
 
 #pragma mark -
 #pragma mark Behavior Tree
+	/**
+	 * Sets the action of this node if this node is not currently locked.
+	 *
+	 * @param child The action node.
+	 *
+	 * @return true if this node's action was successfully set.
+	 *
+	 * @warning this function will only run when node is not _locked.
+	 */
+	bool setAction(const std::shared_ptr<BehaviorAction>& action);
+	
 	/**
 	 * Runs the action associated with leaf node through action function.
 	 * If the action is not given, then nothing occurs.

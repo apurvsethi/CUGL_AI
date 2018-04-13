@@ -2,7 +2,7 @@
 //  CUSelectorNode.h
 //  Cornell University Game Library (CUGL)
 //
-//  This module provides support for a radnom selector composite behavior node.
+//  This module provides support for a random selector composite behavior node.
 //
 //  Author: Apurv Sethi
 //  Version: 3/28/2018
@@ -18,11 +18,11 @@
 namespace cugl {
 	
 /**
- * This class provides a selector composite node for a behavior tree.
+ * This class provides a random selector composite node for a behavior tree.
  *
  * A random selector node is a composite node which is designed to run a
  * randomly selected nodes out of its children. The random selector finishes
- * after its selector node has also finished.
+ * after its selected node has also finished.
  */
 class RandomSelectorNode : public CompositeNode {
 #pragma mark -
@@ -46,7 +46,6 @@ public:
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	/**
 	 * Returns a newly allocated RandomSelectorNode with the given name.
 	 *
 	 * @param name  The name of the priority node.
@@ -54,7 +53,7 @@ public:
 	 * @return a newly allocated RandomSelectorNode with the given name.
 	 */
 	static std::shared_ptr<RandomSelectorNode> alloc(const std::string& name) {
-		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
+		std::shared_ptr<RandomSelectorNode> result = std::make_shared<RandomSelectorNode>();
 		return (result->init(name) ? result : nullptr);
 	}
 	
@@ -68,7 +67,7 @@ public:
 	 */
 	static std::shared_ptr<RandomSelectorNode> allocWithChildren(const std::string& name,
 														   		 const std::vector<std::shared_ptr<BehaviorNode>>& children) {
-		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
+		std::shared_ptr<RandomSelectorNode> result = std::make_shared<RandomSelectorNode>();
 		return (result->initWithChildren(name, children) ? result : nullptr);
 	}
 
@@ -81,8 +80,11 @@ public:
 	 * 
 	 * @return a newly allocated RandomSelectorNode with the given name and children. 
 	 */
-	static std::shared_ptr<RandomSelectorNode> allocWithPriorty(const std::string& name,,
-														        const std::function<float()>& priority);
+	static std::shared_ptr<RandomSelectorNode> allocWithPriorty(const std::string& name,
+																const std::function<float()>& priority) {
+		std::shared_ptr<RandomSelectorNode> result = std::make_shared<RandomSelectorNode>();
+		return (result->initWithPriority(name, priority) ? result : nullptr);
+	}
 
     /**
 	 * Returns a newly allocated RandomSelectorNode with given name, children and 
@@ -96,7 +98,10 @@ public:
 	 */
 	static std::shared_ptr<RandomSelectorNode> allocWithData(const std::string& name,
 															 const std::vector<std::shared_ptr<BehaviorNode>>& children,
-															 const std::function<float()>& priority);
+															 const std::function<float()>& priority) {
+		std::shared_ptr<RandomSelectorNode> result = std::make_shared<RandomSelectorNode>();
+		return (result->initWithData(name, children, priority) ? result : nullptr);
+	}
 
 #pragma mark -
 #pragma mark Behavior Tree

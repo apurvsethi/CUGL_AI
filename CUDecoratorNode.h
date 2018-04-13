@@ -100,7 +100,11 @@ public:
 	 * @return true if initalization was successful.	 
 	 */
 	bool initWithData(const std::string& name, const std::shared_ptr<BehaviorNode>& child,
-					  const std::function<float()>& priority);
+					  const std::function<float()>& priority) {
+		setChild(child);
+		setPriorityFunction(priority);
+		return init(name);
+	}
 	
 #pragma mark -
 #pragma mark Behavior Tree
@@ -134,22 +138,26 @@ public:
 	}
 	
 	/**
-	 * Sets the child of this node if this node is not currently active.
+	 * Sets the child of this node if this node is not currently locked.
 	 *
 	 * @param child The child node.
 	 * 
-	 * @return true if this nodes' child was successfully set.
+	 * @return true if this node's child was successfully set.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
-	bool setChild(std::shared_ptr<BehaviorNode> child);
+	bool setChild(const std::shared_ptr<BehaviorNode>& child);
 	
 	/**
 	 * Sets the child of this node with the given name if this node is not
-	 * currently active.
+	 * currently locked.
 	 *
 	 * @param child The child node.
 	 * @param name  A string to identify the node.
 	 * 
 	 * @return true if this nodes' child was successfully set.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
 	bool setChildWithName(const std::shared_ptr<BehaviorNode>& child, const std::string &name) {
 		child->setName(name);
@@ -157,9 +165,12 @@ public:
 	}
 	
 	/**
-	 * Removes the child of this DecoratorNode if this node is not currently active.
+	 * Removes the child of this DecoratorNode if this node is not currently
+	 * locked.
 	 * 
 	 * @return true if this nodes' child was sucessfully removed.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
 	bool removeChild();
 	

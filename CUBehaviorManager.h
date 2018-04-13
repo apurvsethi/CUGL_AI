@@ -159,7 +159,8 @@ public:
 	}
 	
 	/**
-	 * Removes the tree at the given position from the manager.
+	 * Removes the tree at the given position from the manager, if the
+	 * tree is not currently running.
 	 *
 	 * While trees are enumerated in the order by which they were added,
 	 * it is recommended to access a tree by name instead.
@@ -171,7 +172,8 @@ public:
 	void removeTree(unsigned int pos);
 	
 	/**
-	 * Remove the (first) tree with the given name.
+	 * Remove the (first) tree with the given name, if the tree is not
+	 * currently running.
 	 *
 	 * If there is more than one tree of the given name, it removes the
 	 * first one that is found.

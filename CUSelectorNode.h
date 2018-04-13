@@ -51,7 +51,6 @@ public:
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	/**
 	 * Returns a newly allocated SelectorNode with the given name.
 	 *
 	 * @param name  The name of the priority node.
@@ -86,8 +85,11 @@ public:
 	 * 
 	 * @return a newly allocated SelectorNode with the given name and children. 
 	 */
-	static std::shared_ptr<SelectorNode> allocWithPriorty(const std::string& name,,
-														  const std::function<float()>& priority);
+	static std::shared_ptr<SelectorNode> allocWithPriorty(const std::string& name,
+														  const std::function<float()>& priority) {
+		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
+		return (result->initWithPriority(name, priority) ? result : nullptr);
+	}
 
     /**
 	 * Returns a newly allocated SelectorNode with given name, children and 
@@ -99,9 +101,12 @@ public:
 	 * 
 	 * @return a newly allocated SelectorNode with the given name and children. 
 	 */
-	static std::shared_ptr<SelectorNode> allocWithChildrenAndPriority(const std::string& name,
-																	  const  std::vector<std::shared_ptr<BehaviorNode>>& children,
-																	  const std::function<float()>& priority);
+	static std::shared_ptr<SelectorNode> allocWithData(const std::string& name,
+													   const  std::vector<std::shared_ptr<BehaviorNode>>& children,
+													   const std::function<float()>& priority) {
+		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
+		return (result->initWithData(name, children, priority) ? result : nullptr);
+	}
 
 #pragma mark -
 #pragma mark Behavior Tree

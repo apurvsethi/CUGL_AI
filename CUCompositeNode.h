@@ -27,18 +27,13 @@ namespace cugl {
  * A composite node can be either a priority node, a selector node, or a random
  * selector node. A priority node will run in descending order of priority, where
  * higher priority children can interrupt lower priority chidren, until one runs
- * successfully. A selector node will the children in order until it finds a child
- * with a nonzero priority. A random selector will choose a random active child 
- * node and returns that child priority on finish.
+ * successfully. A selector node will run the children in order until it finds a
+ * child with a nonzero priority. A random selector will run a random child
+ * node.
  */
 class CompositeNode : public BehaviorNode {
 #pragma mark Values
-public:
-
 protected:
-	/** The type of this composite node. */
-	CompositeNode::Type _type;
-
 	/** The array of children for this composite node. */
 	std::vector<std::shared_ptr<BehaviorNode>> _children;
 	
@@ -80,27 +75,34 @@ public:
 	/**
 	 * Initializes a composite node with the given name and children.
 	 *
-	 * @param name  The name of the composite node.
-	 * @param children The children of the composite node.
+	 * @param name  	The name of the composite node.
+	 * @param children 	The children of the composite node.
 	 *
 	 * @return true if initialization was successful.
 	 */
 	bool initWithChildren(const std::string& name, 
-						  const std::vector<std::shared_ptr<BehaviorNode>>& children);
+						  const std::vector<std::shared_ptr<BehaviorNode>>& children) {
+		setChildren(children);
+		return init(name);
+	}
 
 	/**
 	 * Initializes a composite node with the given name, children, and priority
 	 * function.
 	 * 
-	 * @param name	The name of the composite node.
+	 * @param name		The name of the composite node.
 	 * @param children 	The children of the composite node.
 	 * @param priority	The priority function of the composite node.
 	 * 
-	 * @return true if  initialization was successful.
+	 * @return true if initialization was successful.
 	 */
 	bool initWithData(const std::string& name, 
 					  const std::vector<std::shared_ptr<BehaviorNode>>& children,
-					  const std::function<float()> priority);
+					  const std::function<float()> priority) {
+		setChildren(children);
+		setPriorityFunction(priority);
+		return init(name);
+	}
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
@@ -120,7 +122,7 @@ public:
 	 * 
 	 * @return the child with the given priority index.
 	 */
-	std::shared_pointer<BehaviorNode> getChildWithPriorityIndex(unsigned int index);
+	std::shared_ptr<BehaviorNode> getChildWithPriorityIndex(unsigned int index);
 
 	/**
 	 * Returns the child with the given priority index.
@@ -132,7 +134,7 @@ public:
 	 * 
 	 * @return the child with the given priority index.
 	 */
-	const std::shared_pointer<BehaviorNode> getChildWithPriorityIndex(unsigned int index) const;
+	const std::shared_ptr<BehaviorNode> getChildWithPriorityIndex(unsigned int index) const;
 
 	/**
 	 * Returns the child at the given position.
@@ -188,7 +190,19 @@ public:
 	 *
 	 * @return the (first) child with the given name.
 	 */
-	std::shared_ptr<BehaviorNode> getChildByName(const std::string& name) const;
+	std::shared_ptr<BehaviorNode> getChildByName(const std::string& name);
+	
+	/**
+	 * Returns the (first) child with the given name.
+	 *
+	 * If there is more than one child of the given name, it returns the first
+	 * one that is found.
+	 *
+	 * @param name  An identifier to find the child node.
+	 *
+	 * @return the (first) child with the given name.
+	 */
+	const std::shared_ptr<BehaviorNode>& getChildByName(const std::string& name) const;
 	
 	/**
 	 * Returns the (first) child with the given name, typecast to a shared T pointer.
@@ -215,7 +229,7 @@ public:
 	 *
 	 * @return the list of the node's children.
 	 */
-	std::vector<std::shared_ptr<BehaviorNode>> getChildren() const { return _children; }
+	std::vector<std::shared_ptr<BehaviorNode>> getChildren() { return _children; }
 	
 	/**
 	 * Returns the list of the node's children.
@@ -225,33 +239,43 @@ public:
 	const std::vector<std::shared_ptr<BehaviorNode>>& getChildren() const { return _children; }
 	
 	/**
-	 * Adds a child to this node if this node is not currently active.
+	 * Adds a child to this node if this node is not currently locked.
 	 *
 	 * @param child A child node.
 	 * 
 	 * @return true if the child node was sucessfully added, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
-	bool addChild(std::shared_ptr<BehaviorNode> child);
+	bool addChild(const std::shared_ptr<BehaviorNode>& child);
 	
 	/**
 	 * Adds a child to this node with the given name if this node is not 
-	 * currently active.
+	 * currently locked.
 	 *
 	 * @param child A child node.
 	 * @param name  A string to identify the node.
 	 * 
 	 * @return true if the child node was sucessfully added, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
-	bool addChildWithName(const std::shared_ptr<BehaviorNode>& child, const std::string &name) {
-		  child->setName(name);
-		  return addChild(child);
-	}
+	bool addChildWithName(const std::shared_ptr<BehaviorNode>& child, const std::string &name);
 	
-	//TODO: Delete Children Nodes.
+	/**
+	 * Sets the children of this node if this node is not currently locked.
+	 *
+	 * @param children Child nodes.
+	 *
+	 * @return true if the children were sucessfully set, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
+	 */
+	bool setChildren(const std::vector<std::shared_ptr<BehaviorNode>>& children);
 
 	/**
 	 * Removes the child at the given position from this CompositeNode if this
-	 * node is not currently active.
+	 * node is not currently locked.
 	 *
 	 * Removing a child alters the position of every child after it.  Hence
 	 * it is unsafe to cache child positions.
@@ -259,12 +283,14 @@ public:
 	 * @param pos   The position of the child node which will be removed.
 	 * 
 	 * @return true if the child node was sucessfully removed, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
 	bool removeChild(unsigned int pos);
 	
 	/**
 	 * Removes a child from this CompositeNode if this node is not currently
-	 * active.
+	 * locked.
 	 *
 	 * Removing a child alters the position of every child after it.  Hence
 	 * it is unsafe to cache child positions.
@@ -274,12 +300,14 @@ public:
 	 * @param child The child node which will be removed.
 	 * 
 	 * @return true if the child node was sucessfully added, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
 	bool removeChild(const std::shared_ptr<BehaviorNode>& child);
 	
 	/**
 	 * Removes a child from this CompositeNode by name if this node is not
-	 * currently active.
+	 * currently locked.
 	 *
 	 * If there is more than one child of the given name, it removes the first
 	 * one that is found.
@@ -287,46 +315,65 @@ public:
 	 * @param name  A string to identify the node.
 	 * 
 	 * @return true if the child node was sucessfully added, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
 	bool removeChildByName(const std::string &name);
 	
 	/**
 	 * Removes all children from this Node if this node is not currently
-	 * active.
+	 * locked.
 	 * 
 	 * @return true if all children of this node are removed, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
 	bool removeAllChildren();
 	
 	/**
 	 * Sets the child node's position in the ordering below this composite node
-	 * to the given position. Ordering is 0-indexed, and nodes at or below
-	 * the given position are moved down in order to accomodate the change.
+	 * to the given position, if this node is not currently locked. Ordering is
+	 * 0-indexed, and nodes at or below the given position are moved down in
+	 * order to accomodate the change.
 	 *
 	 * @param originalPos	The position of the child node being moved.
 	 * @param newPos		The new position to which the child node is moved.
+	 *
+	 * @return true if position was successfully set, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
-	void setChildPosition(unsigned int originalPos, unsigned int newPos);
+	bool setChildPosition(unsigned int originalPos, unsigned int newPos);
 	
 	/**
 	 * Sets the child node's position in the ordering below this composite node
-	 * to the given position. Ordering is 0-indexed, and nodes at or below
-	 * the given position are moved down in order to accomodate the change.
+	 * to the given position, if this node is not currently locked. Ordering is
+	 * 0-indexed, and nodes at or below the given position are moved down in
+	 * order to accomodate the change.
 	 *
 	 * @param child		The child node being moved.
 	 * @param newPos	The position to which the child node is moved.
+	 *
+	 * @return true if position was successfully set, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
-	void setChildPosition(const std::shared_ptr<BehaviorNode> child, unsigned int newPos);
+	bool setChildPosition(const std::shared_ptr<BehaviorNode> child, unsigned int newPos);
 	
 	/**
 	 * Sets the child node's position in the ordering below this composite node
-	 * to the given position. Ordering is 0-indexed, and nodes at or below
-	 * the given position are moved down in order to accomodate the change.
+	 * to the given position, if this node is not currently locked. Ordering is
+	 * 0-indexed, and nodes at or below the given position are moved down in
+	 * order to accomodate the change.
 	 *
 	 * @param childName	The name of the child node being moved.
 	 * @param newPos	The position to which the child node is moved.
+	 *
+	 * @return true if position was successfully set, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
-	void setChildPosition(const std::string& childName, unsigned int newPos);
+	bool setChildPosition(const std::string& childName, unsigned int newPos);
 
 	/**
 	 * Returns the BehaviorNode::State of the composite node.

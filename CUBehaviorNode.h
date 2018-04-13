@@ -16,6 +16,7 @@
 #ifndef __CU_BEHAVIOR_NODE_H__
 #define __CU_BEHAVIOR_NODE_H__
 
+#include <functional>
 #include <string>
 
 namespace cugl {
@@ -72,16 +73,16 @@ protected:
 	 * This function can be user defined, and the default values can be defined
 	 * by the subclasses.
 	 */
-	std::function<float()> priority;
+	std::function<float()> _priorityFunc;
 
 	/**
 	 * Whether the behavior tree containing this behavior node is currently
-	 * running. 
+	 * contained in a BehaviorManager, and hence locked.
 	 * 
-	 * If the behavior tree is currently executing, then this node cannot be
+	 * If the behavior tree is currently locked, then this node cannot be
 	 * modified by any external sources.
 	 */
-	bool _active;
+	bool _locked;
 	
 #pragma mark -
 #pragma mark Constructors
@@ -92,7 +93,7 @@ public:
 	 * This constructor should never be called directly, as this is an abstract
 	 * class.
 	 */
-	BehaviorNode();
+	BehaviorNode() : _priorityFunc(nullptr) {}
 	
 	/**
 	 * Deletes this node, disposing all resources.
@@ -127,7 +128,10 @@ public:
 	 * @return true if this initialization was successful.
 	 */
 	bool initWithPriority(const std::string& name,
-						  const std::function<float()>& priority);
+						  const std::function<float()>& priority) {
+		setPriorityFunction(priority);
+		return init(name);
+	}
 
 #pragma mark -
 #pragma mark Identifiers
@@ -141,13 +145,18 @@ public:
 	const std::string& getName() const { return _name; }
 	
 	/**
-	 * Sets a string that is used to identify the node.
+	 * Sets a string that is used to identify the node if this node is
+	 * not currently locked.
 	 *
 	 * This name is used to identify nodes in the behavior tree.
 	 *
 	 * @param name  A string that is used to identify the node.
+	 *
+	 * @return true if name was successfully set, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
-	void setName(const std::string& name) { _name = name; }
+	bool setName(const std::string& name);
 	
 	/**
 	 * Returns a string representation of this node for debugging purposes.
@@ -155,7 +164,7 @@ public:
 	 * If verbose is true, the string will include class information.  This
 	 * allows us to unambiguously identify the class.
 	 *
-	 * @param verbose Whether to include class information
+	 * @param verbose Whether to include class information.
 	 *
 	 * @return a string representation of this node for debugging purposes.
 	 */
@@ -167,13 +176,13 @@ public:
 #pragma mark -
 #pragma mark Behavior Trees
 	/**
-	 * Returns whether this behavior node is currently active.
+	 * Returns whether this behavior node is currently locked.
 	 * 
-	 * An active behavior node cannot be modified by any external sources.
+	 * A locked behavior node cannot be modified by any external sources.
 	 * 
-	 * @returns true if this behavior node is currently active, else false.
+	 * @returns true if this behavior node is currently locked, else false.
 	 */
-	bool isActive() const { return _active; }
+	bool isLocked() const { return _locked; }
 
 	/**
 	 * Returns a float that signifies the priority of the behavior node.
@@ -187,13 +196,15 @@ public:
 	
 	/**
 	 * Sets the priority function of this behavior node if this node is
-	 * not active.
+	 * not currently locked.
 	 * 
 	 * @param priority The function to set as the priority function.
 	 * 
 	 * @return whether the behavior tree was modified.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
-	bool setPriorityFunction(const std::function<float()>& priority);
+	bool setPriorityFunction(const std::function<float()>& priorityFunc);
 
 	/**
 	 * Returns a BehaviorNode::State that represents the node state.
@@ -226,11 +237,14 @@ public:
 	const BehaviorNode* getParent() const { return _parent; }
 	
 	/**
-	 * Removes this node from its parent node.
+	 * Removes this node from its parent node if this node is not currently
+	 * locked.
 	 *
 	 * If the node has no parent, nothing happens.
 	 * 
 	 * @return whether the behavior tree was modified.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
 	bool removeFromParent();
 	

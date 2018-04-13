@@ -28,7 +28,7 @@ struct BehaviorActionDef {
 	/**
 	 * The initialization function to begin running an action.
 	 */
-	std::function<void()> _initialize;
+	std::function<void()> _start;
 	
 	/**
 	 * The update function processing the action over time.
@@ -44,11 +44,7 @@ struct BehaviorActionDef {
 	 */
 	std::function<void()> _terminate;
 	
-	BehaviorActionDef() {
-		_initialize = nullptr;
-		_update = nullptr;
-		_terminate = nullptr;
-	}
+	BehaviorActionDef() : _start(nullptr), _update(nullptr), _terminate(nullptr) {}
 };
 	
 /**
@@ -81,7 +77,7 @@ protected:
 	/**
 	 * The initialization function to begin running an action.
 	 */
-	std::function<void()> _initialize;
+	std::function<void()> _start;
 	
 	/**
 	 * The update function processing the action over time.
@@ -165,7 +161,7 @@ public:
 	/**
 	 * Initializes the action to make it begin running.
 	 */
-	void initialize();
+	void start();
 	
 	/**
 	 * Returns the BehaviorAction::State of the action.

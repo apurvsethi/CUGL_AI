@@ -85,8 +85,11 @@ public:
 	 * 
 	 * @return a newly allocated PriorityNode with the given name and children. 
 	 */
-	static std::shared_ptr<PriorityNode> allocWithPriorty(const std::string& name,,
-														  const std::function<float()>& priority);
+	static std::shared_ptr<PriorityNode> allocWithPriorty(const std::string& name,
+														  const std::function<float()>& priority) {
+		std::shared_ptr<PriorityNode> result = std::make_shared<PriorityNode>();
+		return (result->initWithPriority(name, priority) ? result : nullptr);
+	}
 
     /**
 	 * Returns a newly allocated PriorityNode with given name, children and 
@@ -100,7 +103,10 @@ public:
 	 */
 	static std::shared_ptr<PriorityNode> allocWithData(const std::string& name,
 													   const  std::vector<std::shared_ptr<BehaviorNode>>& children,
-													   const std::function<float()>& priority);
+													   const std::function<float()>& priority) {
+		std::shared_ptr<PriorityNode> result = std::make_shared<PriorityNode>();
+		return (result->initWithData(name, children, priority) ? result : nullptr);
+	}
 
 #pragma mark -
 #pragma mark Behavior Tree

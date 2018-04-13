@@ -52,18 +52,6 @@ public:
 	 */
 	~TimedDelayNode() { dispose(); }
 	
-
-	/**
-	 * Initializes a TimedDelayNode node with the given name and.
-	 *
-	 * @param name  The name of the timed delay node.
-	 *
-	 * @return true if initialization was successful.
-	 */
-	bool init(const std::string& name) {
-		return init(name);
-	}
-	
 	/**
 	 * Initializes a TimedDelay node with a given name and delay.
 	 * 
@@ -150,24 +138,24 @@ public:
 	static std::shared_ptr <TimedDelayNode> allocWithPriority(const std::string& name, 
 														      const std::function<float()>& priority) {
 		std::shared_ptr <TimedDelayNode> result = std::make_shared <TimedDelayNode>();
-		return (result->initWithLimit(name, priority) ? result : nullptr);
+		return (result->initWithPriority(name, priority) ? result : nullptr);
 	}
 	
 	/**
 	 * Returns a newly allocated TimedDelayNode with the given name, limit, child, and priority function.
 	 *
 	 * @param name  The name of the repeater node.
-	 * @param limit The limit on the number of times the child node runs.
+	 * @param delay The delay before the child will begin running.
 	 * @param child The child of the repeater node.
 	 * @param priority The priority function of the repeater node.
 	 *
 	 * @return a newly allocated TimedDelayNode with the given name and child.
 	 */
-	static std::shared_ptr <TimedDelayNode> allocWithData(const std::string& name, float limit,
+	static std::shared_ptr <TimedDelayNode> allocWithData(const std::string& name, float delay,
 													      const std::shared_ptr<BehaviorNode>& child,
 														  const std::function<float()>& priority) {
 		std::shared_ptr <TimedDelayNode> result = std::make_shared <TimedDelayNode>();
-		return (result->initWithData(name, limit, child, priority) ? result : nullptr);
+		return (result->initWithData(name, delay, child, priority) ? result : nullptr);
 	}
 	
 #pragma mark -
@@ -184,14 +172,19 @@ public:
 	float getDelay() const { return _delay; }
 	
 	/**
-	 * Sets the number of seconds before the child node begins running.
+	 * Sets the number of seconds before the child node begins running if the
+	 * node is not currently locked.
 	 *
 	 * The delay will prevent the child from returning for a certain
 	 * period of time.
 	 *
 	 * @param delay	the number of seconds before the child node begins running.
+	 *
+	 * @return true if the delay was successfully set, else false.
+	 *
+	 * @warning this function will only run when node is not _locked.
 	 */
-	void setDelay(float delay);
+	bool setDelay(float delay);
 	
 	/**
 	 * Returns the BehaviorNode::State of the timed delay node.

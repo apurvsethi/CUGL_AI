@@ -126,18 +126,18 @@ public:
 		return (result->initWithLimit(name, limit) ? result : nullptr);
 	}
 
-		/**
+	/**
 	 * Returns a newly allocated RepeaterNode with the given name and priority function.
 	 *
-	 * @param name  The name of the repeater node.
-	 * @param priority The limit on the number of times the child node runs.
+	 * @param name  	The name of the repeater node.
+	 * @param priority 	The priority function of the repeater node.
 	 *
 	 * @return a newly allocated RepeaterNode with the given name and priority function.
 	 */
-	static std::shared_ptr<RepeaterNode> allocWithLimit(const std::string& name, 
-														const std::function<float()>& priority) {
+	static std::shared_ptr<RepeaterNode> allocWithPriority(const std::string& name,
+														   const std::function<float()>& priority) {
 		std::shared_ptr<RepeaterNode> result = std::make_shared<RepeaterNode>();
-		return (result->initWithLimit(name, priority) ? result : nullptr);
+		return (result->initWithPriority(name, priority) ? result : nullptr);
 	}
 	
 	/**
@@ -178,12 +178,17 @@ public:
 	unsigned int getLimit() const { return _limit; }
 	
 	/**
-	 * Sets the limit on the number of times the child node can run.
+	 * Sets the limit on the number of times the child node can run if this
+	 * node is not currently locked.
 	 *
 	 * This limit is used to limit the maximum number of times a child node
 	 * can run.
 	 *
 	 * @param limit	A the limit on the number of times the child node can run.
+	 *
+	 * @return true if limit was successfully set, else false.
+	 *
+	 * @warning this function will only run when node is not _locked
 	 */
 	void setLimit(unsigned int limit) { _limit = limit; }
 	
