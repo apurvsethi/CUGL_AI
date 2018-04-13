@@ -257,10 +257,12 @@ public:
 	 * The priority value of the node is updated within this function, based
 	 * on either a priority function provided to the node or the default
 	 * priority function.
+	 * 
+	 * @param dt The elapsed time since the last frame.
 	 *
 	 * @return the BehaviorNode::State of the behavior node.
 	 */
-	virtual BehaviorNode::State update() = 0;
+	virtual BehaviorNode::State update(float dt) = 0;
 	
 private:
 #pragma mark -
