@@ -75,20 +75,6 @@ public:
 	}
 
 #pragma mark -
-#pragma mark Actions
-	/**
-	 * A function to create an action instance from an action def, which is
-	 * used primarily for templates.
-	 *
-	 * @param name		Name of the action (for identification purposes)
-	 * @param actionDef	Action def that serves as a template for action instance
-	 *
-	 * @return created action with given name and functions from actionDef
-	 */
-	static std::shared_ptr<BehaviorAction> createAction(const std::string& name,
-														const std::shared_ptr<BehaviorActionDef>& actionDef);
-
-#pragma mark -
 #pragma mark Behavior Trees
 	/**
 	 * Returns the tree at the given position.

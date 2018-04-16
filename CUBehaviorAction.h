@@ -22,7 +22,7 @@ namespace cugl {
 
 /**
  * A def through which an action is constructed; a template to use in order to create
- * an action, using BehaviorManager.createAction.
+ * an action.
  */
 struct BehaviorActionDef {
 	/**
@@ -117,7 +117,8 @@ public:
 	void dispose();
 	
 	/**
-	 * Initializes an action with the given name.
+	 * Initializes an action with the given name, using the def as a
+	 * template.
 	 *
 	 * @param name 		The name of the action.
 	 * @param actionDef Def through which this Action is constructed.
@@ -126,6 +127,24 @@ public:
 	 */
 	bool init(const std::string& name,
 			  const std::shared_ptr<BehaviorActionDef>& actionDef);
+	
+#pragma mark -
+#pragma mark Static Constructors
+	/**
+	 * Returns a newly allocated BehaviorAction with the given name, using
+	 * the def as a template.
+	 *
+	 * @param name 		The name of the action.
+	 * @param actionDef Def through which this Action is constructed.
+	 *
+	 * @return a newly allocated BehaviorAction with the given name, functions
+	 * from actionDef.
+	 */
+	static std::shared_ptr<BehaviorAction> alloc(const std::string& name,
+												 const std::shared_ptr<BehaviorActionDef>& actionDef) {
+		std::shared_ptr<BehaviorAction> result = std::make_shared<BehaviorAction>();
+		return (result->init(name, actionDef) ? result : nullptr);
+	}
 	
 #pragma mark -
 #pragma mark Identifiers
