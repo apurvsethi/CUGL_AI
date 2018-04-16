@@ -21,21 +21,30 @@ namespace cugl {
 /**
  * This class provides a leaf behavior node for a behavior tree.
  *
- * A leaf node within a behavior tree refers to the base nodes that perform actions
- * based on conditionals. Each leaf node has a user defined priority function which
- * it will call each update tick to set its priority. Additionally, each leaf node
- * also has a provided action which (TODO: Write interaction with the AI Manager.).
+ * A leaf node within a behavior tree refers to the base nodes that perform
+ * actions based on conditionals. Each leaf node has a user defined priority
+ * function which it will call each update tick to set its priority.
+ * Additionally, each leaf node also has a provided action which begins running
+ * when the leaf node is chosen for execution.
  */
 class LeafNode : public BehaviorNode {
 #pragma mark Values
 protected:
-	/** The state of the behavior node. 
+	/**
+	 * The state of the behavior node.
 	 * 
-	 *	This function will find the current status of this leaf node.
+	 * This function will find the current status of this leaf node.
 	 *
-	 *  TODO: Change to integrate with AIManager.
+	 * TODO: Change to integrate with AIManager.
 	 */
 	std::function<BehaviorNode::State()> currentState;
+	
+	/**
+	 * The action used when this node is run.
+	 *
+	 * This should only be used when this node is of type LeafNode.
+	 */
+	std::shared_ptr<BehaviorAction> _action;
 	
 #pragma mark -
 #pragma mark Constructors
@@ -66,101 +75,30 @@ public:
 	void dispose() override;
 	
 	/**
-	 * Initializes a leaf node with the given name.
+	 * Initializes a leaf node using the given template def.
 	 *
-	 * @param name  The name of the leaf node.
-	 *
-	 * @return true if initialization was successful.
-	 */
-	bool init(const std::string& name) override;
-	
-	/**
-	 * Initializes a leaf node with the given name and action.
-	 *
-	 * @param name  	The name of the leaf node.
-	 * @param action	The action of the leaf node.
+	 * @param behaviorNodeDef	The def specifying arguments for this node.
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool initWithAction(const std::string& name, const std::shared_ptr<BehaviorAction>& action) {
-		setAction(action);
-		return init(name);
-	}
-
-	/**
-	 * Initializes a leaf node with the given name, action, and priority
-	 * function.
-	 *
-	 * @param name 		The name of the leaf node.
-	 * @param action 	The action of the leaf node.
-	 * @param priority 	The priority function of the leaf node.
-	 */
-	bool initWithData(const std::string& name, const std::shared_ptr<BehaviorAction>& action,
-					  const std::function<float()>& priority) {
-		setAction(action);
-		setPriorityFunction(priority);
-		return init(name);
-	}
+	bool init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) override;
 
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Allocates a leaf node with the given name.
+	 * Returns a newly allocated LeafNode using the given template def.
 	 *
-	 * @param name  The name of the leaf node.
+	 * @param behaviorNodeDef	The def specifying arguments for this node.
 	 *
-	 * @return a newly allocated leaf node with the given name.
+	 * @return a newly allocated LeafNode using the given template def.
 	 */
-	static std::shared_ptr<LeafNode> alloc(const std::string& name) {
+	static std::shared_ptr<LeafNode> alloc(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
 		std::shared_ptr<LeafNode> result = std::make_shared<LeafNode>();
-		return (result->init(name) ? result : nullptr);
-	}
-	
-	/**
-	 * Allocates a leaf node with the given name and action.
-	 *
-	 * @param name  	The name of the leaf node.
-	 * @param action	The action of the leaf node.
-	 *
-	 * @return 	A newly allocated leaf node with the given name and action.
-	 */
-	static std::shared_ptr<LeafNode> allocWithAction(const std::string& name,
-													 const std::shared_ptr<BehaviorAction>& action) {
-		std::shared_ptr<LeafNode> result = std::make_shared<LeafNode>();
-		return (result->initWithAction(name, action) ? result : nullptr);
-	}
-
-	/**
-	 * Initializes a leaf node with the given name, action, and priority
-	 * function.
-	 *
-	 * @param name 		The name of the leaf node.
-	 * @param action 	The action of the leaf node.
-	 * @param priority 	The priority of the leaf node.
-	 * 
-	 * @return 	A newly allocated leaf node with the given name, action, and 
-	 * 			priority function.
-	 */
-	static std::shared_ptr<LeafNode> allocWithData(const std::string& name, 
-												   const std::shared_ptr<BehaviorAction>& action,
-												   const std::function<float()>& priority) {
-		std::shared_ptr<LeafNode> result = std::make_shared<LeafNode>();
-		return (result->initWithData(name, action, priority) ? result : nullptr);
+		return (result->init(behaviorNodeDef) ? result : nullptr);
 	}
 
 #pragma mark -
 #pragma mark Behavior Tree
-	/**
-	 * Sets the action of this node if this node is not currently locked.
-	 *
-	 * @param child The action node.
-	 *
-	 * @return true if this node's action was successfully set.
-	 *
-	 * @warning this function will only run when node is not _locked.
-	 */
-	bool setAction(const std::shared_ptr<BehaviorAction>& action);
-	
 	/**
 	 * Runs the action associated with leaf node through action function.
 	 * If the action is not given, then nothing occurs.
@@ -170,11 +108,11 @@ public:
 	/**
 	 * Returns the BehaviorNode::State of the leaf node.
 	 *
-	 * Runs an update function, meant to be used on each tick, for the
-	 * leaf node. The state for this node is derived from the state of the
-	 * action function given. If the action function is still running, then
-	 * the state is running. Otherwise, the state corresponds with the output
-	 * of the action function. True implies success while false implies faliure.
+	 * Runs an update function, meant to be used on each tick, for the leaf
+	 * node. The state for this node is derived from the state of the action
+	 * function given. If the action function is still running, then the state
+	 * is running. Otherwise, the state corresponds with the output of the
+	 * action function. True implies success while false implies faliure.
 	 *
 	 * The priority value of the node is updated within this function, based
 	 * on the priority function provided by the user.

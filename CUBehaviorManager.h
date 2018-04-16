@@ -130,19 +130,7 @@ public:
 	 *
 	 * @param tree	The behavior tree to add to this manager
 	 */
-	void addTree(const std::shared_ptr<BehaviorNode>& tree);
-	
-	/**
-	 * Add a behavior tree to the manager with the given name. This tree cannot be
-	 * changed once added, until it is finished running.
-	 *
-	 * @param tree	The behavior tree to add to this manager
-	 * @param name  A string to identify the tree.
-	 */
-	void addTreeWithName(const std::shared_ptr<BehaviorNode>& tree, const std::string& name) {
-		addTree(tree);
-		tree->setName(name);
-	}
+	void addTree(const std::shared_ptr<BehaviorNodeDef>& tree);
 	
 	/**
 	 * Removes the tree at the given position from the manager, if the

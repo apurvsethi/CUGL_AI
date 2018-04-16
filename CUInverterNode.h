@@ -48,59 +48,15 @@ public:
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Returns a newly allocated InverterNode with the given name.
+	 * Returns a newly allocated InverterNode using the given template def.
 	 *
-	 * @param name  The name of the inverter node.
+	 * @param behaviorNodeDef	The def specifying arguments for this node.
 	 *
-	 * @return a newly allocated InverterNode with the given name.
+	 * @return a newly allocated InverterNode using the given template def.
 	 */
-	static std::shared_ptr<InverterNode> alloc(const std::string& name) {
+	static std::shared_ptr<InverterNode> alloc(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
 		std::shared_ptr<InverterNode> result = std::make_shared<InverterNode>();
-		return (result->init(name) ? result : nullptr);
-	}
-	
-	/**
-	 * Returns a newly allocated InverterNode with the given name and child.
-	 *
-	 * @param name  The name of the inverter node.
-	 * @param child The child of the inverter node.
-	 *
-	 * @return a newly allocated InverterNode with the given name and child.
-	 */
-	static std::shared_ptr<InverterNode> allocWithChild(const std::string& name,
-														const std::shared_ptr<BehaviorNode>& child) {
-		std::shared_ptr<InverterNode> result = std::make_shared<InverterNode>();
-		return (result->initWithChild(name, child) ? result : nullptr);
-	}
-
-	/**
-	 * Returns a newly allocated InverterNode with given name and priority function.
-	 * 
-	 * @param name The name of the inverter node.
-	 * @param priority The priority function of the inverter node.
-	 * 
-	 * @return a newly allocated InverterNode with the given name and priority function. 
-	 */
-	static std::shared_ptr<InverterNode> allocWithPriority(const std::string& name,
-														   const std::function<float()>& priority) {
-		std::shared_ptr<InverterNode> result = std::make_shared<InverterNode>();
-		return (result->initWithPriority(name, priority) ? result : nullptr);
-	}
-
-	/**
-	 * Returns a newly allocated InverterNode with given name, child and priority function.
-	 * 
-	 * @param name The name of the inverter node.
-	 * @param child the child of the inverter node.
-	 * @param priority The priority function of the inverter node.
-	 * 
-	 * @return a newly allocated InverterNode with the given name and priority function. 
-	 */
-	static std::shared_ptr<InverterNode> allocWithData(const std::string& name,
-													   const std::shared_ptr<BehaviorNode>& child,
-													   const std::function<float()>& priority) {
-		std::shared_ptr<InverterNode> result = std::make_shared<InverterNode>();
-		return (result->initWithData(name, child, priority) ? result : nullptr);
+		return (result->init(behaviorNodeDef) ? result : nullptr);
 	}
 	
 #pragma mark -

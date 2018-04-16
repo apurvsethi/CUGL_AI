@@ -21,9 +21,9 @@ namespace cugl {
  * This class provides a selector composite node for a behavior tree.
  *
  * A selector node is a composite node which is designed to run the nodes below
- * it in order, on the basis of failure for previous nodes. SelectorNode "selects"
- * one of the nodes below it as the option taken based on failure of the options
- * given as child nodes before it.
+ * it in order, on the basis of failure for previous nodes. SelectorNode
+ * "selects" one of the nodes below it as the option taken based on failure of
+ * the options given as child nodes before it.
  *
  * The first node is run and if it is successful, then the SelectorNode's state
  * is set to success. Otherwise, the next node is run. If all child nodes fail,
@@ -51,61 +51,15 @@ public:
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Returns a newly allocated SelectorNode with the given name.
+	 * Returns a newly allocated SelectorNode using the given template def.
 	 *
-	 * @param name  The name of the priority node.
+	 * @param behaviorNodeDef	The def specifying arguments for this node.
 	 *
-	 * @return a newly allocated SelectorNode with the given name.
+	 * @return a newly allocated SelectorNode using the given template def.
 	 */
-	static std::shared_ptr<SelectorNode> alloc(const std::string& name) {
+	static std::shared_ptr<SelectorNode> alloc(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
 		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
-		return (result->init(name) ? result : nullptr);
-	}
-	
-	/**
-	 * Returns a newly allocated SelectorNode with the given name and children.
-	 *
-	 * @param name  The name of the priority node.
-	 * @param children The children of the priority node.
-	 *
-	 * @return a newly allocated SelectorNode with the given name and children.
-	 */
-	static std::shared_ptr<SelectorNode> allocWithChildren(const std::string& name,
-														   const std::vector<std::shared_ptr<BehaviorNode>>& children) {
-		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
-		return (result->initWithChildren(name, children) ? result : nullptr);
-	}
-
-	/**
-	 * Returns a newly allocated SelectorNode with given name and priority
-	 * function.
-	 * 
-	 * @param name The name of the priority node.
-	 * @param priority the priority function of the priority node.
-	 * 
-	 * @return a newly allocated SelectorNode with the given name and children. 
-	 */
-	static std::shared_ptr<SelectorNode> allocWithPriorty(const std::string& name,
-														  const std::function<float()>& priority) {
-		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
-		return (result->initWithPriority(name, priority) ? result : nullptr);
-	}
-
-    /**
-	 * Returns a newly allocated SelectorNode with given name, children and 
-	 * priority function.
-	 * 
-	 * @param name The name of the priority node.
-	 * @param children The children of the priority node.
-	 * @param priority the priority function of the priority node.
-	 * 
-	 * @return a newly allocated SelectorNode with the given name and children. 
-	 */
-	static std::shared_ptr<SelectorNode> allocWithData(const std::string& name,
-													   const  std::vector<std::shared_ptr<BehaviorNode>>& children,
-													   const std::function<float()>& priority) {
-		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
-		return (result->initWithData(name, children, priority) ? result : nullptr);
+		return (result->init(behaviorNodeDef) ? result : nullptr);
 	}
 
 #pragma mark -
