@@ -82,7 +82,7 @@ public:
 	 * While trees are enumerated in the order by which they were added,
 	 * it is recommended to attempt to retrieve a tree by name instead.
 	 *
-	 * @param pos   The tree position.
+	 * @param pos	The tree position.
 	 *
 	 * @return the tree at the given position.
 	 */
@@ -94,7 +94,7 @@ public:
 	 * If there is more than one tree of the given name, it returns the first
 	 * one that is found.
 	 *
-	 * @param name  An identifier to find the tree.
+	 * @param name	An identifier to find the tree.
 	 *
 	 * @return the (first) tree with the given name.
 	 */
@@ -106,7 +106,7 @@ public:
 	 * While trees are enumerated in the order by which they were added,
 	 * it is recommended to attempt to retrieve the state by name instead.
 	 *
-	 * @param pos   The tree position.
+	 * @param pos	The tree position.
 	 *
 	 * @return the state of the tree at the given position.
 	 */
@@ -118,7 +118,7 @@ public:
 	 * If there is more than one tree of the given name, it returns the state
 	 * of the first one that is found.
 	 *
-	 * @param name  An identifier to find the tree.
+	 * @param name	An identifier to find the tree.
 	 *
 	 * @return the state of the (first) tree with the given name.
 	 */
@@ -139,7 +139,7 @@ public:
 	 * While trees are enumerated in the order by which they were added,
 	 * it is recommended to access a tree by name instead.
 	 *
-	 * @param pos   The tree position.
+	 * @param pos	The tree position.
 	 *
 	 * @warning The tree will only be removed if not currently running.
 	 */
@@ -152,7 +152,7 @@ public:
 	 * If there is more than one tree of the given name, it removes the
 	 * first one that is found.
 	 *
-	 * @param name  An identifier to find the tree.
+	 * @param name	An identifier to find the tree.
 	 *
 	 * @warning The tree will only be removed if not currently running.
 	 */
@@ -164,7 +164,7 @@ public:
 	 * While trees are enumerated in the order by which they were added,
 	 * it is recommended to access them by name instead.
 	 *
-	 * @param pos   The tree position.
+	 * @param pos	The tree position.
 	 */
 	void startTree(unsigned int pos);
 	
@@ -174,13 +174,15 @@ public:
 	 * If there is more than one tree of the given name, it starts running
 	 * the first one that is found.
 	 *
-	 * @param name  An identifier to find the tree.
+	 * @param name	An identifier to find the tree.
 	 */
 	void startTreeWithName(const std::string& name);
 	
 	/**
 	 * Runs an update function, meant to be used on each tick, for each
 	 * behavior tree that is currently running within the manager.
+	 *
+	 * @param dt	The elapsed time since the last frame.
 	 */
 	void update(float dt);
 };

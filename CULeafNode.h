@@ -108,7 +108,7 @@ public:
 	 * The priority value of the node is updated within this function, based
 	 * on the priority function provided by the user.
 	 *
-	 * @param dt The elapsed time since the last frame.
+	 * @param dt	The elapsed time since the last frame.
 	 * 
 	 * @return the BehaviorNode::State of the laf node.
 	 */

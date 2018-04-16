@@ -80,18 +80,6 @@ public:
 	 * @return The number of children of this composite node.
 	 */
 	size_t getChildCount() const { return _children.size(); }
-
-	/**
-	 * Returns the child with the given priority index.
-	 *
-	 * A child with a specific priority index i is the child with the ith
-	 * highest priority. Ties are broken arbitrarily.
-	 * 
-	 * @param index 	The child's priority index.
-	 * 
-	 * @return the child with the given priority index.
-	 */
-	const std::shared_ptr<BehaviorNode>& getChildWithPriorityIndex(unsigned int index) const;
 	
 	/**
 	 * Returns the child at the given position.
@@ -99,7 +87,7 @@ public:
 	 * While children are enumerated in the order by which they were added,
 	 * it is recommended to attempt to retrieve a child by name instead.
 	 *
-	 * @param pos   The child position.
+	 * @param pos	The child position.
 	 *
 	 * @return the child at the given position.
 	 */
@@ -116,7 +104,7 @@ public:
 	 * While children are enumerated in the order by which they were added,
 	 * it is recommended to attempt to retrieve a child by name instead.
 	 *
-	 * @param pos   The child position.
+	 * @param pos	The child position.
 	 *
 	 * @return the child at the given position, typecast to a shared T pointer.
 	 */
@@ -131,7 +119,7 @@ public:
 	 * If there is more than one child of the given name, it returns the first
 	 * one that is found.
 	 *
-	 * @param name  An identifier to find the child node.
+	 * @param name	An identifier to find the child node.
 	 *
 	 * @return the (first) child with the given name.
 	 */
@@ -149,7 +137,7 @@ public:
 	 * If there is more than one child of the given name, it returns the first
 	 * one that is found.
 	 *
-	 * @param name  An identifier to find the child node.
+	 * @param name	An identifier to find the child node.
 	 *
 	 * @return the (first) child with the given name, typecast to a shared T
 	 * pointer.
@@ -157,6 +145,40 @@ public:
 	template <typename T>
 	inline std::shared_ptr<T> getChildByName(const std::string& name) const {
 		return std::dynamic_pointer_cast<T>(getChildByName(name));
+	}
+	
+	/**
+	 * Returns the child with the given priority index.
+	 *
+	 * A child with a specific priority index i is the child with the ith
+	 * highest priority. Ties are broken arbitrarily.
+	 *
+	 * @param index	The child's priority index.
+	 *
+	 * @return the child with the given priority index.
+	 */
+	const std::shared_ptr<BehaviorNode>& getChildByPriorityIndex(unsigned int index) const;
+	
+	/**
+	 * Returns the child with the given priority index, typecast to a shared T
+	 * pointer.
+	 *
+	 * This method is provided to simplify the polymorphism of a behavior tree.
+	 * While all children are a subclass of type BehaviorNode, you may want to
+	 * access them by their specific subclass.  If the child is not an instance
+	 * of type T (or a subclass), this method returns nullptr.
+	 *
+	 * If there is more than one child with the same priority value, the tie is
+	 * broken arbitrarily.
+	 *
+	 * @param index	The child's priority index.
+	 *
+	 * @return the child with the given priority index, typecast to a shared T
+	 * pointer.
+	 */
+	template <typename T>
+	inline std::shared_ptr<T> getChildByPriorityIndex(unsigned int index) const {
+		return std::dynamic_pointer_cast<T>(getChildByPriorityIndex(index));
 	}
 	
 	/**
@@ -177,11 +199,11 @@ public:
 	 * The priority value of the node is updated within this function, based
 	 * on the priority values of the nodes below the given node.
 	 *
-	 * @param dt The elapsed time since the last frame.
+	 * @param dt	The elapsed time since the last frame.
 	 *
 	 * @return the BehaviorNode::State of the composite node.
 	 */
-	virtual BehaviorNode::State update(float dt) override;
+	virtual BehaviorNode::State update(float dt) override = 0;
 };
 	
 	

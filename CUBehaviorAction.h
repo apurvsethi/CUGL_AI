@@ -121,8 +121,8 @@ public:
 	 * Initializes an action with the given name, using the def as a
 	 * template.
 	 *
-	 * @param name 		The name of the action.
-	 * @param actionDef Def through which this Action is constructed.
+	 * @param name		The name of the action.
+	 * @param actionDef	Def through which this Action is constructed.
 	 *
 	 * @return true if initialization was successful.
 	 */
@@ -163,7 +163,7 @@ public:
 	 *
 	 * This name is used to identify actions in a behavior tree.
 	 *
-	 * @param name  A string that is used to identify the action.
+	 * @param name	A string that is used to identify the action.
 	 */
 	void setName(const std::string& name) { _name = name; }
 	
@@ -189,7 +189,7 @@ public:
 	 * Runs an update function, meant to be used on each tick, for the
 	 * action, to further process this action.
 	 *
-	 * @param dt	The timestep over which the update needs to process.
+	 * @param dt	The elapsed time since the last frame.
 	 *
 	 * @return the BehaviorAction::State of the action.
 	 */

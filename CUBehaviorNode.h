@@ -216,7 +216,7 @@ public:
 	 * This constructor should never be called directly, as this is an abstract
 	 * class.
 	 */
-	BehaviorNode() : _priorityFunc(nullptr) {}
+	BehaviorNode() : _parent(nullptr), _priorityFunc(nullptr) {}
 	
 	/**
 	 * Deletes this node, disposing all resources.
@@ -240,11 +240,7 @@ public:
 	 *
 	 * @return true if initialization was successful.
 	 */
-	virtual bool init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
-		_name = behaviorNodeDef->_name;
-		_priorityFunc = behaviorNodeDef->_priorityFunc;
-		return true;
-	}
+	virtual bool init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef);
 
 #pragma mark -
 #pragma mark Identifiers
@@ -263,7 +259,7 @@ public:
 	 * If verbose is true, the string will include class information.  This
 	 * allows us to unambiguously identify the class.
 	 *
-	 * @param verbose Whether to include class information.
+	 * @param verbose	Whether to include class information.
 	 *
 	 * @return a string representation of this node for debugging purposes.
 	 */
@@ -321,7 +317,7 @@ public:
 	 * on either a priority function provided to the node or the default
 	 * priority function.
 	 * 
-	 * @param dt The elapsed time since the last frame.
+	 * @param dt	The elapsed time since the last frame.
 	 *
 	 * @return the BehaviorNode::State of the behavior node.
 	 */
