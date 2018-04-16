@@ -25,15 +25,14 @@ namespace cugl {
  * This class provides a decorator behavior node for a behavior tree.
  *
  * A decorator node within a behavior tree refers to the set of nodes that have
- * one child, and perform some function regarding the state of the child node or
- * the number of times the child node is run. There are rules specific to each
- * type of decorator node defining how many times the child is run and the
- * state of the decorator given the state of the child node.
+ * one child, and perform some function regarding the priority value of the
+ * child node. There are rules specific to each type of decorator node defining
+ * this.
  *
- * The three concrete subclasses for a DecoratorNode are: InverterNode,
- * SucceederNode, FailerNode, RepeaterNode, RepeatUntilSuccessNode, and
- * RepeatUntilFailNode. While similar in structure, each class has key
- * differences defining how it runs in relation to its child node.
+ * The two concrete subclasses for a DecoratorNode are: InverterNode and
+ * TimerNode. While similar in structure, each class has key differences
+ * defining how it runs in relation to its child
+ * node.
  */
 class DecoratorNode : public BehaviorNode {
 #pragma mark Values
@@ -68,26 +67,13 @@ public:
 	void dispose() override;
 	
 	/**
-	 * Initializes a decorator node with the given name.
+	 * Initializes a decorator node using the given template def.
 	 *
-	 * @param name  The name of the decorator node.
-	 *
-	 * @return true if initialization was successful.
-	 */
-	bool init(const std::string& name) override;
-	
-	/**
-	 * Initializes a decorator node with the given name and child.
-	 *
-	 * @param name  The name of the decorator node.
-	 * @param child The child of the decorator node.
+	 * @param behaviorNodeDef	The def specifying arguments for this node.
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool initWithChild(const std::string& name, const std::shared_ptr<BehaviorNode>& child) {
-		setChild(child);
-		return init(name);
-	}
+	virtual bool init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) override;
 	
 #pragma mark -
 #pragma mark Behavior Tree
@@ -109,9 +95,9 @@ public:
 	 * Returns the node's child, typecast to a shared T pointer.
 	 *
 	 * This method is provided to simplify the polymorphism of a behavior tree.
-	 * While the child is a subclass of type BehaviorNode, you may want to access
-	 * them by their specific subclass.  If the child is not an instance of type
-	 * T (or a subclass), this method returns nullptr.
+	 * While the child is a subclass of type BehaviorNode, you may want to
+	 * access them by their specific subclass.  If the child is not an instance
+	 * of type T (or a subclass), this method returns nullptr.
 	 *
 	 * @return the child at the given position, typecast to a shared T pointer.
 	 */
@@ -119,29 +105,6 @@ public:
 	inline std::shared_ptr<T> getChild() const {
 		return std::dynamic_pointer_cast<T>(getChild());
 	}
-	
-	/**
-	 * Sets the child of this node.
-	 *
-	 * @param child The child node.
-	 */
-	void setChild(std::shared_ptr<BehaviorNode> child) { _child = child; }
-	
-	/**
-	 * Sets the child of this node with the given name.
-	 *
-	 * @param child The child node.
-	 * @param name  A string to identify the node.
-	 */
-	void setChildWithName(const std::shared_ptr<BehaviorNode>& child, const std::string &name) {
-		setChild(child);
-		child->setName(name);
-	}
-	
-	/**
-	 * Removes the child of this DecoratorNode.
-	 */
-	void removeChild() { _child = nullptr; }
 	
 	/**
 	 * Returns the BehaviorNode::State of the decorator node.
@@ -153,9 +116,11 @@ public:
 	 * The priority value of the node is updated within this function, based
 	 * on the priority values of the nodes below the given node.
 	 *
+	 * @param dt The elapsed time since the last frame.
+	 * 
 	 * @return the BehaviorNode::State of the decorator node.
 	 */
-	virtual BehaviorNode::State update() override = 0;
+	virtual BehaviorNode::State update(float dt) override = 0;
 };
 	
 	

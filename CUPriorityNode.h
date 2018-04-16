@@ -25,9 +25,9 @@ namespace cugl {
  * interrupted by another child node that has a higher priority value during the
  * update function.
  *
- * A priority node's state is directly based upon the child node currently running
- * or the child node that has finished running. Only one child node will finish
- * running as part of the PriorityNode.
+ * A priority node's state is directly based upon the child node currently
+ * running or the child node that has finished running. Only one child node
+ * will finish running as part of the PriorityNode.
  */
 class PriorityNode : public CompositeNode {
 #pragma mark -
@@ -51,31 +51,17 @@ public:
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Returns a newly allocated PriorityNode with the given name.
+	 * Returns a newly allocated PriorityNode using the given template def.
 	 *
-	 * @param name  The name of the priority node.
+	 * @param behaviorNodeDef	The def specifying arguments for this node.
 	 *
-	 * @return a newly allocated PriorityNode with the given name.
+	 * @return a newly allocated PriorityNode using the given template def.
 	 */
-	static std::shared_ptr<PriorityNode> alloc(const std::string& name) {
+	static std::shared_ptr<PriorityNode> alloc(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
 		std::shared_ptr<PriorityNode> result = std::make_shared<PriorityNode>();
-		return (result->init(name) ? result : nullptr);
+		return (result->init(behaviorNodeDef) ? result : nullptr);
 	}
-	
-	/**
-	 * Returns a newly allocated PriorityNode with the given name and children.
-	 *
-	 * @param name  The name of the priority node.
-	 * @param children The children of the priority node.
-	 *
-	 * @return a newly allocated PriorityNode with the given name and children.
-	 */
-	static std::shared_ptr<PriorityNode> allocWithChildren(const std::string& name,
-														   const std::vector<std::shared_ptr<BehaviorNode>>& children) {
-		std::shared_ptr<PriorityNode> result = std::make_shared<PriorityNode>();
-		return (result->initWithChildren(name, children) ? result : nullptr);
-	}
-	
+
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
@@ -89,9 +75,11 @@ public:
 	 * The priority value of the node is updated within this function, based
 	 * on the priority values of the nodes below the given node.
 	 *
+	 * @param dt The elapsed time since the last frame.
+	 * 
 	 * @return the BehaviorNode::State of the priority node.
 	 */
-	BehaviorNode::State update() override;
+	BehaviorNode::State update(float dt) override;
 };
 	
 	

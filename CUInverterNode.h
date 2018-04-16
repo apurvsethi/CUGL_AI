@@ -48,29 +48,15 @@ public:
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Returns a newly allocated InverterNode with the given name.
+	 * Returns a newly allocated InverterNode using the given template def.
 	 *
-	 * @param name  The name of the inverter node.
+	 * @param behaviorNodeDef	The def specifying arguments for this node.
 	 *
-	 * @return a newly allocated InverterNode with the given name.
+	 * @return a newly allocated InverterNode using the given template def.
 	 */
-	static std::shared_ptr<InverterNode> alloc(const std::string& name) {
+	static std::shared_ptr<InverterNode> alloc(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
 		std::shared_ptr<InverterNode> result = std::make_shared<InverterNode>();
-		return (result->init(name) ? result : nullptr);
-	}
-	
-	/**
-	 * Returns a newly allocated InverterNode with the given name and child.
-	 *
-	 * @param name  The name of the inverter node.
-	 * @param child The child of the inverter node.
-	 *
-	 * @return a newly allocated InverterNode with the given name and child.
-	 */
-	static std::shared_ptr<InverterNode> allocWithChild(const std::string& name,
-														const std::shared_ptr<BehaviorNode>& child) {
-		std::shared_ptr<InverterNode> result = std::make_shared<InverterNode>();
-		return (result->initWithChild(name, child) ? result : nullptr);
+		return (result->init(behaviorNodeDef) ? result : nullptr);
 	}
 	
 #pragma mark -
@@ -85,9 +71,11 @@ public:
 	 * The priority value of the node is updated within this function, based
 	 * on the priority values of the child node.
 	 *
+	 * @param dt The elapsed time since the last frame.
+	 * 
 	 * @return the BehaviorNode::State of the child node.
 	 */
-	BehaviorNode::State update() override;
+	BehaviorNode::State update(float dt) override;
 };
 	
 	
