@@ -125,8 +125,8 @@ public:
 	BehaviorNode::State getTreeStateWithName(const std::string& name) const;
 	
 	/**
-	 * Add a behavior tree to the manager. This tree cannot be changed once added,
-	 * until it is finished running.
+	 * Add a behavior tree to the manager. This tree cannot be changed once
+	 * added, until it is finished running.
 	 *
 	 * @param tree	The behavior tree to add to this manager
 	 */

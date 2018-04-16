@@ -21,12 +21,13 @@
 namespace cugl {
 
 /**
- * A def through which an action is constructed; a template to use in order to create
- * an action.
+ * A def through which an action is constructed; a template to use in order to
+ * create an action.
  */
 struct BehaviorActionDef {
 	/**
-	 * The initialization function to begin running an action.
+	 * The initialization function to begin running an action, setting up the
+	 * action to allow functional updates.
 	 */
 	std::function<void()> _start;
 	
@@ -38,13 +39,13 @@ struct BehaviorActionDef {
 	std::function<bool(float dt)> _update;
 	
 	/**
-	 * The terminate function to interrupt an action over time.
-	 *
-	 * This return true if the action is finished and false otherwise.
+	 * The terminate function to interrupt an action that may have been running
+	 * over a period of time.
 	 */
 	std::function<void()> _terminate;
 	
-	BehaviorActionDef() : _start(nullptr), _update(nullptr), _terminate(nullptr) {}
+	BehaviorActionDef() : _start(nullptr), _update(nullptr),
+						  _terminate(nullptr) {}
 };
 	
 /**
@@ -199,16 +200,6 @@ public:
 	 * to a stable state while in the middle of running an action.
 	 */
 	void terminate();
-	
-private:
-#pragma mark -
-#pragma mark Internal Helpers
-	/**
-	 * Sets the state of the action.
-	 *
-	 * @param state    BehaviorAction::State of the action.
-	 */
-	void setState(BehaviorAction::State state) { _state = state; }
 };
 	
 	

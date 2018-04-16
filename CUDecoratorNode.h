@@ -82,13 +82,6 @@ public:
 	 *
 	 * @return the node's child.
 	 */
-	std::shared_ptr<BehaviorNode> getChild() { return _child; }
-	
-	/**
-	 * Returns the node's child.
-	 *
-	 * @return the node's child.
-	 */
 	const std::shared_ptr<BehaviorNode>& getChild() const { return _child; }
 	
 	/**

@@ -31,15 +31,6 @@ class LeafNode : public BehaviorNode {
 #pragma mark Values
 protected:
 	/**
-	 * The state of the behavior node.
-	 * 
-	 * This function will find the current status of this leaf node.
-	 *
-	 * TODO: Change to integrate with AIManager.
-	 */
-	std::function<BehaviorNode::State()> currentState;
-	
-	/**
 	 * The action used when this node is run.
 	 *
 	 * This should only be used when this node is of type LeafNode.

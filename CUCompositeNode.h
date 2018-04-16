@@ -91,7 +91,7 @@ public:
 	 * 
 	 * @return the child with the given priority index.
 	 */
-	const std::shared_ptr<BehaviorNode> getChildWithPriorityIndex(unsigned int index) const;
+	const std::shared_ptr<BehaviorNode>& getChildWithPriorityIndex(unsigned int index) const;
 	
 	/**
 	 * Returns the child at the given position.
