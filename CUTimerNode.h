@@ -28,11 +28,22 @@ namespace cugl {
 class TimerNode : public DecoratorNode {
 #pragma mark Values
 protected:
+	/**
+	 * Whether the time provided to the TimerNode should be used to delay
+	 * execution of its child node, or should be used to ensure that the child
+	 * node is not chosen again for the given amount of time. If true, then
+	 * execution is delayed, otherwise the child is not chosen after execution
+	 * for the given time.
+	 *
+	 * This flag is only useful for TimerNode.
+	 */
+	bool _timeDelay;
+	
 	/** The delay before beginning executing in seconds. */
 	float _delay;
 
 	/** The current time that has been delayed. */
-	float _current_delay;
+	float _currentDelay;
 	
 #pragma mark -
 #pragma mark Constructors
@@ -77,7 +88,6 @@ public:
 	
 #pragma mark -
 #pragma mark Behavior Tree
-	
 	/**
 	 * Returns the number of seconds before the child node begins running.
 	 *

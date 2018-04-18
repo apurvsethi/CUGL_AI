@@ -26,6 +26,17 @@ namespace cugl {
  * also finished.
  */
 class RandomNode : public CompositeNode {
+#pragma mark Values
+protected:
+	/**
+	 * Whether or not the random node should choose the child for execution
+	 * based on a uniformly at random choice amongst its children, or should
+	 * choose the child randomly with weightage being provided for children
+	 * nodes through their priority values. If true, then the node chooses
+	 * uniformly at random, otherwise the node uses a weighted probability.
+	 */
+	bool _uniformRandom;
+
 #pragma mark -
 #pragma mark Constructors
 public:

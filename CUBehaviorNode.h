@@ -110,7 +110,7 @@ struct BehaviorNodeDef {
 	/**
 	 * Whether or not the random node should choose the child for execution
 	 * based on a uniformly at random choice amongst its children, or should
-	 * choose the child randomly with weightage begin provided for children
+	 * choose the child randomly with weightage being provided for children
 	 * nodes through their priority values. If true, then the node chooses
 	 * uniformly at random, otherwise the node uses a weighted probability.
 	 *
@@ -140,6 +140,13 @@ struct BehaviorNodeDef {
 	 * This flag is only useful for TimerNode.
 	 */
 	bool _timeDelay;
+	
+	/**
+	 * The delay before beginning executing in seconds.
+	 *
+	 * This flag is only useful for TimerNode.
+	 */
+	float _delay;
 	
 	/**
 	 * The action used when this node is run.

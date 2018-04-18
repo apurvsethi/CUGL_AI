@@ -34,6 +34,15 @@ namespace cugl {
 class CompositeNode : public BehaviorNode {
 #pragma mark Values
 protected:
+	/**
+	 * Whether or not the composite node should choose a new child node on each
+	 * execution, possibly interrupting an old child node's execution if a
+	 * different node would be chosen now. If true, the composite node can
+	 * interrupt a running child node, otherwise a chosen node cannot be
+	 * interrupted.
+	 */
+	bool _preempt;
+	
 	/** The array of children for this composite node. */
 	std::vector<std::shared_ptr<BehaviorNode>> _children;
 	
