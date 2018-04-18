@@ -158,6 +158,20 @@ struct BehaviorNodeDef {
 	BehaviorNodeDef() : _type(BehaviorNodeType::LEAF_NODE),
 						_priorityFunc(nullptr), _parent(nullptr),
 						_action(nullptr) {}
+	
+	/**
+	 * Returns the (first) node with the given name found using a recursive
+	 * search down from this BehaviorNodeDef.
+	 *
+	 * If there is more than one node of the given name, it returns the first
+	 * one that is found in an unspecified search order. As a result, names
+	 * should be unique.
+	 *
+	 * @param name	An identifier to find the node.
+	 *
+	 * @return the (first) node with the given name found.
+	 */
+	std::shared_ptr<BehaviorNodeDef> getNodeByName(const std::string& name);
 };
 	
 /**
