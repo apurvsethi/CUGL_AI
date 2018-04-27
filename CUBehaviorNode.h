@@ -17,17 +17,18 @@
 #define __CU_BEHAVIOR_NODE_H__
 
 #include <functional>
+#include <memory>
 #include <string>
 #include <vector>
 #include <cugl/ai/behaviorTree/CUBehaviorAction.h>
 
 namespace cugl {
-	
+
 /**
  * A def through which a behavior node is constructed; a template to use in
  * order to create a node and thus a behavior tree.
  */
-struct BehaviorNodeDef {
+struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	/**
 	 * This enum is used to determine the type of the BehaviorNode. When
 	 * creating an instance of a behavior node from a BehaviorNodeDef, this
@@ -76,13 +77,13 @@ struct BehaviorNodeDef {
 		 */
 		LEAF_NODE
 	};
-	
+
 	/** The descriptive, identifying name of the node. */
 	std::string _name;
-	
+
 	/** The type of behavior node this def is for. */
 	BehaviorNodeType _type;
-	
+
 	/**
 	 * The priority function for this behavior node.
 	 *
@@ -91,10 +92,10 @@ struct BehaviorNodeDef {
 	 * by the type of node.
 	 */
 	std::function<float()> _priorityFunc;
-	
+
 	/** A weaker pointer to the parent (or null if root). */
 	BehaviorNodeDef* _parent;
-	
+
 	/**
 	 * Whether or not the composite node should choose a new child node on each
 	 * execution, possibly interrupting an old child node's execution if a
@@ -106,7 +107,7 @@ struct BehaviorNodeDef {
 	 * RandomNode).
 	 */
 	bool _preempt;
-	
+
 	/**
 	 * Whether or not the random node should choose the child for execution
 	 * based on a uniformly at random choice amongst its children, or should
@@ -117,7 +118,7 @@ struct BehaviorNodeDef {
 	 * This flag is only useful for RandomNode.
 	 */
 	bool _uniformRandom;
-	
+
 	/**
 	 * The array of children for this node.
 	 *
@@ -129,7 +130,7 @@ struct BehaviorNodeDef {
 	 * nodes (InverterNode and TimerNode).
 	 */
 	std::vector<std::shared_ptr<BehaviorNodeDef>> _children;
-	
+
 	/**
 	 * Whether the time provided to the TimerNode should be used to delay
 	 * execution of its child node, or should be used to ensure that the child
@@ -140,25 +141,25 @@ struct BehaviorNodeDef {
 	 * This flag is only useful for TimerNode.
 	 */
 	bool _timeDelay;
-	
+
 	/**
 	 * The delay before beginning executing in seconds.
 	 *
 	 * This flag is only useful for TimerNode.
 	 */
 	float _delay;
-	
+
 	/**
 	 * The action used when this node is run.
 	 *
 	 * This should only be used when this node is of type LeafNode.
 	 */
 	std::shared_ptr<BehaviorAction> _action;
-	
+
 	BehaviorNodeDef() : _type(BehaviorNodeType::LEAF_NODE),
 						_priorityFunc(nullptr), _parent(nullptr),
 						_action(nullptr) {}
-	
+
 	/**
 	 * Returns the (first) node with the given name found using a recursive
 	 * search down from this BehaviorNodeDef.
@@ -173,7 +174,7 @@ struct BehaviorNodeDef {
 	 */
 	std::shared_ptr<BehaviorNodeDef> getNodeByName(const std::string& name);
 };
-	
+
 /**
  * This class provides a behavior node for a behavior tree.
  *
@@ -204,13 +205,13 @@ public:
 protected:
 	/** The descriptive, identifying name of the node. */
 	std::string _name;
-	
+
 	/** A weaker pointer to the parent (or null if root). */
 	BehaviorNode* _parent;
 
 	/** The current state of this node. */
 	BehaviorNode::State _state;
-	
+
 	/**
 	 * The current priority, or relevance of this node.
 	 *
@@ -227,7 +228,7 @@ protected:
 	 * by the subclasses.
 	 */
 	std::function<float()> _priorityFunc;
-	
+
 #pragma mark -
 #pragma mark Constructors
 public:
@@ -238,12 +239,12 @@ public:
 	 * class.
 	 */
 	BehaviorNode() : _parent(nullptr), _priorityFunc(nullptr) {}
-	
+
 	/**
 	 * Deletes this node, disposing all resources.
 	 */
 	~BehaviorNode() { dispose(); }
-	
+
 	/**
 	 * Disposes all of the resources used by this node.
 	 *
@@ -253,7 +254,7 @@ public:
 	 * inside of a running behavior tree.
 	 */
 	virtual void dispose();
-	
+
 	/**
 	 * Initializes a node using the given template def.
 	 *
@@ -273,7 +274,7 @@ public:
 	 * @return a string that is used to identify the node.
 	 */
 	const std::string& getName() const { return _name; }
-	
+
 	/**
 	 * Returns a string representation of this node for debugging purposes.
 	 *
@@ -285,10 +286,10 @@ public:
 	 * @return a string representation of this node for debugging purposes.
 	 */
 	virtual std::string toString(bool verbose = false) const;
-	
+
 	/** Cast from a BehaviorNode to a string. */
 	operator std::string() const { return toString(); }
-	
+
 #pragma mark -
 #pragma mark Behavior Trees
 	/**
@@ -310,7 +311,7 @@ public:
 	 * @return a BehaviorNode::State that represents the node state.
 	 */
 	BehaviorNode::State getState() const { return _state; }
-	
+
 	/**
 	 * Returns a (weak) pointer to the parent node.
 	 *
@@ -320,14 +321,14 @@ public:
 	 * @return a (weak) pointer to the parent node.
 	 */
 	const BehaviorNode* getParent() const { return _parent; }
-	
+
 	/**
 	 * Begin running the node, moving from an uninitialized state to a running
 	 * state as the correct action to perform is found through choosing a leaf
 	 * node.
 	 */
 	void start();
-	
+
 	/**
 	 * Returns the BehaviorNode::State of the composite node.
 	 *
@@ -344,7 +345,7 @@ public:
 	 */
 	virtual BehaviorNode::State update(float dt) = 0;
 };
-	
-	
+
+
 }
 #endif /* __CU_BEHAVIOR_NODE_H__ */
