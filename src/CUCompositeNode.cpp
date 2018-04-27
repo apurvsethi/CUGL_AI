@@ -97,10 +97,12 @@ const std::shared_ptr<BehaviorNode>& CompositeNode::getChildByName(const std::st
 const std::shared_ptr<BehaviorNode>& getChildByPriorityIndex(unsigned int index) const {
     // TODO: Decide whether to maintain priority ordering or to do by default.
     CUAssertLog(index < _children.size(), "Priority index out of bounds");
-    std::vector<std::shared_ptr<BehaviorNode>>& ordered_children = _children;
-    std::sort(ordered_children.begin(), ordered_children.end(), 
-        [&](std::shared_ptr<BehaviorNode> child1, std::shared_ptr<BehaviorNode> child2)
-        { return child1->getPriority() > child2->getPriority(); }
+    std::vector<std::shared_ptr<BehaviorNode>>& orderedChildren = _children;
+    std::sort(orderedChildren.begin(), orderedChildren.end(),
+        [](const std::shared_ptr<BehaviorNode>& child1, const std::shared_ptr<BehaviorNode>& child2)
+        {
+            return child1->getPriority() > child2->getPriority();
+        }
     );
-    return ordered_children[index];
+    return orderedChildren[index];
 }

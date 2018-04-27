@@ -31,14 +31,20 @@ using namespace cugl;
  * @return the (first) node with the given name found.
  */
 std::shared_ptr<BehaviorNodeDef> BehaviorNodeDef::getNodeByName(const std::string& name) {
-// if (name == _name) {
-//     return ;
-//}
-//for (auto it = _children.begin(); it != _children.end(); ++it) {
-//     
-//}
+    if (name == _name) {
+        return shared_from_this();
+    }
+    BehaviorNode namedChild;
+    for (auto it = _children.begin(); it != _children.end(); ++it) {
+        namedChild = (*it)->getNodeByName();
+        if (namedChild) {
+            return namedChild;
+        }
+    }
+    return nullptr;
 }
 
+#pragma mark -
 #pragma mark Constructors
 /**
  * Initializes a node using the given template def.
@@ -50,10 +56,10 @@ std::shared_ptr<BehaviorNodeDef> BehaviorNodeDef::getNodeByName(const std::strin
 bool init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
     _name = behaviorNodeDef->_name;
     _parent = behaviorNodeDef->_parent;
-    _state = UNINITIALIZED;
+    _state = BehaviorNode::State::UNINITIALIZED;
     _priority = 0;
     _priorityFunc = behaviorNodeDef->_priorityFunc;
-    return true;   
+    return true;
 }
 
 /**
@@ -65,7 +71,12 @@ bool init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
  * inside of a running behavior tree.
  */
 void BehaviorNode::dispose() {
-    //TODO: implement this after discussing changes.
+    _name = "";
+    //TODO: Remove child from parent.
+    _parent = nullptr;
+    _state = BehaviorNode::State::UNINITIALIZED;
+    _priority = 0;
+    _priorityFunc = nullptr;
 }
 
 #pragma mark Identifiers
