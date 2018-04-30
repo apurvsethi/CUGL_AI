@@ -21,29 +21,15 @@ using namespace cugl;
 
 #pragma mark Constructors
 /**
- * Creates an uninitialized behavior manager.
- *
- * This constructor should never be called directly.
- */
-BehaviorManager::BehaviorManager() {}
-
-
-/**
  * Disposes all of the resources used by this manager.
  *
  * It is unsafe to call this while behavior trees are running.
  */
 void BehaviorManager::dispose() {
+	for(auto it = _trees.begin(); it != _trees.end(); ++it) {
+		(*it)->dispose();
+	}
 	_trees.clear();
-}
-
-/**
- * Initializes a behavior tree manager.
- *
- * @return true if initialization was successful.
- */
-bool BehaviorManager::init() {
-	return true;
 }
 
 #pragma mark -
@@ -289,8 +275,8 @@ std::shared_ptr<BehaviorNode> BehaviorManager::createTree(const std::shared_ptr<
  */
 std::vector<std::shared_ptr<BehaviorNode>> BehaviorManager::createTrees(const std::vector<std::shared_ptr<BehaviorNodeDef>>& treeDefs) {
 	std::vector<std::shared_ptr<BehaviorNode>> trees;
-	for (std::shared_ptr<BehaviorNodeDef> treeDef : treeDefs) {
-		trees.push_back(createTree(treeDef));
+	for(auto it = treeDefs.begin(); it != treeDefs.end(); ++it) {
+		trees.push_back(createTree((*it)));
 	}
 	return trees;
 }

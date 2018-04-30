@@ -57,7 +57,8 @@ public:
 	~DecoratorNode() { dispose(); }
 
 	/**
-	 * Disposes all of the resources used by this node.
+	 * Disposes all of the resources used by this node, and all descendants
+	 * in the tree.
 	 *
 	 * A disposed DecoratorNode can be safely reinitialized.
 	 *
@@ -88,7 +89,7 @@ public:
 	*
 	* @return a string representation of this node for debugging purposes.
 	*/
-	virtual std::string toString(bool verbose = false) const = 0;
+	virtual std::string toString(bool verbose = false) const override = 0;
 
 #pragma mark -
 #pragma mark Behavior Tree
@@ -115,20 +116,47 @@ public:
 	}
 
 	/**
-	 * Returns the BehaviorNode::State of the decorator node.
+	 * Updates the priority value for this node and all children beneath it,
+	 * running the piority function provided or default priority function
+	 * if available for the class.
+	 */
+	virtual void updatePriority() override = 0;
+
+	/**
+	 * Returns the BehaviorNode::State of the node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
-	 * decorator node (and all nodes below this node in the tree).
-	 * The state for this node is derived from its child.
+	 * behavior node (and nodes chosen to run below it in the tree).
 	 *
-	 * The priority value of the node is updated within this function, based
-	 * on the priority values of the nodes below the given node.
+	 * Update priority may be run as part of this function, based on whether a
+	 * composite node uses preemption.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
-	 * @return the BehaviorNode::State of the decorator node.
+	 * @return the BehaviorNode::State of the behavior node.
 	 */
-	virtual BehaviorNode::State update(float dt) override = 0;
+	BehaviorNode::State update(float dt) override {
+		setState(_child->update(dt));
+		return getState();
+	}
+
+	/**
+	 * Stops this node from running, and also stops any running nodes under
+	 * this node in the tree if they exist.
+	 */
+	virtual void preempt() override = 0;
+
+protected:
+	/**
+	 * Removes the child at the given position from this node.
+	 *
+	 * @param pos   The position of the child node which will be removed.
+	 */
+	void removeChild(unsigned int pos) override {
+		_child->setParent(nullptr);
+		_child->setChildOffset(-1);
+		_child = nullptr;
+	}
 };
 
 

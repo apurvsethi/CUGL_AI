@@ -148,10 +148,19 @@ public:
 	*
 	* @return a string representation of this node for debugging purposes.
 	*/
-	virtual std::string toString(bool verbose = false) const override;
+	std::string toString(bool verbose = false) const override;
 
 #pragma mark -
 #pragma mark Behavior Tree
+	/**
+	 * Returns the type of delay (before or after). True if before, otherwise
+	 * false.
+	 *
+	 * @return the type of delay (before or after). True if after, otherwise
+	 * false.
+	 */
+	bool getDelayType() const { return _timeDelay; }
+
 	/**
 	 * Returns the number of seconds before the child node begins running.
 	 *
@@ -173,21 +182,17 @@ public:
 	float getCurrentDelay() const { return _currentDelay;  }
 	
 	/**
-	 * Returns the BehaviorNode::State of the timer node.
-	 *
-	 * Runs an update function, meant to be used on each tick, for the
-	 * timer node (and all nodes below this node in the tree). The state for
-	 * his node is derived from the state of its child node.
-	 *
-	 * The priority value of the node is updated within this function or
-	 * based on the priority values of the child node if no priority function
-	 * has been provided.
-	 *
-	 * @param dt	The elapsed time since the last frame.
-	 * 
-	 * @return the BehaviorNode::State of the child node.
+	 * Updates the priority value for this node and all children beneath it,
+	 * running the piority function provided or default priority function
+	 * if available for the class.
 	 */
-	BehaviorNode::State update(float dt) override;
+	void updatePriority() override;
+
+	/**
+	 * Stops this node from running, and also stops any running nodes under
+	 * this node in the tree if they exist.
+	 */
+	void preempt() override;
 };
 	
 	

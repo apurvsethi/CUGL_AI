@@ -18,51 +18,36 @@ using namespace cugl;
 #pragma mark -
 #pragma mark Constructors
 /**
-* Initializes a composite node with the given name and children.
-*
-* The priority of this node is dependant of the children's priorities.
-*
-* @param name		The name of the composite node.
-* @param children 	The children of the composite node.
-* @param preempt	Whether child nodes can be preempted.
-*
-* @return true if initialization was successful.
-*/
+ * Initializes a composite node with the given name and children.
+ *
+ * The priority of this node is dependant of the children's priorities.
+ *
+ * @param name		The name of the composite node.
+ * @param priority	The priority function of the composite node.
+ * @param children 	The children of the composite node.
+ * @param preempt	Whether child nodes can be preempted.
+ *
+ * @return true if initialization was successful.
+ */
 bool CompositeNode::init(const std::string& name,
+						 const std::function<float()> priority,
 						 const std::vector<std::shared_ptr<BehaviorNode>>& children,
-	                     bool preempt = false) {
+						 bool preempt) {
 	_name = name;
+	_priorityFunc = priority;
 	_children = children;
 	_childOffset = -1;
-	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		(*it)->setParent(this);
-		(*it)->setChildOffset(it - _children.begin());
+	for (int ii = 0; ii < _children.size(); ii++) {
+		_children[ii]->setParent(this);
+		_children[ii]->setChildOffset(ii);
 	}
 	_preempt = preempt;
 	return true;
 }
 
 /**
-* Initializes a composite node with the given name, children, and priority
-* function.
-*
-* @param name		The name of the composite node.
-* @param priority	The priority function of the composite node.
-* @param children 	The children of the composite node.
-* @param preempt	Whether child nodes can be preempted.
-*
-* @return true if initialization was successful.
-*/
-bool CompositeNode::init(const std::string& name,
-						 const std::function<float()> priority,
-						 const std::vector<std::shared_ptr<BehaviorNode>>& children,
-						 bool preempt = false) {
-	_priorityFunc = priority;
-	return init(name, children, preempt);
-}
-
-/**
- * Disposes all of the resources used by this node.
+ * Disposes all of the resources used by this node, and all descendants
+ * in the tree.
  *
  * A disposed CompositeNode can be safely reinitialized.
  *
@@ -70,21 +55,18 @@ bool CompositeNode::init(const std::string& name,
  * inside of a running behavior tree.
  */
 void CompositeNode::dispose() {
-    BehaviorNode::dispose();
-    _preempt = false;
-    for (auto it = _children.begin(); it != _children.end(); ++it) {
-		(*it)->setParent(nullptr);
-		(*it)->setChildOffset(-1);
-		//TODO: Dispose children instead?
+	BehaviorNode::dispose();
+	_preempt = false;
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		(*it)->dispose();
 	}
-    _children.clear();
+	_children.clear();
 	removeFromParent();
 	_parent = nullptr;
 }
 
 #pragma mark -
 #pragma mark Behavior Tree
-
 /**
  * Returns the child at the given position.
  *
@@ -97,7 +79,7 @@ void CompositeNode::dispose() {
  */
 const std::shared_ptr<BehaviorNode>& CompositeNode::getChild(unsigned int pos) const {
 	CUAssertLog(pos < _children.size(), "Position index out of bounds");
-    return _children[pos];
+	return _children[pos];
 }
 
 /**
@@ -111,12 +93,12 @@ const std::shared_ptr<BehaviorNode>& CompositeNode::getChild(unsigned int pos) c
  * @return the (first) child with the given name.
  */
 const std::shared_ptr<BehaviorNode>& CompositeNode::getChildByName(const std::string& name) const {
-    for (auto it = _children.begin(); it != _children.end(); ++it) {
-        if ((*it)->getName() == name) {
-            return *it;
-        }
-    }
-    return nullptr;
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		if ((*it)->getName() == name) {
+			return *it;
+		}
+	}
+	return nullptr;
 }
 
 /**
@@ -130,10 +112,10 @@ const std::shared_ptr<BehaviorNode>& CompositeNode::getChildByName(const std::st
  * @return the child with the given priority index.
  */
 const std::shared_ptr<BehaviorNode>& CompositeNode::getChildByPriorityIndex(unsigned int index) const {
-    CUAssertLog(index < _children.size(), "Priority index out of bounds");
-    std::vector<std::shared_ptr<BehaviorNode>> ordered_children = _children;
-    std::sort(ordered_children.begin(), ordered_children.end(), BehaviorNode::compareNodeSibs);
-    return ordered_children[index];
+	CUAssertLog(index < _children.size(), "Priority index out of bounds");
+	std::vector<std::shared_ptr<BehaviorNode>> ordered_children = _children;
+	std::sort(ordered_children.begin(), ordered_children.end(), BehaviorNode::compareNodeSibs);
+	return ordered_children[index];
 }
 
 #pragma mark -

@@ -20,13 +20,13 @@ using namespace cugl;
 #pragma mark Constructors
 
 /**
-* Initializes a decorator node with the given name and child.
-*
-* @param name  The name of the decorator node.
-* @param child The child of the decorator node.
-*
-* @return true if initialization was successful.
-*/
+ * Initializes a decorator node with the given name and child.
+ *
+ * @param name  The name of the decorator node.
+ * @param child The child of the decorator node.
+ *
+ * @return true if initialization was successful.
+ */
 bool DecoratorNode::init(const std::string& name, const std::shared_ptr<BehaviorNode>& child) {
 	_child = child;
 	_name = name;
@@ -37,15 +37,16 @@ bool DecoratorNode::init(const std::string& name, const std::shared_ptr<Behavior
 }
 
 /**
-* Disposes all of the resources used by this node.
-*
-* A disposed DecoratorNode can be safely reinitialized.
-*
-* It is unsafe to call this on a DecoratorNode that is still currently
-* inside of a running behavior tree.
-*/
+ * Disposes all of the resources used by this node, and all descendants
+ * in the tree.
+ *
+ * A disposed DecoratorNode can be safely reinitialized.
+ *
+ * It is unsafe to call this on a DecoratorNode that is still currently
+ * inside of a running behavior tree.
+ */
 void DecoratorNode::dispose() {
 	BehaviorNode::dispose();
-	_child->setChildOffset(-1);
+	_child->dispose();
 	_child = nullptr;
 }

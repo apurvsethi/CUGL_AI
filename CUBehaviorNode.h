@@ -228,7 +228,6 @@ protected:
 	/** The (current) child offset of this node (-1 if root) */
 	int _childOffset;
 
-
 #pragma mark -
 #pragma mark Constructors
 public:
@@ -238,8 +237,8 @@ public:
 	 * This constructor should never be called directly, as this is an abstract
 	 * class.
 	 */
-	BehaviorNode() : _name(""), _parent(nullptr), _priorityFunc(nullptr), 
-					 _state(BehaviorNode::State::UNINITIALIZED), _childOffset(-2) {}
+	BehaviorNode() : _parent(nullptr), _priorityFunc(nullptr),
+	_state(BehaviorNode::State::UNINITIALIZED), _childOffset(-2) {}
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -247,7 +246,8 @@ public:
 	~BehaviorNode() { dispose(); }
 
 	/**
-	 * Disposes all of the resources used by this node.
+	 * Disposes all of the resources used by this node, and any descendants
+	 * in the tree.
 	 *
 	 * A disposed BehaviorNode can be safely reinitialized.
 	 *
@@ -341,23 +341,31 @@ public:
 	 */
 	void removeFromParent() { if (_parent) _parent->removeChild(_childOffset); }
 
-
 	/**
 	 * Begin running the node, moving from an uninitialized state to a running
-	 * state as the correct action to perform is found through choosing a leaf
-	 * node.
+	 * state as the correct action to perform as all priority values are updated
+	 * and the correct node to run is found through choosing a leaf node.
 	 */
-	void start() { _state = BehaviorNode::State::RUNNING; }
+	void start() {
+		updatePriority();
+		update(0.0f);
+	}
 
 	/**
-	 * Returns the BehaviorNode::State of the composite node.
+	 * Updates the priority value for this node and all children beneath it,
+	 * running the piority function provided or default priority function
+	 * if available for the class.
+	 */
+	virtual void updatePriority() = 0;
+
+	/**
+	 * Returns the BehaviorNode::State of the node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
-	 * behavior node (and all nodes below this node in the tree).
+	 * behavior node (and nodes chosen to run below it in the tree).
 	 *
-	 * The priority value of the node is updated within this function, based
-	 * on either a priority function provided to the node or the default
-	 * priority function.
+	 * Update priority may be run as part of this function, based on whether a
+	 * composite node uses preemption.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
@@ -365,36 +373,41 @@ public:
 	 */
 	virtual BehaviorNode::State update(float dt) = 0;
 
+	/**
+	 * Stops this node from running, and also stops any running nodes under
+	 * this node in the tree if they exist.
+	 */
+	virtual void preempt() = 0;
+
 #pragma mark -
 #pragma mark Internal Helpers
 	/**
-	 * TODO: Find some better way to track offset from parent.
-	 *
 	 * Sets child offset of this node.
 	 *
 	 * @param offset The child offset of this node.
 	 */
-	void setChildOffset(int pos) { _childOffset = pos;  }
+	void setChildOffset(int pos) { _childOffset = pos; }
 
 protected:
 	/**
-	* Returns true if sibling a has a larger priority than sibling 2.
-	*
-	* This method is used by std::sort to sort the children. Ties are
-	* broken from the offset of the children.
-	*
-	* @param a The first child
-	* @param b The second child
-	*
-	* @return true if sibling a is has a larger priority than sibling 2.
-	*/
-	bool BehaviorNode::compareNodeSibs(const std::shared_ptr<BehaviorNode>& a, const std::shared_ptr<BehaviorNode>& b);
+	 * Returns true if sibling a has a larger priority than sibling 2.
+	 *
+	 * This method is used by std::sort to sort the children. Ties are
+	 * broken from the offset of the children.
+	 *
+	 * @param a The first child
+	 * @param b The second child
+	 *
+	 * @return true if sibling a is has a larger priority than sibling 2.
+	 */
+	static bool compareNodeSibs(const std::shared_ptr<BehaviorNode>& a,
+								const std::shared_ptr<BehaviorNode>& b);
 
 	/**
-	* Removes the child at the given position from this node.
-	*
-	* @param pos   The position of the child node which will be removed.
-	*/
+	 * Removes the child at the given position from this node.
+	 *
+	 * @param pos   The position of the child node which will be removed.
+	 */
 	virtual void removeChild(unsigned int pos) = 0;
 };
 

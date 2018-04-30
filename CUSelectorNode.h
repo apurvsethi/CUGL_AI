@@ -71,21 +71,33 @@ public:
 	}
 
 #pragma mark -
+#pragma mark Identifiers
+	/**
+	 * Returns a string representation of this node for debugging purposes.
+	 *
+	 * If verbose is true, the string will include class information.  This
+	 * allows us to unambiguously identify the class.
+	 *
+	 * @param verbose	Whether to include class information.
+	 *
+	 * @return a string representation of this node for debugging purposes.
+	 */
+	virtual std::string toString(bool verbose = false) const override;
+
+#pragma mark -
 #pragma mark Behavior Tree
 	/**
-	 * Returns the BehaviorNode::State of the selector node.
+	 * Returns the BehaviorNode::State of the node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
-	 * selector node (and all nodes below this node in the tree).
-	 * The state for this node is derived from the state of the running
-	 * or most recently run node.
+	 * behavior node (and nodes chosen to run below it in the tree).
 	 *
-	 * The priority value of the node is updated within this function, based
-	 * on the priority values of the nodes below the given node.
+	 * Update priority may be run as part of this function, based on whether a
+	 * composite node uses preemption.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
-	 * @return the BehaviorNode::State of the selector node.
+	 * @return the BehaviorNode::State of the behavior node.
 	 */
 	BehaviorNode::State update(float dt) override;
 };

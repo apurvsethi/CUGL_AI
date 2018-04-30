@@ -41,10 +41,11 @@ public:
 	 *
 	 * This constructor should never be called directly.
 	 */
-	BehaviorManager();
+	BehaviorManager() {};
 	
 	/**
-	 * Deletes this manager, disposing all resources.
+	 * Deletes this manager, disposing all resources and all trees owned by
+	 * this manager.
 	 */
 	~BehaviorManager() { dispose(); }
 	
@@ -60,7 +61,7 @@ public:
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool init();
+	bool init() { return true; }
 	
 #pragma mark -
 #pragma mark Static Constructors

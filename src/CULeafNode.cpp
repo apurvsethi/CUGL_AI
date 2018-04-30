@@ -61,7 +61,7 @@ void LeafNode::dispose() {
 *
 * @return a string representation of this node for debugging purposes.
 */
-std::string LeafNode::toString(bool verbose = false) const {
+std::string LeafNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::LeafNode(name:" : "(name:") << _name;
 	ss << ", priority:" << _priority;
@@ -72,17 +72,6 @@ std::string LeafNode::toString(bool verbose = false) const {
 
 #pragma mark -
 #pragma mark Behavior Tree
-/**
- * Runs the action associated with leaf node through action function.
- * If the action is not given, then nothing occurs.
- */
-void LeafNode::execute() {
-	if (_action) {
-		_action->start();
-		_state = BehaviorNode::State::RUNNING;
-	}
-}
-
 /**
 * Returns the BehaviorNode::State of the leaf node.
 *

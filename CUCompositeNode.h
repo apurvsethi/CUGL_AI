@@ -63,7 +63,8 @@ public:
 	~CompositeNode() { dispose(); }
 
 	/**
-	 * Disposes all of the resources used by this node.
+	 * Disposes all of the resources used by this node, and all descendants
+	 * in the tree.
 	 *
 	 * A disposed CompositeNode can be safely reinitialized.
 	 *
@@ -219,21 +220,32 @@ public:
 	const std::vector<std::shared_ptr<BehaviorNode>>& getChildren() const { return _children; }
 
 	/**
-	 * Returns the BehaviorNode::State of the composite node.
+	 * Updates the priority value for this node and all children beneath it,
+	 * running the piority function provided or default priority function
+	 * if available for the class.
+	 */
+	virtual void updatePriority() override;
+
+	/**
+	 * Returns the BehaviorNode::State of the node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
-	 * composite node (and all nodes below this node in the tree).
-	 * The state for this node is derived from the state of the running
-	 * or most recently run node.
+	 * behavior node (and nodes chosen to run below it in the tree).
 	 *
-	 * The priority value of the node is updated within this function, based
-	 * on the priority values of the nodes below the given node.
+	 * Update priority may be run as part of this function, based on whether a
+	 * composite node uses preemption.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
-	 * @return the BehaviorNode::State of the composite node.
+	 * @return the BehaviorNode::State of the behavior node.
 	 */
 	virtual BehaviorNode::State update(float dt) override = 0;
+
+	/**
+	 * Stops this node from running, and also stops any running nodes under
+	 * this node in the tree if they exist.
+	 */
+	virtual void preempt() override;
 
 #pragma mark -
 #pragma mark Internal Helpers

@@ -26,7 +26,7 @@ using namespace cugl;
 *
 * @return a string representation of this node for debugging purposes.
 */
-std::string PriorityNode::toString(bool verbose = false) const {
+std::string PriorityNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::PriorityNode(name:" : "(name:") << _name;
 	ss << ", priority:" << _priority;
@@ -56,35 +56,5 @@ std::string PriorityNode::toString(bool verbose = false) const {
 * @return the BehaviorNode::State of the priority node.
 */
 BehaviorNode::State PriorityNode::update(float dt) {
-	if (_state == BehaviorNode::State::FINISHED) {
-		return _state;
-	}
-	std::shared_ptr<BehaviorNode> activeChild = nullptr;
-	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		(*it)->update(dt);
-		if ((*it)->getState() != BehaviorNode::State::UNINITIALIZED) {
-			activeChild = *it;
-		}
-	}
-	if (activeChild) {
-		if (_state == BehaviorNode::State::UNINITIALIZED) {
-			activeChild->setState(BehaviorNode::State::UNINITIALIZED);
-		}
-		else if (!_preempt && activeChild->getState() == BehaviorNode::State::FINISHED) {
-			_state = BehaviorNode::State::FINISHED;
-		}
-	}
-	if (_state == BehaviorNode::State::UNINITIALIZED || !activeChild || _preempt) {
-		std::shared_ptr<BehaviorNode> maxPriorityChild = *std::max_element(
-			_children.begin(), _children.end(), BehaviorNode::compareNodeSibs);
-		if (_state == BehaviorNode::State::RUNNING) {
-			if (activeChild && maxPriorityChild != activeChild) {
-				activeChild->setState(BehaviorNode::State::UNINITIALIZED);
-			}
-			maxPriorityChild->setState(BehaviorNode::State::RUNNING);
-		}
-		if (_preempt) {
-			
-		}
-	}
+	return getState();
 }

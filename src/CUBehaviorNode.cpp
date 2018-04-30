@@ -36,8 +36,9 @@ std::shared_ptr<BehaviorNodeDef> BehaviorNodeDef::getNodeByName(const std::strin
 		return shared_from_this();
 	}
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		if ((*it)->_name == name) {
-			return *it;
+		std::shared_ptr<BehaviorNodeDef> result = getNodeByName(name);
+		if (result) {
+			return result;
 		}
 	}
 	return nullptr;
@@ -46,7 +47,8 @@ std::shared_ptr<BehaviorNodeDef> BehaviorNodeDef::getNodeByName(const std::strin
 #pragma mark -
 #pragma mark Constructors
 /**
- * Disposes all of the resources used by this node.
+ * Disposes all of the resources used by this node, and any descendants
+ * in the tree.
  *
  * A disposed BehaviorNode can be safely reinitialized.
  *
@@ -80,13 +82,4 @@ void BehaviorNode::dispose() {
 bool BehaviorNode::compareNodeSibs(const std::shared_ptr<BehaviorNode>& a, const std::shared_ptr<BehaviorNode>& b) {
 	return a->_priority > b->_priority 
 	|| (a->_priority == b->_priority && a->_childOffset > b->_childOffset);
-}
-
-/**
-* Removes the child at the given position from this node.
-*
-* @param pos   The position of the child node which will be removed.
-*/
-void removeChild(unsigned int pos) {
-	CULogError("Cannot remove child from this node.");
 }

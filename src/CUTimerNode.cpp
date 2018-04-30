@@ -27,6 +27,7 @@ using namespace cugl;
 */
 void TimerNode::dispose() {
 	DecoratorNode::dispose();
+	_timeDelay = false;
 	_delay = 0;
 	_currentDelay = 0;
 }
@@ -43,12 +44,13 @@ void TimerNode::dispose() {
 * @return true if initialization was successful.
 */
 bool TimerNode::init(const std::string& name,
-	const std::shared_ptr<BehaviorNode>& child,
-	bool timeDelay, float delay) {
+					 const std::shared_ptr<BehaviorNode>& child,
+					 bool timeDelay, float delay) {
 	DecoratorNode::init(name, child);
 	_timeDelay = timeDelay;
 	_delay = delay;
 	_currentDelay = 0;
+	return true;
 }
 
 #pragma mark -
@@ -63,7 +65,7 @@ bool TimerNode::init(const std::string& name,
 *
 * @return a string representation of this node for debugging purposes.
 */
-std::string TimerNode::toString(bool verbose = false) const {
+std::string TimerNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::TimerNode(name:" : "(name:") << _name;
 	ss << "priority:" << _priority;
@@ -72,25 +74,4 @@ std::string TimerNode::toString(bool verbose = false) const {
 	ss << "delay time:" << _delay;
 	ss << ")";
 	return ss.str();
-}
-
-#pragma mark -
-#pragma mark Behavior Tree
-/**
-* Returns the BehaviorNode::State of the timer node.
-*
-* Runs an update function, meant to be used on each tick, for the
-* timer node (and all nodes below this node in the tree). The state for
-* his node is derived from the state of its child node.
-*
-* The priority value of the node is updated within this function or
-* based on the priority values of the child node if no priority function
-* has been provided.
-*
-* @param dt	The elapsed time since the last frame.
-*
-* @return the BehaviorNode::State of the child node.
-*/
-BehaviorNode::State update(float dt) {
-
 }

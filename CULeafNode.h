@@ -112,14 +112,18 @@ public:
 
 #pragma mark -
 #pragma mark Behavior Tree
-	/**
-	 * Runs the action associated with leaf node through action function.
-	 * If the action is not given, then nothing occurs.
-	 */
-	void execute();
 
 	/**
-	 * Returns the BehaviorNode::State of the leaf node.
+	 * Updates the priority value for this node and all children beneath it,
+	 * running the piority function provided or default priority function
+	 * if available for the class.
+	 */
+	void updatePriority() override {
+		_priority = _priorityFunc();
+	}
+
+	/**
+	 * Returns the BehaviorNode::State of the node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the leaf
 	 * node. The state for this node is derived from the state of the action
@@ -127,14 +131,33 @@ public:
 	 * is running. Otherwise, the state corresponds with the output of the
 	 * action function. True implies success while false implies faliure.
 	 *
-	 * The priority value of the node is updated within this function, based
-	 * on the priority function provided by the user.
+	 * Update priority may be run as part of this function, based on whether a
+	 * composite node uses preemption.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
-	 * @return the BehaviorNode::State of the laf node.
+	 * @return the BehaviorNode::State of the behavior node.
 	 */
 	BehaviorNode::State update(float dt) override;
+
+	/**
+	 * Stops this node from running, and also stops any running nodes under
+	 * this node in the tree if they exist.
+	 */
+	void preempt() override {
+		_action->terminate();
+		setState(BehaviorNode::State::UNINITIALIZED);
+	}
+
+#pragma mark -
+#pragma mark Internal Helpers
+protected:
+	/**
+	 * Removes the child at the given position from this node.
+	 *
+	 * @param pos   The position of the child node which will be removed.
+	 */
+	void removeChild(unsigned int pos) override {}
 };
 
 

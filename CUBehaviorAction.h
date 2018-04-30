@@ -127,7 +127,14 @@ public:
 	 * @return true if initialization was successful.
 	 */
 	bool init(const std::string& name,
-			  const std::shared_ptr<BehaviorActionDef>& actionDef);
+			  const std::shared_ptr<BehaviorActionDef>& actionDef) {
+		_name = name;
+		setState(BehaviorAction::State::UNINITIALIZED);
+		_start = actionDef->_start;
+		_update = actionDef->_update;
+		_terminate = actionDef->_terminate;
+		return true;
+	}
 	
 #pragma mark -
 #pragma mark Static Constructors
@@ -172,25 +179,43 @@ public:
 	/**
 	 * Initializes the action to make it begin running.
 	 */
-	void start();
+	void start() { _start(); }
 	
 	/**
 	 * Returns the BehaviorAction::State of the action.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
-	 * action, to further process this action.
+	 * action, to further process this action. This should only be used
+	 * if the action is meant to be running.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
 	 * @return the BehaviorAction::State of the action.
 	 */
-	BehaviorAction::State update(float dt);
+	BehaviorAction::State update(float dt) {
+		setState(_update(dt) ? BehaviorAction::State::FINISHED
+				 : BehaviorAction::State::RUNNING);
+		return getState();
+	}
 	
 	/**
 	 * Terminates the action, perhaps while it is running. A way to get back
 	 * to a stable state while in the middle of running an action.
 	 */
-	void terminate();
+	void terminate() {
+		_terminate();
+		setState(BehaviorAction::State::UNINITIALIZED);
+	}
+
+protected:
+	/**
+	 * Sets the state of this action.
+	 *
+	 * This state is used to identify the state of the action.
+	 *
+	 * @param state The state of this action.
+	 */
+	void setState(BehaviorAction::State state) { _state = state; }
 };
 	
 	
