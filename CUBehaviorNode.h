@@ -225,6 +225,10 @@ protected:
 	 */
 	std::function<float()> _priorityFunc;
 
+	/** The (current) child offset of this node (-1 if root) */
+	int _childOffset;
+
+
 #pragma mark -
 #pragma mark Constructors
 public:
@@ -234,7 +238,8 @@ public:
 	 * This constructor should never be called directly, as this is an abstract
 	 * class.
 	 */
-	BehaviorNode() : _parent(nullptr), _priorityFunc(nullptr) {}
+	BehaviorNode() : _name(""), _parent(nullptr), _priorityFunc(nullptr), 
+					_state(BehaviorNode::State::UNINITIALIZED), _childOffset(-2) {}
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -272,7 +277,7 @@ public:
 	 *
 	 * @return a string representation of this node for debugging purposes.
 	 */
-	virtual std::string toString(bool verbose = false) const;
+	virtual std::string toString(bool verbose = false) const = 0;
 
 	/** Cast from a BehaviorNode to a string. */
 	operator std::string() const { return toString(); }
@@ -300,6 +305,16 @@ public:
 	BehaviorNode::State getState() const { return _state; }
 
 	/**
+	 * Sets the state of this node.
+	 *
+	 * This state is used to identify the state of the node. If the node
+	 * has no parent, then this is the state of the behavior tree.
+	 *
+	 * @param state The state of this node.
+	 */
+	void setState(BehaviorNode::State state) { _state = state; }
+
+	/**
 	 * Returns a (weak) pointer to the parent node.
 	 *
 	 * The purpose of this pointer is to climb back up the behavior tree.
@@ -310,11 +325,29 @@ public:
 	const BehaviorNode* getParent() const { return _parent; }
 
 	/**
+	 * Sets the parent of this node.
+	 *
+	 * The purpose of this pointer is to climb back up the behavior tree.
+	 * No child asserts ownership of its parent.
+	 *
+	 * @param parent The parent of this node.
+	 */
+	void setParent(BehaviorNode* parent) { _parent = parent; }
+
+	/**
+	 * Removes this node from the parent.
+	 *
+	 * If this node has no parent, nothing happens.
+	 */
+	void removeFromParent() { if (_parent) _parent->removeChild(_childOffset); }
+
+
+	/**
 	 * Begin running the node, moving from an uninitialized state to a running
 	 * state as the correct action to perform is found through choosing a leaf
 	 * node.
 	 */
-	void start();
+	void start() { _state = BehaviorNode::State::RUNNING; }
 
 	/**
 	 * Returns the BehaviorNode::State of the composite node.
@@ -331,6 +364,29 @@ public:
 	 * @return the BehaviorNode::State of the behavior node.
 	 */
 	virtual BehaviorNode::State update(float dt) = 0;
+
+#pragma mark -
+#pragma mark Internal Helpers
+protected:
+	/**
+	* Returns true if sibling a has a larger priority than sibling 2.
+	*
+	* This method is used by std::sort to sort the children. Ties are
+	* broken from the offset of the children.
+	*
+	* @param a The first child
+	* @param b The second child
+	*
+	* @return true if sibling a is has a larger priority than sibling 2.
+	*/
+	bool BehaviorNode::compareNodeSibs(const std::shared_ptr<BehaviorNode>& a, const std::shared_ptr<BehaviorNode>& b);
+
+	/**
+	* Removes the child at the given position from this node.
+	*
+	* @param pos   The position of the child node which will be removed.
+	*/
+	virtual void removeChild(unsigned int pos) = 0;
 };
 
 
