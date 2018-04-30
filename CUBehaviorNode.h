@@ -239,7 +239,7 @@ public:
 	 * class.
 	 */
 	BehaviorNode() : _name(""), _parent(nullptr), _priorityFunc(nullptr), 
-					_state(BehaviorNode::State::UNINITIALIZED), _childOffset(-2) {}
+					 _state(BehaviorNode::State::UNINITIALIZED), _childOffset(-2) {}
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -367,6 +367,15 @@ public:
 
 #pragma mark -
 #pragma mark Internal Helpers
+	/**
+	 * TODO: Find some better way to track offset from parent.
+	 *
+	 * Sets child offset of this node.
+	 *
+	 * @param offset The child offset of this node.
+	 */
+	void setChildOffset(int pos) { _childOffset = pos;  }
+
 protected:
 	/**
 	* Returns true if sibling a has a larger priority than sibling 2.

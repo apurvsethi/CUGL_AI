@@ -55,7 +55,7 @@ public:
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	CompositeNode();
+	CompositeNode() {};
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -73,6 +73,21 @@ public:
 	virtual void dispose() override;
 
 	/**
+	* Initializes a composite node with the given name and children.
+	*
+	* The priority of this node is dependant of the children's priorities.
+	*
+	* @param name		The name of the composite node.
+	* @param children 	The children of the composite node.
+	* @param preempt	Whether child nodes can be preempted.
+	*
+	* @return true if initialization was successful.
+	*/
+	virtual bool init(const std::string& name,
+		              const std::vector<std::shared_ptr<BehaviorNode>>& children,
+		              bool preempt = false);
+
+	/**
 	 * Initializes a composite node with the given name, children, and priority
 	 * function.
 	 *
@@ -86,7 +101,21 @@ public:
 	virtual bool init(const std::string& name,
 					  const std::function<float()> priority,
 					  const std::vector<std::shared_ptr<BehaviorNode>>& children,
-					  bool preempt);
+					  bool preempt = false);
+
+#pragma mark -
+#pragma mark Identifiers
+	/**
+	* Returns a string representation of this node for debugging purposes.
+	*
+	* If verbose is true, the string will include class information.  This
+	* allows us to unambiguously identify the class.
+	*
+	* @param verbose	Whether to include class information.
+	*
+	* @return a string representation of this node for debugging purposes.
+	*/
+	virtual std::string toString(bool verbose = false) const override = 0;
 
 #pragma mark -
 #pragma mark Behavior Tree
@@ -220,6 +249,16 @@ public:
 	 * @return the BehaviorNode::State of the composite node.
 	 */
 	virtual BehaviorNode::State update(float dt) override = 0;
+
+#pragma mark -
+#pragma mark Internal Helpers
+protected:
+	/**
+	* Removes the child at the given position from this node.
+	*
+	* @param pos   The position of the child node which will be removed.
+	*/
+	void removeChild(unsigned int pos) override;
 };
 
 
