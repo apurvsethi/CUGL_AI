@@ -20,7 +20,7 @@
 #include <cugl/ai/behaviorTree/CUBehaviorNode.h>
 
 namespace cugl {
-	
+
 /**
  * This class provides a decorator behavior node for a behavior tree.
  *
@@ -39,7 +39,7 @@ class DecoratorNode : public BehaviorNode {
 protected:
 	/** The child of this decorator node. */
 	std::shared_ptr<BehaviorNode> _child;
-	
+
 #pragma mark -
 #pragma mark Constructors
 public:
@@ -50,12 +50,12 @@ public:
 	 * class.
 	 */
 	DecoratorNode();
-	
+
 	/**
 	 * Deletes this node, disposing all resources.
 	 */
 	~DecoratorNode() { dispose(); }
-	
+
 	/**
 	 * Disposes all of the resources used by this node.
 	 *
@@ -64,17 +64,18 @@ public:
 	 * It is unsafe to call this on a DecoratorNode that is still currently
 	 * inside of a running behavior tree.
 	 */
-	void dispose() override;
-	
+	virtual void dispose() override;
+
 	/**
-	 * Initializes a decorator node using the given template def.
+	 * Initializes a decorator node with the given name and child.
 	 *
-	 * @param behaviorNodeDef	The def specifying arguments for this node.
+	 * @param name  The name of the decorator node.
+	 * @param child The child of the decorator node.
 	 *
 	 * @return true if initialization was successful.
 	 */
-	virtual bool init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) override;
-	
+	virtual bool init(const std::string& name, const std::shared_ptr<BehaviorNode>& child);
+
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
@@ -83,7 +84,7 @@ public:
 	 * @return the node's child.
 	 */
 	const std::shared_ptr<BehaviorNode>& getChild() const { return _child; }
-	
+
 	/**
 	 * Returns the node's child, typecast to a shared T pointer.
 	 *
@@ -98,7 +99,7 @@ public:
 	inline std::shared_ptr<T> getChild() const {
 		return std::dynamic_pointer_cast<T>(getChild());
 	}
-	
+
 	/**
 	 * Returns the BehaviorNode::State of the decorator node.
 	 *
@@ -110,12 +111,12 @@ public:
 	 * on the priority values of the nodes below the given node.
 	 *
 	 * @param dt	The elapsed time since the last frame.
-	 * 
+	 *
 	 * @return the BehaviorNode::State of the decorator node.
 	 */
 	virtual BehaviorNode::State update(float dt) override = 0;
 };
-	
-	
+
+
 }
 #endif /* __CU_DECORATOR_NODE_H__ */

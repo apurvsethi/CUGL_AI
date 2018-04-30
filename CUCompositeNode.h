@@ -16,14 +16,14 @@
 #include <cugl/ai/behaviorTree/CUBehaviorNode.h>
 
 namespace cugl {
-	
+
 /**
  * This class provides a composite behavior node for a behavior tree.
  *
  * A composite node within a behavior tree refers to the set of nodes that have
  * multiple children under them and run the children in some order. If a child
  * successfully finishes running, the composite node will return.
- * 
+ *
  * A composite node can be either a priority node, a selector node, or a random
  * node. A priority node will run in descending order of priority, where higher
  * priority children can interrupt lower priority chidren, until one runs
@@ -42,26 +42,26 @@ protected:
 	 * interrupted.
 	 */
 	bool _preempt;
-	
+
 	/** The array of children for this composite node. */
 	std::vector<std::shared_ptr<BehaviorNode>> _children;
-	
+
 #pragma mark -
 #pragma mark Constructors
 public:
 	/**
 	 * Creates an uninitialized composite node.
 	 *
-     * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
-     * the heap, use one of the static constructors instead.
+	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
+	 * the heap, use one of the static constructors instead.
 	 */
 	CompositeNode();
-	
+
 	/**
 	 * Deletes this node, disposing all resources.
 	 */
 	~CompositeNode() { dispose(); }
-	
+
 	/**
 	 * Disposes all of the resources used by this node.
 	 *
@@ -70,17 +70,24 @@ public:
 	 * It is unsafe to call this on a CompositeNode that is still currently
 	 * inside of a running behavior tree.
 	 */
-	void dispose() override;
-	
+	virtual void dispose() override;
+
 	/**
-	 * Initializes a composite node using the given template def.
+	 * Initializes a composite node with the given name, children, and priority
+	 * function.
 	 *
-	 * @param behaviorNodeDef	The def specifying arguments for this node.
+	 * @param name		The name of the composite node.
+	 * @param priority	The priority function of the composite node.
+	 * @param children 	The children of the composite node.
+	 * @param preempt	Whether child nodes can be preempted.
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) override;
-	
+	virtual bool init(const std::string& name,
+					  const std::function<float()> priority,
+					  const std::vector<std::shared_ptr<BehaviorNode>>& children,
+					  bool preempt);
+
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
@@ -89,7 +96,7 @@ public:
 	 * @return The number of children of this composite node.
 	 */
 	size_t getChildCount() const { return _children.size(); }
-	
+
 	/**
 	 * Returns the child at the given position.
 	 *
@@ -101,7 +108,7 @@ public:
 	 * @return the child at the given position.
 	 */
 	const std::shared_ptr<BehaviorNode>& getChild(unsigned int pos) const;
-	
+
 	/**
 	 * Returns the child at the given position, typecast to a shared T pointer.
 	 *
@@ -121,7 +128,7 @@ public:
 	inline std::shared_ptr<T> getChild(unsigned int pos) const {
 		return std::dynamic_pointer_cast<T>(getChild(pos));
 	}
-	
+
 	/**
 	 * Returns the (first) child with the given name.
 	 *
@@ -133,7 +140,7 @@ public:
 	 * @return the (first) child with the given name.
 	 */
 	const std::shared_ptr<BehaviorNode>& getChildByName(const std::string& name) const;
-	
+
 	/**
 	 * Returns the (first) child with the given name, typecast to a shared T
 	 * pointer.
@@ -155,7 +162,7 @@ public:
 	inline std::shared_ptr<T> getChildByName(const std::string& name) const {
 		return std::dynamic_pointer_cast<T>(getChildByName(name));
 	}
-	
+
 	/**
 	 * Returns the child with the given priority index.
 	 *
@@ -167,7 +174,7 @@ public:
 	 * @return the child with the given priority index.
 	 */
 	const std::shared_ptr<BehaviorNode>& getChildByPriorityIndex(unsigned int index) const;
-	
+
 	/**
 	 * Returns the child with the given priority index, typecast to a shared T
 	 * pointer.
@@ -189,7 +196,7 @@ public:
 	inline std::shared_ptr<T> getChildByPriorityIndex(unsigned int index) const {
 		return std::dynamic_pointer_cast<T>(getChildByPriorityIndex(index));
 	}
-	
+
 	/**
 	 * Returns the list of the node's children.
 	 *
@@ -214,7 +221,7 @@ public:
 	 */
 	virtual BehaviorNode::State update(float dt) override = 0;
 };
-	
-	
+
+
 }
 #endif /* __CU_COMPOSITE_NODE_H__ */

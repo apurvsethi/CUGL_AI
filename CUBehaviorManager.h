@@ -125,12 +125,18 @@ public:
 	BehaviorNode::State getTreeStateWithName(const std::string& name) const;
 	
 	/**
-	 * Add a behavior tree to the manager. This tree cannot be changed once
-	 * added, until it is finished running.
+	 * Returns whether BehaviorNode tree was successfully created and added.
 	 *
-	 * @param tree	The behavior tree to add to this manager
+	 * Creates BehaviorNodes from template provided by BehaviorNodeDefs, and
+	 * adds it to the BehaviorManager. Returns falsereturns if a BehaviorNodeDef
+	 * provided does not allow creation of a matching BehaviorNode, true
+	 * otherwise.
+	 *
+	 * @param treeDef	BehaviorNodeDef tree template for a BehaviorNode tree.
+	 *
+	 * @return whether BehaviorNode tree was successfully created and added.
 	 */
-	void addTree(const std::shared_ptr<BehaviorNodeDef>& tree);
+	bool addTree(const std::shared_ptr<BehaviorNodeDef>& treeDef);
 	
 	/**
 	 * Removes the tree at the given position from the manager, if the
@@ -185,6 +191,33 @@ public:
 	 * @param dt	The elapsed time since the last frame.
 	 */
 	void update(float dt);
+
+private:
+	/**
+	 * Returns BehaviorNode tree created from BehaviorNodeDef tree.
+	 *
+	 * Creates BehaviorNodes from template provided by BehaviorNodeDefs, and
+	 * returns a nullptr if a BehaviorNodeDef provided does not allow creation
+	 * of a matching BehaviorNode.
+	 *
+	 * @param treeDef	BehaviorNodeDef tree template for a BehaviorNode tree.
+	 *
+	 * @return BehaviorNode tree created from BehaviorNodeDef tree.
+	 */
+	std::shared_ptr<BehaviorNode> createTree(const std::shared_ptr<BehaviorNodeDef>& treeDef);
+	
+	/**
+	 * Returns BehaviorNode trees created from BehaviorNodeDef tree templates.
+	 *
+	 * Creates BehaviorNodes from templates provided by BehaviorNodeDefs, and
+	 * returns a nullptr for a BehaviorNode if a BehaviorNodeDef provided does
+	 * not allow creation of a matching BehaviorNode.
+	 *
+	 * @param treeDefs	BehaviorNodeDef tree templates for BehaviorNode trees.
+	 *
+	 * @return BehaviorNode trees created from BehaviorNodeDef tree templates.
+	 */
+	std::vector<std::shared_ptr<BehaviorNode>> createTrees(const std::vector<std::shared_ptr<BehaviorNodeDef>>& treeDefs);
 };
 	
 	

@@ -17,7 +17,7 @@
 #include <cugl/ai/behaviorTree/CUBehaviorAction.h>
 
 namespace cugl {
-	
+
 /**
  * This class provides a leaf behavior node for a behavior tree.
  *
@@ -36,7 +36,7 @@ protected:
 	 * This should only be used when this node is of type LeafNode.
 	 */
 	std::shared_ptr<BehaviorAction> _action;
-	
+
 #pragma mark -
 #pragma mark Constructors
 public:
@@ -49,12 +49,12 @@ public:
 	 * the heap, use one of the static constructors instead.
 	 */
 	LeafNode();
-	
+
 	/**
 	 * Deletes this node, disposing all resources.
 	 */
 	~LeafNode() { dispose(); }
-	
+
 	/**
 	 * Disposes all of the resources used by this node.
 	 *
@@ -64,28 +64,38 @@ public:
 	 * inside of a running behavior tree.
 	 */
 	void dispose() override;
-	
+
 	/**
-	 * Initializes a leaf node using the given template def.
+	 * Initializes a leaf node with the given name, priority function, and
+	 * action.
 	 *
-	 * @param behaviorNodeDef	The def specifying arguments for this node.
+	 * @param name 		The name of the leaf node.
+	 * @param priority 	The priority function of the leaf node.
+	 * @param action 	The action of the leaf node.
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) override;
+	bool init(const std::string& name, const std::function<float()>& priority,
+			  const std::shared_ptr<BehaviorAction>& action);
 
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Returns a newly allocated LeafNode using the given template def.
+	 * Returns a newly allocated LeafNode with the given name, priority
+	 * function, and action.
 	 *
-	 * @param behaviorNodeDef	The def specifying arguments for this node.
+	 * @param name 		The name of the leaf node.
+	 * @param priority 	The priority function of the leaf node.
+	 * @param action 	The action of the leaf node.
 	 *
-	 * @return a newly allocated LeafNode using the given template def.
+	 * @return a newly allocated LeafNode with the given name, priority
+	 * function, and action.
 	 */
-	static std::shared_ptr<LeafNode> alloc(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
+	static std::shared_ptr<LeafNode> alloc(const std::string& name,
+										   const std::function<float()>& priority,
+										   const std::shared_ptr<BehaviorAction>& action) {
 		std::shared_ptr<LeafNode> result = std::make_shared<LeafNode>();
-		return (result->init(behaviorNodeDef) ? result : nullptr);
+		return (result->init(name, priority, action) ? result : nullptr);
 	}
 
 #pragma mark -
@@ -95,7 +105,7 @@ public:
 	 * If the action is not given, then nothing occurs.
 	 */
 	void execute();
-	
+
 	/**
 	 * Returns the BehaviorNode::State of the leaf node.
 	 *
@@ -109,12 +119,12 @@ public:
 	 * on the priority function provided by the user.
 	 *
 	 * @param dt	The elapsed time since the last frame.
-	 * 
+	 *
 	 * @return the BehaviorNode::State of the laf node.
 	 */
 	BehaviorNode::State update(float dt) override;
 };
-	
-	
+
+
 }
 #endif /* __CU_LEAF_NODE_H__ */

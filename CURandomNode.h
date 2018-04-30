@@ -16,7 +16,7 @@
 #include <cugl/ai/behaviorTree/CUCompositeNode.h>
 
 namespace cugl {
-	
+
 /**
  * This class provides a random composite node for a behavior tree.
  *
@@ -49,24 +49,78 @@ public:
 	 * the heap, use one of the static constructors instead.
 	 */
 	RandomNode();
-	
+
 	/**
 	 * Deletes this node, disposing all resources.
 	 */
 	~RandomNode() { dispose(); }
-	
+
+	/**
+	 * Disposes all of the resources used by this node.
+	 *
+	 * A disposed RandomNode can be safely reinitialized.
+	 *
+	 * It is unsafe to call this on a RandomNode that is still currently
+	 * inside of a running behavior tree.
+	 */
+	void dispose() override;
+
+	/**
+	 * Initializes a random node with the given name, children, and priority
+	 * function. Utilizes uniformly at random to choose child nodes.
+	 *
+	 * @param name			The name of the random node.
+	 * @param priority		The priority function of the random node.
+	 * @param children 		The children of the random node.
+	 * @param preempt		Whether child nodes can be preempted.
+	 *
+	 * @return true if initialization was successful.
+	 */
+	bool init(const std::string& name,
+			  const std::function<float()> priority,
+			  const std::vector<std::shared_ptr<BehaviorNode>>& children,
+			  bool preempt) override {
+		return init(name, priority, children, preempt, true);
+	}
+
+	/**
+	 * Initializes a random node with the given name, children, priority
+	 * function, and random type.
+	 *
+	 * @param name			The name of the random node.
+	 * @param priority		The priority function of the random node.
+	 * @param children 		The children of the random node.
+	 * @param preempt		Whether child nodes can be preempted.
+	 * @param uniformRandom	Whether children are chosen uniformly at random.
+	 *
+	 * @return true if initialization was successful.
+	 */
+	bool init(const std::string& name,
+			  const std::function<float()> priority,
+			  const std::vector<std::shared_ptr<BehaviorNode>>& children,
+			  bool preempt, bool uniformRandom);
+
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Returns a newly allocated RandomNode using the given template def.
+	 * Returns a newly allocated RandomNode with the given name, children,
+	 * priority function, and random type.
 	 *
-	 * @param behaviorNodeDef	The def specifying arguments for this node.
+	 * @param name		The name of the composite node.
+	 * @param priority	The priority function of the composite node.
+	 * @param children 	The children of the composite node.
+	 * @param preempt	Whether child nodes can be preempted.
+	 * @param uniformRandom	Whether children are chosen uniformly at random.
 	 *
-	 * @return a newly allocated RandomNode using the given template def.
+	 * @return a newly allocated RandomNode with the given name, children,
+	 * priority function, and random type.
 	 */
-	static std::shared_ptr<RandomNode> alloc(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
+	static std::shared_ptr<RandomNode> alloc(const std::string& name,
+											 const std::function<float()> priority,
+											 const std::vector<std::shared_ptr<BehaviorNode>>& children,
+											 bool preempt, bool uniformRandom) {
 		std::shared_ptr<RandomNode> result = std::make_shared<RandomNode>();
-		return (result->init(behaviorNodeDef) ? result : nullptr);
+		return (result->init(name, priority, children, preempt, uniformRandom) ? result : nullptr);
 	}
 
 #pragma mark -
@@ -80,16 +134,16 @@ public:
 	 * node.
 	 *
 	 * The priority value of the node is updated within this function or
-	 * based on the priority values of the children nodes if no priority 
+	 * based on the priority values of the children nodes if no priority
 	 * function has been provided.
-	 * 
+	 *
 	 * @param dt	The elapsed time since the last frame.
-	 * 
+	 *
 	 * @return the BehaviorNode::State of the selector node.
 	 */
 	BehaviorNode::State update(float dt) override;
 };
-	
-	
+
+
 }
 #endif /* __CU_RANDOM_NODE_H__ */

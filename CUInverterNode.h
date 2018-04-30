@@ -39,26 +39,28 @@ public:
 	 * the heap, use one of the static constructors instead.
 	 */
 	InverterNode();
-	
+
 	/**
 	 * Deletes this node, disposing all resources.
 	 */
 	~InverterNode() { dispose(); }
-	
+
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Returns a newly allocated InverterNode using the given template def.
+	 * Returns a newly allocated InverterNode with the given name and child.
 	 *
-	 * @param behaviorNodeDef	The def specifying arguments for this node.
+	 * @param name  The name of the decorator node.
+	 * @param child The child of the decorator node.
 	 *
-	 * @return a newly allocated InverterNode using the given template def.
+	 * @return a newly allocated InverterNode with the given name and child.
 	 */
-	static std::shared_ptr<InverterNode> alloc(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
+	static std::shared_ptr<InverterNode> alloc(const std::string& name,
+											   const std::shared_ptr<BehaviorNode>& child) {
 		std::shared_ptr<InverterNode> result = std::make_shared<InverterNode>();
-		return (result->init(behaviorNodeDef) ? result : nullptr);
+		return (result->init(name, child) ? result : nullptr);
 	}
-	
+
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
@@ -72,12 +74,12 @@ public:
 	 * on the priority values of the child node.
 	 *
 	 * @param dt	The elapsed time since the last frame.
-	 * 
+	 *
 	 * @return the BehaviorNode::State of the child node.
 	 */
 	BehaviorNode::State update(float dt) override;
 };
-	
-	
+
+
 }
 #endif /* __CU_INVERTER_NODE_H__ */

@@ -34,7 +34,7 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	 * creating an instance of a behavior node from a BehaviorNodeDef, this
 	 * enum is used to determine the type of behavior node created.
 	 */
-	enum class BehaviorNodeType {
+	enum class Type {
 		/**
 		 * A priority node is a composite node, or a node with one or more
 		 * children, that uses the priority value of its children to choose the
@@ -82,7 +82,7 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	std::string _name;
 
 	/** The type of behavior node this def is for. */
-	BehaviorNodeType _type;
+	Type _type;
 
 	/**
 	 * The priority function for this behavior node.
@@ -92,9 +92,6 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	 * by the type of node.
 	 */
 	std::function<float()> _priorityFunc;
-
-	/** A weaker pointer to the parent (or null if root). */
-	BehaviorNodeDef* _parent;
 
 	/**
 	 * Whether or not the composite node should choose a new child node on each
@@ -156,9 +153,8 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	 */
 	std::shared_ptr<BehaviorAction> _action;
 
-	BehaviorNodeDef() : _type(BehaviorNodeType::LEAF_NODE),
-						_priorityFunc(nullptr), _parent(nullptr),
-						_action(nullptr) {}
+	BehaviorNodeDef() : _type(Type::LEAF_NODE),	_priorityFunc(nullptr),
+	_action(nullptr) {}
 
 	/**
 	 * Returns the (first) node with the given name found using a recursive
@@ -255,15 +251,6 @@ public:
 	 */
 	virtual void dispose();
 
-	/**
-	 * Initializes a node using the given template def.
-	 *
-	 * @param behaviorNodeDef	The def specifying arguments for this node.
-	 *
-	 * @return true if initialization was successful.
-	 */
-	virtual bool init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef);
-
 #pragma mark -
 #pragma mark Identifiers
 	/**
@@ -338,7 +325,7 @@ public:
 	 * The priority value of the node is updated within this function, based
 	 * on either a priority function provided to the node or the default
 	 * priority function.
-	 * 
+	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
 	 * @return the BehaviorNode::State of the behavior node.

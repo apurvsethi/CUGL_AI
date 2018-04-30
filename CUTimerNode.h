@@ -64,26 +64,76 @@ public:
 	~TimerNode() { dispose(); }
 	
 	/**
-	 * Initializes a timed delay node using the given template def.
+	 * Disposes all of the resources used by this node.
 	 *
-	 * @param behaviorNodeDef	The def specifying arguments for this node.
+	 * A disposed TimerNode can be safely reinitialized.
+	 *
+	 * It is unsafe to call this on a TimerNode that is still currently
+	 * inside of a running behavior tree.
+	 */
+	void dispose() override;
+	
+	/**
+	 * Initializes a timed delay node with the given name and child. Utilizes
+	 * a 1 second delay before running the child node.
+	 *
+	 * @param name  The name of the timer node.
+	 * @param child The child of the timer node.
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) override;
+	bool init(const std::string& name,
+			  const std::shared_ptr<BehaviorNode>& child) override;
+
+	/**
+	 * Initializes a timed delay node with the given name, child, delay type,
+	 * and delay.
+	 *
+	 * @param name  	The name of the timer node.
+	 * @param child 	The child of the timer node.
+	 * @param timeDelay Whether the child node is delayed before running.
+	 * @param delay 	The number of seconds for which the child is delayed.
+	 *
+	 * @return true if initialization was successful.
+	 */
+	bool init(const std::string& name,
+			  const std::shared_ptr<BehaviorNode>& child,
+			  bool timeDelay, float delay);
 	
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Returns a newly allocated TimerNode using the given template def.
+	 * Returns a newly allocated TimerNode with the given name and child.
+	 * Utilizes a 1 second delay before running the child node.
 	 *
-	 * @param behaviorNodeDef	The def specifying arguments for this node.
+	 * @param name  The name of the timer node.
+	 * @param child The child of the timer node.
 	 *
-	 * @return a newly allocated TimerNode using the given template def.
+	 * @return a newly allocated TimerNode with the given name and child.
 	 */
-	static std::shared_ptr<TimerNode> alloc(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
+	static std::shared_ptr<TimerNode> alloc(const std::string& name,
+											const std::shared_ptr<BehaviorNode>& child) {
 		std::shared_ptr<TimerNode> result = std::make_shared<TimerNode>();
-		return (result->init(behaviorNodeDef) ? result : nullptr);
+		return (result->init(name, child) ? result : nullptr);
+	}
+
+	/**
+	 * Returns a newly allocated TimerNode with the given name, child, delay
+	 * type, and delay.
+	 *
+	 * @param name  The name of the timer node.
+	 * @param child The child of the timer node.
+	 * @param timeDelay Whether the child node is delayed before running.
+	 * @param delay 	The number of seconds for which the child is delayed.
+	 *
+	 * @return a newly allocated TimerNode with the given name, child, delay
+	 * type, and delay.
+	 */
+	static std::shared_ptr<TimerNode> alloc(const std::string& name,
+											const std::shared_ptr<BehaviorNode>& child,
+											bool timeDelay, float delay) {
+		std::shared_ptr<TimerNode> result = std::make_shared<TimerNode>();
+		return (result->init(name, child, timeDelay, delay) ? result : nullptr);
 	}
 	
 #pragma mark -
