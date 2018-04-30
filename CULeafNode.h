@@ -31,9 +31,7 @@ class LeafNode : public BehaviorNode {
 #pragma mark Values
 protected:
 	/**
-	 * The action used when this node is run.
-	 *
-	 * This should only be used when this node is of type LeafNode.
+	 * The action used when this node is run.	 
 	 */
 	std::shared_ptr<BehaviorAction> _action;
 
@@ -48,7 +46,7 @@ public:
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	LeafNode();
+	LeafNode() : BehaviorNode(), _action(nullptr) {};
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -97,6 +95,20 @@ public:
 		std::shared_ptr<LeafNode> result = std::make_shared<LeafNode>();
 		return (result->init(name, priority, action) ? result : nullptr);
 	}
+
+#pragma mark -
+#pragma mark Identifier
+	/**
+	* Returns a string representation of this node for debugging purposes.
+	*
+	* If verbose is true, the string will include class information.  This
+	* allows us to unambiguously identify the class.
+	*
+	* @param verbose	Whether to include class information.
+	*
+	* @return a string representation of this node for debugging purposes.
+	*/
+	std::string toString(bool verbose = false) const override;
 
 #pragma mark -
 #pragma mark Behavior Tree
