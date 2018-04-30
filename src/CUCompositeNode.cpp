@@ -33,6 +33,7 @@ bool CompositeNode::init(const std::string& name,
 	                     bool preempt = false) {
 	_name = name;
 	_children = children;
+	_childOffset = -1;
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
 		(*it)->setParent(this);
 		(*it)->setChildOffset(it - _children.begin());

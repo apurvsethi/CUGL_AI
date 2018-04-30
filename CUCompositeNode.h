@@ -73,21 +73,6 @@ public:
 	virtual void dispose() override;
 
 	/**
-	* Initializes a composite node with the given name and children.
-	*
-	* The priority of this node is dependant of the children's priorities.
-	*
-	* @param name		The name of the composite node.
-	* @param children 	The children of the composite node.
-	* @param preempt	Whether child nodes can be preempted.
-	*
-	* @return true if initialization was successful.
-	*/
-	virtual bool init(const std::string& name,
-		              const std::vector<std::shared_ptr<BehaviorNode>>& children,
-		              bool preempt = false);
-
-	/**
 	 * Initializes a composite node with the given name, children, and priority
 	 * function.
 	 *
@@ -101,7 +86,7 @@ public:
 	virtual bool init(const std::string& name,
 					  const std::function<float()> priority,
 					  const std::vector<std::shared_ptr<BehaviorNode>>& children,
-					  bool preempt = false);
+					  bool preempt);
 
 #pragma mark -
 #pragma mark Identifiers

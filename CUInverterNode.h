@@ -38,7 +38,7 @@ public:
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	InverterNode();
+	InverterNode() {};
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -60,6 +60,20 @@ public:
 		std::shared_ptr<InverterNode> result = std::make_shared<InverterNode>();
 		return (result->init(name, child) ? result : nullptr);
 	}
+
+#pragma mark -
+#pragma mark Identifiers
+	/**
+	* Returns a string representation of this node for debugging purposes.
+	*
+	* If verbose is true, the string will include class information.  This
+	* allows us to unambiguously identify the class.
+	*
+	* @param verbose	Whether to include class information.
+	*
+	* @return a string representation of this node for debugging purposes.
+	*/
+	virtual std::string toString(bool verbose = false) const override;
 
 #pragma mark -
 #pragma mark Behavior Tree

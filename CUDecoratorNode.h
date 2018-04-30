@@ -49,7 +49,7 @@ public:
 	 * This constructor should never be called directly, as this is an abstract
 	 * class.
 	 */
-	DecoratorNode();
+	DecoratorNode() : BehaviorNode(), _child(nullptr) {};
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -75,6 +75,20 @@ public:
 	 * @return true if initialization was successful.
 	 */
 	virtual bool init(const std::string& name, const std::shared_ptr<BehaviorNode>& child);
+
+#pragma mark -
+#pragma mark Identifiers
+	/**
+	* Returns a string representation of this node for debugging purposes.
+	*
+	* If verbose is true, the string will include class information.  This
+	* allows us to unambiguously identify the class.
+	*
+	* @param verbose	Whether to include class information.
+	*
+	* @return a string representation of this node for debugging purposes.
+	*/
+	virtual std::string toString(bool verbose = false) const = 0;
 
 #pragma mark -
 #pragma mark Behavior Tree

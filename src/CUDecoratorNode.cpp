@@ -12,35 +12,40 @@
 //  Version: 3/28/2018
 //
 
-#include <cugl/ai/behaviorTree/CUBehaviorTree.h>
+#include <cugl/ai/behaviorTree/CUDecoratorNode.h>
 
 using namespace cugl;
 
+#pragma mark -
+#pragma mark Constructors
+
 /**
- * Disposes all of the resources used by this node.
- *
- * A disposed DecoratorNode can be safely reinitialized.
- *
- * It is unsafe to call this on a DecoratorNode that is still currently
- * inside of a running behavior tree.
- */
-void DecoratorNode::dispose() {
-    BehaviorNode::dispose();
-    _child = nullptr;
-    //TODO: Remove from parent.
+* Initializes a decorator node with the given name and child.
+*
+* @param name  The name of the decorator node.
+* @param child The child of the decorator node.
+*
+* @return true if initialization was successful.
+*/
+bool DecoratorNode::init(const std::string& name, const std::shared_ptr<BehaviorNode>& child) {
+	_child = child;
+	_name = name;
+	_childOffset = -1;
+	_child->setParent(this);
+	_child->setChildOffset(-1);
+	return true;
 }
 
 /**
- * Initializes a decorator node using the given template def.
- *
- * @param behaviorNodeDef	The def specifying arguments for this node.
- *
- * @return true if initialization was successful.
- */
-bool DecoratorNode::init(const std::shared_ptr<BehaviorNodeDef>& behaviorNodeDef) {
-    if (behaviorNodeDef->childCount != 1) {
-        return false;
-    }
-    BehaviorNode::init(behaviorNodeDef);
-    //TODO: Initialize child.
+* Disposes all of the resources used by this node.
+*
+* A disposed DecoratorNode can be safely reinitialized.
+*
+* It is unsafe to call this on a DecoratorNode that is still currently
+* inside of a running behavior tree.
+*/
+void DecoratorNode::dispose() {
+	BehaviorNode::dispose();
+	_child->setChildOffset(-1);
+	_child = nullptr;
 }

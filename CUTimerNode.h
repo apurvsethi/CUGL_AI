@@ -34,8 +34,6 @@ protected:
 	 * node is not chosen again for the given amount of time. If true, then
 	 * execution is delayed, otherwise the child is not chosen after execution
 	 * for the given time.
-	 *
-	 * This flag is only useful for TimerNode.
 	 */
 	bool _timeDelay;
 	
@@ -56,7 +54,7 @@ public:
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	TimerNode();
+	TimerNode() {};
 	
 	/**
 	 * Deletes this node, disposing all resources.
@@ -83,7 +81,9 @@ public:
 	 * @return true if initialization was successful.
 	 */
 	bool init(const std::string& name,
-			  const std::shared_ptr<BehaviorNode>& child) override;
+		const std::shared_ptr<BehaviorNode>& child) override {
+		return init(name, child, 1, true);
+	}
 
 	/**
 	 * Initializes a timed delay node with the given name, child, delay type,
@@ -135,7 +135,21 @@ public:
 		std::shared_ptr<TimerNode> result = std::make_shared<TimerNode>();
 		return (result->init(name, child, timeDelay, delay) ? result : nullptr);
 	}
-	
+
+#pragma mark -
+#pragma mark Identifiers
+	/**
+	* Returns a string representation of this node for debugging purposes.
+	*
+	* If verbose is true, the string will include class information.  This
+	* allows us to unambiguously identify the class.
+	*
+	* @param verbose	Whether to include class information.
+	*
+	* @return a string representation of this node for debugging purposes.
+	*/
+	virtual std::string toString(bool verbose = false) const override;
+
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
@@ -147,6 +161,16 @@ public:
 	 * @return the number of seconds before the child node begins running.
 	 */
 	float getDelay() const { return _delay; }
+
+	/**
+	 * Returns the current time that has been delayed.
+	 *
+	 * The child will be prevented from running until the current time delayed is
+	 * greater than the delay.
+	 *
+	 * @param The current time that has been delayed
+	 */
+	float getCurrentDelay() const { return _currentDelay;  }
 	
 	/**
 	 * Returns the BehaviorNode::State of the timer node.

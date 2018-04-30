@@ -9,6 +9,7 @@
 //
 
 #include <cugl/ai/behaviorTree/CULeafNode.h>
+#include <cugl/util/CUDebug.h>
 #include <sstream>
 
 using namespace cugl;
@@ -64,7 +65,7 @@ std::string LeafNode::toString(bool verbose = false) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::LeafNode(name:" : "(name:") << _name;
 	ss << ", priority:" << _priority;
-	ss << ", action:" << _action->getName();
+	ss << ", action:" << (_action ? _action->getName() : "None");
 	ss << ")";
 	return ss.str();
 }

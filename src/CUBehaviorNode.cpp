@@ -14,6 +14,7 @@
 //
 
 #include <cugl/ai/behaviorTree/CUBehaviorNode.h>
+#include <cugl/util/CUDebug.h>
 #include <sstream>
 
 using namespace cugl;
@@ -59,6 +60,7 @@ void BehaviorNode::dispose() {
 	_priorityFunc = nullptr;
 	removeFromParent();
 	_parent = nullptr;
+	_childOffset = -2;
 }
 
 #pragma mark -
@@ -78,4 +80,13 @@ void BehaviorNode::dispose() {
 bool BehaviorNode::compareNodeSibs(const std::shared_ptr<BehaviorNode>& a, const std::shared_ptr<BehaviorNode>& b) {
 	return a->_priority > b->_priority 
 	|| (a->_priority == b->_priority && a->_childOffset > b->_childOffset);
+}
+
+/**
+* Removes the child at the given position from this node.
+*
+* @param pos   The position of the child node which will be removed.
+*/
+void removeChild(unsigned int pos) {
+	CULogError("Cannot remove child from this node.");
 }

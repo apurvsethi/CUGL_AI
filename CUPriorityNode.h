@@ -41,7 +41,7 @@ public:
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	PriorityNode();
+	PriorityNode() {};
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -50,6 +50,7 @@ public:
 
 #pragma mark -
 #pragma mark Static Constructors
+
 	/**
 	 * Returns a newly allocated PriorityNode with the given name, children, and
 	 * priority function.
@@ -65,10 +66,24 @@ public:
 	static std::shared_ptr<PriorityNode> alloc(const std::string& name,
 											   const std::function<float()> priority,
 											   const std::vector<std::shared_ptr<BehaviorNode>>& children,
-											   bool preempt) {
+											   bool preempt = false) {
 		std::shared_ptr<PriorityNode> result = std::make_shared<PriorityNode>();
 		return (result->init(name, priority, children, preempt) ? result : nullptr);
 	}
+
+#pragma mark -
+#pragma mark Identifiers
+	/**
+	* Returns a string representation of this node for debugging purposes.
+	*
+	* If verbose is true, the string will include class information.  This
+	* allows us to unambiguously identify the class.
+	*
+	* @param verbose	Whether to include class information.
+	*
+	* @return a string representation of this node for debugging purposes.
+	*/
+	virtual std::string toString(bool verbose = false) const;
 
 #pragma mark -
 #pragma mark Behavior Tree

@@ -12,13 +12,11 @@
 
 using namespace cugl;
 
-#pragma mark -
-#pragma mark Behavior Tree
 /**
  * Returns the BehaviorNode::State of the selector node.
  *
  * Runs an update function, meant to be used on each tick, for the
- * selector node (and all nodes below this node in the tree).
+ * selector node(and all nodes below this node in the tree).
  * The state for this node is derived from the state of the running
  * or most recently run node.
  *
@@ -30,29 +28,41 @@ using namespace cugl;
  * @return the BehaviorNode::State of the selector node.
  */
 BehaviorNode::State SelectorNode::update(float dt) {
-        if (_state == BehaviorNode::State::RUNNING) {
-        std::shared_ptr<BehaviorNode> activeChild;
-        for (auto it = _children.begin(); it != _children.end(); ++it) {
-            (*it)->update(dt);
-            switch((*it)->_state) {
-                case BehaviorNode::State::RUNNING:
-                    activeChild = *it;
-                    break;
-                case BehaviorNode::State::FINISEHD;
-                    activeChild = *it;
-                    _state = BehaviorNode::State::FINISHED;
-                    break;
-            }
-        }
-        if (_preempt && _state == BehaviorNode::State::RUNNING) {
-            activeChild->_state = BehaviorNode::State::UNINITIALIZED;
-            activeChild = nullptr;
-        }
-        if (!activeChild) {
-            activeChild = _children[0];
-            activeChild->_state = BehaviorNode::State::RUNNING;
-        }
-        _priority = _priorityFunc ? _priorityFunc() : activeChild->_priority;
-    }
-    return _state;
+	if (_state == BehaviorNode::State::FINISHED) {
+		return _state;
+	}
+	std::shared_ptr<BehaviorNode> activeChild = nullptr, selectChild = nullptr;
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		(*it)->update(dt);
+		if (!selectChild && (*it)->getPriority() > 0) {
+			selectChild = *it;
+		}
+		if ((*it)->getState() != BehaviorNode::State::UNINITIALIZED) {
+			activeChild = *it;
+		}
+	}
+	if (_state == BehaviorNode::State::UNINITIALIZED) {
+		if (activeChild) {
+			activeChild->setState(BehaviorNode::State::UNINITIALIZED);
+		}
+		_priority = _priorityFunc ? _priorityFunc() : 
+			(selectChild ? selectChild->getPriority() : 0);
+	}
+	else if (_state == BehaviorNode::State::RUNNING) {
+		if (!activeChild) {
+			selectChild->start();
+			activeChild = selectChild;
+		}
+		else if (selectChild && activeChild != selectChild && _preempt) {
+			activeChild->setState(BehaviorNode::State::UNINITIALIZED);
+			selectChild->start();
+			activeChild = selectChild;
+		}
+		else if (activeChild->getState() == BehaviorNode::State::FINISHED) {
+			_state = BehaviorNode::State::FINISHED;
+		}
+		_priority = _priorityFunc ? _priorityFunc() :
+			(activeChild ? activeChild->getPriority() : 0);
+	}
+	return _state;
 }
