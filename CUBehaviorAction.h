@@ -158,15 +158,6 @@ public:
 	 */
 	const std::string& getName() const { return _name; }
 	
-	/**
-	 * Sets a string that is used to identify the action.
-	 *
-	 * This name is used to identify actions in a behavior tree.
-	 *
-	 * @param name	A string that is used to identify the action.
-	 */
-	void setName(const std::string& name) { _name = name; }
-	
 #pragma mark -
 #pragma mark Behavior Trees
 	/**
