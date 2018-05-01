@@ -168,25 +168,22 @@ void CompositeNode::updatePriority() {
 * @return the BehaviorNode::State of the behavior node.
 */
 BehaviorNode::State CompositeNode::update(float dt) {
-	if (_state == BehaviorNode::State::RUNNING) {
-		std::shared_ptr<BehaviorNode> activeChild;
-		if (_activeChildPos != -1 && _preempt) {
-			updatePriority();
-		}
-		if (_activeChildPos == -1 || _preempt) {
-			activeChild = getChosenChild();
-			if (_preempt && _children[_activeChildPos] != activeChild) {
-				_children[_activeChildPos]->preempt();
-				activeChild->setState(BehaviorNode::State::RUNNING);
-				_activeChildPos = activeChild->getChildOffset();
-			}
-		}
-		else {
-			activeChild = _children[_activeChildPos];
-		}
-		activeChild->update(dt);
-		setState(activeChild->update(dt));
+	std::shared_ptr<BehaviorNode> activeChild;
+	if (_activeChildPos != -1 && _preempt) {
+		updatePriority();
 	}
+	if (_activeChildPos == -1 || _preempt) {
+		activeChild = getChosenChild();
+		if (_preempt && _children[_activeChildPos] != activeChild) {
+			_children[_activeChildPos]->preempt();
+			_activeChildPos = activeChild->getChildOffset();
+		}
+	}
+	else {
+		activeChild = _children[_activeChildPos];
+	}
+	activeChild->update(dt);
+	setState(activeChild->update(dt));
 	return getState();
 }
 
