@@ -9,7 +9,7 @@
 //  use one of the concrete subclasses of BehaviorNode. Because this is an
 //  abstract class, it has no allocators.  It only has an initializer.
 //
-//  Author: Apurv Sethi
+//  Author: Apurv Sethi and Andrew Matsumoto
 //  Version: 3/28/2018
 //
 
@@ -409,6 +409,13 @@ protected:
 	 */
 	static bool compareNodeSibs(const std::shared_ptr<BehaviorNode>& a,
 								const std::shared_ptr<BehaviorNode>& b);
+
+	/**
+	 * Sets the priority of this node.
+	 *
+	 * @param priority The priority of this node.
+	 */
+	void setPriority(float priority);
 
 	/**
 	 * Removes the child at the given position from this node.

@@ -83,3 +83,13 @@ bool BehaviorNode::compareNodeSibs(const std::shared_ptr<BehaviorNode>& a, const
 	return a->_priority > b->_priority 
 	|| (a->_priority == b->_priority && a->_childOffset > b->_childOffset);
 }
+
+/**
+* Sets the priority of this node.
+*
+* @param priority The priority of this node.
+*/
+void BehaviorNode::setPriority(float priority) {
+	CUAssertLog(priority >= 0.0f && priority <= 1.0f, "Priority is not between 0 and 1");
+	_priority = priority;
+}
