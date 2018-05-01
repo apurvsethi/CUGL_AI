@@ -52,15 +52,15 @@ void LeafNode::dispose() {
 #pragma mark Identifiers
 
 /**
-* Returns a string representation of this node for debugging purposes.
-*
-* If verbose is true, the string will include class information.  This
-* allows us to unambiguously identify the class.
-*
-* @param verbose	Whether to include class information.
-*
-* @return a string representation of this node for debugging purposes.
-*/
+ * Returns a string representation of this node for debugging purposes.
+ *
+ * If verbose is true, the string will include class information.  This
+ * allows us to unambiguously identify the class.
+ *
+ * @param verbose	Whether to include class information.
+ *
+ * @return a string representation of this node for debugging purposes.
+ */
 std::string LeafNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::LeafNode(name:" : "(name:") << _name;
@@ -73,21 +73,21 @@ std::string LeafNode::toString(bool verbose) const {
 #pragma mark -
 #pragma mark Behavior Tree
 /**
-* Returns the BehaviorNode::State of the leaf node.
-*
-* Runs an update function, meant to be used on each tick, for the leaf
-* node. The state for this node is derived from the state of the action
-* function given. If the action function is still running, then the state
-* is running. Otherwise, the state corresponds with the output of the
-* action function. True implies success while false implies faliure.
-*
-* The priority value of the node is updated within this function, based
-* on the priority function provided by the user.
-*
-* @param dt	The elapsed time since the last frame.
-*
-* @return the BehaviorNode::State of the last node.
-*/
+ * Returns the BehaviorNode::State of the leaf node.
+ *
+ * Runs an update function, meant to be used on each tick, for the leaf
+ * node. The state for this node is derived from the state of the action
+ * function given. If the action function is still running, then the state
+ * is running. Otherwise, the state corresponds with the output of the
+ * action function. True implies success while false implies faliure.
+ *
+ * The priority value of the node is updated within this function, based
+ * on the priority function provided by the user.
+ *
+ * @param dt	The elapsed time since the last frame.
+ *
+ * @return the BehaviorNode::State of the last node.
+ */
 BehaviorNode::State LeafNode::update(float dt) {
 	if (!_action) {
 		_priority = 0;

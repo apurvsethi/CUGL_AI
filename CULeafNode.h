@@ -31,7 +31,7 @@ class LeafNode : public BehaviorNode {
 #pragma mark Values
 protected:
 	/**
-	 * The action used when this node is run.	 
+	 * The action used when this node is run.
 	 */
 	std::shared_ptr<BehaviorAction> _action;
 
@@ -99,15 +99,15 @@ public:
 #pragma mark -
 #pragma mark Identifier
 	/**
-	* Returns a string representation of this node for debugging purposes.
-	*
-	* If verbose is true, the string will include class information.  This
-	* allows us to unambiguously identify the class.
-	*
-	* @param verbose	Whether to include class information.
-	*
-	* @return a string representation of this node for debugging purposes.
-	*/
+	 * Returns a string representation of this node for debugging purposes.
+	 *
+	 * If verbose is true, the string will include class information.  This
+	 * allows us to unambiguously identify the class.
+	 *
+	 * @param verbose	Whether to include class information.
+	 *
+	 * @return a string representation of this node for debugging purposes.
+	 */
 	std::string toString(bool verbose = false) const override;
 
 #pragma mark -

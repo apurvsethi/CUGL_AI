@@ -18,7 +18,7 @@
 #include <cugl/ai/behaviorTree/CUBehaviorAction.h>
 
 namespace cugl {
-	
+
 /**
  * This class provides a behavior manager for behavior trees. It owns,
  * runs, and updates all active behavior trees.
@@ -32,7 +32,7 @@ class BehaviorManager {
 protected:
 	/** The trees currently being run by the manager. */
 	std::vector<std::shared_ptr<BehaviorNode>> _trees;
-	
+
 #pragma mark -
 #pragma mark Constructors
 public:
@@ -42,27 +42,27 @@ public:
 	 * This constructor should never be called directly.
 	 */
 	BehaviorManager() {};
-	
+
 	/**
 	 * Deletes this manager, disposing all resources and all trees owned by
 	 * this manager.
 	 */
 	~BehaviorManager() { dispose(); }
-	
+
 	/**
 	 * Disposes all of the resources used by this manager.
 	 *
 	 * It is unsafe to call this while behavior trees are running.
 	 */
 	void dispose();
-	
+
 	/**
 	 * Initializes a behavior tree manager.
 	 *
 	 * @return true if initialization was successful.
 	 */
 	bool init() { return true; }
-	
+
 #pragma mark -
 #pragma mark Static Constructors
 	/**
@@ -88,7 +88,7 @@ public:
 	 * @return the tree at the given position.
 	 */
 	const std::shared_ptr<BehaviorNode>& getTree(unsigned int pos) const;
-	
+
 	/**
 	 * Returns the (first) tree with the given name.
 	 *
@@ -100,7 +100,7 @@ public:
 	 * @return the (first) tree with the given name.
 	 */
 	const std::shared_ptr<BehaviorNode>& getTreeWithName(const std::string& name) const;
-	
+
 	/**
 	 * Returns the state of the tree at the given position.
 	 *
@@ -112,7 +112,7 @@ public:
 	 * @return the state of the tree at the given position.
 	 */
 	BehaviorNode::State getTreeState(unsigned int pos) const;
-	
+
 	/**
 	 * Returns the state of the (first) tree with the given name.
 	 *
@@ -124,7 +124,7 @@ public:
 	 * @return the state of the (first) tree with the given name.
 	 */
 	BehaviorNode::State getTreeStateWithName(const std::string& name) const;
-	
+
 	/**
 	 * Returns whether BehaviorNode tree was successfully created and added.
 	 *
@@ -138,7 +138,7 @@ public:
 	 * @return whether BehaviorNode tree was successfully created and added.
 	 */
 	bool addTree(const std::shared_ptr<BehaviorNodeDef>& treeDef);
-	
+
 	/**
 	 * Removes the tree at the given position from the manager, if the
 	 * tree is not currently running.
@@ -151,7 +151,7 @@ public:
 	 * @warning The tree will only be removed if not currently running.
 	 */
 	void removeTree(unsigned int pos);
-	
+
 	/**
 	 * Remove the (first) tree with the given name, if the tree is not
 	 * currently running.
@@ -164,7 +164,7 @@ public:
 	 * @warning The tree will only be removed if not currently running.
 	 */
 	void removeTreeWithName(const std::string& name);
-	
+
 	/**
 	 * Starts running the tree at the given position.
 	 *
@@ -174,7 +174,7 @@ public:
 	 * @param pos	The tree position.
 	 */
 	void startTree(unsigned int pos);
-	
+
 	/**
 	 * Starts running the (first) tree with the given name.
 	 *
@@ -184,7 +184,7 @@ public:
 	 * @param name	An identifier to find the tree.
 	 */
 	void startTreeWithName(const std::string& name);
-	
+
 	/**
 	 * Runs an update function, meant to be used on each tick, for each
 	 * behavior tree that is currently running within the manager.
@@ -206,7 +206,7 @@ private:
 	 * @return BehaviorNode tree created from BehaviorNodeDef tree.
 	 */
 	std::shared_ptr<BehaviorNode> createTree(const std::shared_ptr<BehaviorNodeDef>& treeDef);
-	
+
 	/**
 	 * Returns BehaviorNode trees created from BehaviorNodeDef tree templates.
 	 *
@@ -220,7 +220,7 @@ private:
 	 */
 	std::vector<std::shared_ptr<BehaviorNode>> createTrees(const std::vector<std::shared_ptr<BehaviorNodeDef>>& treeDefs);
 };
-	
-	
+
+
 }
 #endif /* __CU_BEHAVIOR_MANAGER_H__ */

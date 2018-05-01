@@ -74,30 +74,31 @@ public:
 #pragma mark -
 #pragma mark Identifiers
 	/**
-	* Returns a string representation of this node for debugging purposes.
-	*
-	* If verbose is true, the string will include class information.  This
-	* allows us to unambiguously identify the class.
-	*
-	* @param verbose	Whether to include class information.
-	*
-	* @return a string representation of this node for debugging purposes.
-	*/
-	virtual std::string toString(bool verbose = false) const override;
+	 * Returns a string representation of this node for debugging purposes.
+	 *
+	 * If verbose is true, the string will include class information.  This
+	 * allows us to unambiguously identify the class.
+	 *
+	 * @param verbose	Whether to include class information.
+	 *
+	 * @return a string representation of this node for debugging purposes.
+	 */
+	std::string toString(bool verbose = false) const override;
 
 #pragma mark -
 #pragma mark Internal Helpers
 protected:
 	/**
-	* Returns the child choosen by this priority node.
-	*
-	* A priority node will choose the child with the maximum priority, with ties broken
-	* by the child with the earliest position.
-	*
-	* @return the child choosen by this priority node.
-	*/
-	virtual const std::shared_ptr<BehaviorNode>& getChosenChild() const = 0;
+	 * Returns the child choosen by this priority node.
+	 *
+	 * A priority node will choose the child with the maximum priority, with ties broken
+	 * by the child with the earliest position.
+	 *
+	 * @return the child choosen by this priority node.
+	 */
+	const std::shared_ptr<BehaviorNode>& getChosenChild() const override;
 };
+
 
 }
 #endif /* __CU_PRIORITY_NODE_H__ */

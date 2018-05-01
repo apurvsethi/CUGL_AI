@@ -119,9 +119,9 @@ const std::shared_ptr<BehaviorNode>& CompositeNode::getChildByPriorityIndex(unsi
 }
 
 /**
-* Stops this node from running, and also stops any running nodes under
-* this node in the tree if they exist.
-*/
+ * Stops this node from running while it is currently running, and preempts
+ * running child.
+ */
 void CompositeNode::preempt() {
 	if (_state != BehaviorNode::State::RUNNING) {
 		return;
@@ -135,10 +135,10 @@ void CompositeNode::preempt() {
 }
 
 /**
-* Updates the priority value for this node and all children beneath it,
-* running the piority function provided or default priority function
-* if available for the class.
-*/
+ * Updates the priority value for this node and all children beneath it,
+ * running the piority function provided or default priority function
+ * if available for the class.
+ */
 void CompositeNode::updatePriority() {
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
 		(*it)->updatePriority();
@@ -155,18 +155,18 @@ void CompositeNode::updatePriority() {
 }
 
 /**
-* Returns the BehaviorNode::State of the node.
-*
-* Runs an update function, meant to be used on each tick, for the
-* behavior node (and nodes chosen to run below it in the tree).
-*
-* Update priority may be run as part of this function, based on whether a
-* composite node uses preemption.
-*
-* @param dt	The elapsed time since the last frame.
-*
-* @return the BehaviorNode::State of the behavior node.
-*/
+ * Returns the BehaviorNode::State of the node.
+ *
+ * Runs an update function, meant to be used on each tick, for the
+ * behavior node (and nodes chosen to run below it in the tree).
+ *
+ * Update priority may be run as part of this function, based on whether a
+ * composite node uses preemption.
+ *
+ * @param dt	The elapsed time since the last frame.
+ *
+ * @return the BehaviorNode::State of the behavior node.
+ */
 BehaviorNode::State CompositeNode::update(float dt) {
 	std::shared_ptr<BehaviorNode> activeChild;
 	if (_activeChildPos != -1 && _preempt) {

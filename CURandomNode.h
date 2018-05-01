@@ -122,7 +122,7 @@ public:
 		std::shared_ptr<RandomNode> result = std::make_shared<RandomNode>();
 		return (result->init(name, priority, children, preempt, uniformRandom) ? result : nullptr);
 	}
-
+	
 #pragma mark -
 #pragma mark Identifiers
 	/**
@@ -135,20 +135,19 @@ public:
 	 *
 	 * @return a string representation of this node for debugging purposes.
 	 */
-	virtual std::string toString(bool verbose = false) const override;
+	std::string toString(bool verbose = false) const override;
 
 #pragma mark -
 #pragma mark Internal Helpers
 	/**
-	* Returns the child choosen by this composite node.
-	*
-	* The algorithm for choosing the child of this node is implementation
-	* specific to the subclasses of this node.
-	*
-	* @return the child choosen by this composite node.
-	*/
-	virtual const std::shared_ptr<BehaviorNode>& getChosenChild() const override;
-
+	 * Returns the child choosen by this composite node.
+	 *
+	 * The algorithm for choosing the child of this node is implementation
+	 * specific to the subclasses of this node.
+	 *
+	 * @return the child choosen by this composite node.
+	 */
+	const std::shared_ptr<BehaviorNode>& getChosenChild() const override;
 };
 
 

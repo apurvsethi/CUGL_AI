@@ -17,7 +17,7 @@
 #include <cugl/ai/behaviorTree/CUDecoratorNode.h>
 
 namespace cugl {
-	
+
 /**
  * This class provides a decorator node with a timer for a behavior tree.
  *
@@ -36,13 +36,13 @@ protected:
 	 * for the given time.
 	 */
 	bool _timeDelay;
-	
+
 	/** The delay before beginning executing in seconds. */
 	float _delay;
 
 	/** The current time that has been delayed. */
 	float _currentDelay;
-	
+
 #pragma mark -
 #pragma mark Constructors
 public:
@@ -55,12 +55,12 @@ public:
 	 * the heap, use one of the static constructors instead.
 	 */
 	TimerNode() {};
-	
+
 	/**
 	 * Deletes this node, disposing all resources.
 	 */
 	~TimerNode() { dispose(); }
-	
+
 	/**
 	 * Disposes all of the resources used by this node.
 	 *
@@ -70,7 +70,7 @@ public:
 	 * inside of a running behavior tree.
 	 */
 	void dispose() override;
-	
+
 	/**
 	 * Initializes a timed delay node with the given name and child. Utilizes
 	 * a 1 second delay before running the child node.
@@ -81,7 +81,7 @@ public:
 	 * @return true if initialization was successful.
 	 */
 	bool init(const std::string& name,
-		const std::shared_ptr<BehaviorNode>& child) override {
+			  const std::shared_ptr<BehaviorNode>& child) override {
 		return init(name, child, 1, true);
 	}
 
@@ -99,7 +99,7 @@ public:
 	bool init(const std::string& name,
 			  const std::shared_ptr<BehaviorNode>& child,
 			  bool timeDelay, float delay);
-	
+
 #pragma mark -
 #pragma mark Static Constructors
 	/**
@@ -139,15 +139,15 @@ public:
 #pragma mark -
 #pragma mark Identifiers
 	/**
-	* Returns a string representation of this node for debugging purposes.
-	*
-	* If verbose is true, the string will include class information.  This
-	* allows us to unambiguously identify the class.
-	*
-	* @param verbose	Whether to include class information.
-	*
-	* @return a string representation of this node for debugging purposes.
-	*/
+	 * Returns a string representation of this node for debugging purposes.
+	 *
+	 * If verbose is true, the string will include class information.  This
+	 * allows us to unambiguously identify the class.
+	 *
+	 * @param verbose	Whether to include class information.
+	 *
+	 * @return a string representation of this node for debugging purposes.
+	 */
 	std::string toString(bool verbose = false) const override;
 
 #pragma mark -
@@ -180,7 +180,7 @@ public:
 	 * @param The current time that has been delayed
 	 */
 	float getCurrentDelay() const { return _currentDelay;  }
-	
+
 	/**
 	 * Updates the priority value for this node and all children beneath it,
 	 * running the piority function provided or default priority function
@@ -194,7 +194,7 @@ public:
 	 */
 	void preempt() override;
 };
-	
-	
+
+
 }
 #endif /* __CU_TIMER_NODE_H__ */

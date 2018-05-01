@@ -69,26 +69,26 @@ void BehaviorNode::dispose() {
 #pragma mark Internal Helpers
 
 /**
-* Returns true if sibling a has a larger priority than sibling 2.
-*
-* This method is used by std::sort to sort the children. Ties are
-* broken from the offset of the children.
-*
-* @param a The first child
-* @param b The second child
-*
-* @return true if sibling a is has a larger priority than sibling 2.
-*/
+ * Returns true if sibling a has a larger priority than sibling b.
+ *
+ * This method is used by std::sort to sort the children. Ties are
+ * broken from the offset of the children.
+ *
+ * @param a The first child
+ * @param b The second child
+ *
+ * @return true if sibling a is has a larger priority than sibling b.
+ */
 bool BehaviorNode::compareNodeSibs(const std::shared_ptr<BehaviorNode>& a, const std::shared_ptr<BehaviorNode>& b) {
-	return a->_priority > b->_priority 
+	return a->_priority > b->_priority
 	|| (a->_priority == b->_priority && a->_childOffset < b->_childOffset);
 }
 
 /**
-* Sets the priority of this node.
-*
-* @param priority The priority of this node.
-*/
+ * Sets the priority of this node.
+ *
+ * @param priority The priority of this node.
+ */
 void BehaviorNode::setPriority(float priority) {
 	CUAssertLog(priority >= 0.0f && priority <= 1.0f, "Priority is not between 0 and 1");
 	_priority = priority;

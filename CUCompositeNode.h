@@ -94,15 +94,15 @@ public:
 #pragma mark -
 #pragma mark Identifiers
 	/**
-	* Returns a string representation of this node for debugging purposes.
-	*
-	* If verbose is true, the string will include class information.  This
-	* allows us to unambiguously identify the class.
-	*
-	* @param verbose	Whether to include class information.
-	*
-	* @return a string representation of this node for debugging purposes.
-	*/
+	 * Returns a string representation of this node for debugging purposes.
+	 *
+	 * If verbose is true, the string will include class information.  This
+	 * allows us to unambiguously identify the class.
+	 *
+	 * @param verbose	Whether to include class information.
+	 *
+	 * @return a string representation of this node for debugging purposes.
+	 */
 	virtual std::string toString(bool verbose = false) const override = 0;
 
 #pragma mark -
@@ -253,10 +253,10 @@ public:
 #pragma mark Internal Helpers
 protected:
 	/**
-	* Removes the child at the given position from this node.
-	*
-	* @param pos   The position of the child node which will be removed.
-	*/
+	 * Removes the child at the given position from this node.
+	 *
+	 * @param pos   The position of the child node which will be removed.
+	 */
 	void removeChild(unsigned int pos) override;
 
 	/**
@@ -265,7 +265,7 @@ protected:
 	 * The algorithm for choosing the child of this node is implementation
 	 * specific to the subclasses of this node.
 	 *
-	 * @return the child choosen by this composite node. 
+	 * @return the child choosen by this composite node.
 	 */
 	virtual const std::shared_ptr<BehaviorNode>& getChosenChild() const = 0;
 };

@@ -30,24 +30,24 @@ struct BehaviorActionDef {
 	 * action to allow functional updates.
 	 */
 	std::function<void()> _start;
-	
+
 	/**
 	 * The update function processing the action over time.
 	 *
 	 * This return true if the action is finished and false otherwise.
 	 */
 	std::function<bool(float dt)> _update;
-	
+
 	/**
 	 * The terminate function to interrupt an action that may have been running
 	 * over a period of time.
 	 */
 	std::function<void()> _terminate;
-	
+
 	BehaviorActionDef() : _start(nullptr), _update(nullptr),
-						  _terminate(nullptr) {}
+	_terminate(nullptr) {}
 };
-	
+
 /**
  * This class provides an action, used to represent actions in leaf nodes
  * of behavior trees.
@@ -71,29 +71,29 @@ public:
 protected:
 	/** The descriptive, identifying name of the action. */
 	std::string _name;
-	
+
 	/** The state of the action. */
 	BehaviorAction::State _state;
-	
+
 	/**
 	 * The initialization function to begin running an action.
 	 */
 	std::function<void()> _start;
-	
+
 	/**
 	 * The update function processing the action over time.
 	 *
 	 * This return true if the action is finished and false otherwise.
 	 */
 	std::function<bool(float dt)> _update;
-	
+
 	/**
 	 * The terminate function to interrupt an action over time.
 	 *
 	 * This return true if the action is finished and false otherwise.
 	 */
 	std::function<void()> _terminate;
-	
+
 #pragma mark -
 #pragma mark Constructors
 public:
@@ -103,12 +103,12 @@ public:
 	 * This constructor should never be called directly.
 	 */
 	BehaviorAction();
-	
+
 	/**
 	 * Deletes this action, disposing all resources.
 	 */
 	~BehaviorAction() { dispose(); }
-	
+
 	/**
 	 * Disposes all of the resources used by this action.
 	 *
@@ -116,7 +116,7 @@ public:
 	 * inside of a running behavior tree.
 	 */
 	void dispose();
-	
+
 	/**
 	 * Initializes an action with the given name, using the def as a
 	 * template.
@@ -135,7 +135,7 @@ public:
 		_terminate = actionDef->_terminate;
 		return true;
 	}
-	
+
 #pragma mark -
 #pragma mark Static Constructors
 	/**
@@ -153,7 +153,7 @@ public:
 		std::shared_ptr<BehaviorAction> result = std::make_shared<BehaviorAction>();
 		return (result->init(name, actionDef) ? result : nullptr);
 	}
-	
+
 #pragma mark -
 #pragma mark Identifiers
 	/**
@@ -164,7 +164,7 @@ public:
 	 * @return a string that is used to identify the action.
 	 */
 	const std::string& getName() const { return _name; }
-	
+
 #pragma mark -
 #pragma mark Behavior Trees
 	/**
@@ -175,12 +175,12 @@ public:
 	 * @return a BehaviorAction::State that represents the action's state.
 	 */
 	BehaviorAction::State getState() const { return _state; }
-	
+
 	/**
 	 * Initializes the action to make it begin running.
 	 */
 	void start() { _start(); }
-	
+
 	/**
 	 * Returns the BehaviorAction::State of the action.
 	 *
@@ -197,7 +197,7 @@ public:
 				 : BehaviorAction::State::RUNNING);
 		return getState();
 	}
-	
+
 	/**
 	 * Terminates the action, perhaps while it is running. A way to get back
 	 * to a stable state while in the middle of running an action.
@@ -217,7 +217,7 @@ protected:
 	 */
 	void setState(BehaviorAction::State state) { _state = state; }
 };
-	
-	
+
+
 }
 #endif /* __CU_BEHAVIOR_ACTION_H__ */

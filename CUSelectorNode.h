@@ -69,7 +69,7 @@ public:
 		std::shared_ptr<SelectorNode> result = std::make_shared<SelectorNode>();
 		return (result->init(name, priority, children, preempt) ? result : nullptr);
 	}
-
+	
 #pragma mark -
 #pragma mark Identifiers
 	/**
@@ -82,7 +82,7 @@ public:
 	 *
 	 * @return a string representation of this node for debugging purposes.
 	 */
-	virtual std::string toString(bool verbose = false) const override;
+	std::string toString(bool verbose = false) const override;
 
 #pragma mark -
 #pragma mark Internal Helpers
@@ -91,12 +91,12 @@ protected:
 	 * Returns the child choosen by this selector node.
 	 *
 	 * A selector node will choose the first child with a nonzero priority. If all
-	 * children have a priority of zero, the selector node will choose the first 
+	 * children have a priority of zero, the selector node will choose the first
 	 * child.
 	 *
 	 * @return the child choosen by this priority node.
 	 */
-	 virtual const std::shared_ptr<BehaviorNode>& getChosenChild() const override;
+	const std::shared_ptr<BehaviorNode>& getChosenChild() const override;
 };
 
 

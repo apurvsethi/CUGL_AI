@@ -397,7 +397,7 @@ public:
 
 protected:
 	/**
-	 * Returns true if sibling a has a larger priority than sibling 2.
+	 * Returns true if sibling a has a larger priority than sibling b.
 	 *
 	 * This method is used by std::sort to sort the children. Ties are
 	 * broken from the offset of the children.
@@ -405,7 +405,7 @@ protected:
 	 * @param a The first child
 	 * @param b The second child
 	 *
-	 * @return true if sibling a is has a larger priority than sibling 2.
+	 * @return true if sibling a is has a larger priority than sibling b.
 	 */
 	static bool compareNodeSibs(const std::shared_ptr<BehaviorNode>& a,
 								const std::shared_ptr<BehaviorNode>& b);

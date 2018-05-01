@@ -64,15 +64,15 @@ public:
 #pragma mark -
 #pragma mark Identifiers
 	/**
-	* Returns a string representation of this node for debugging purposes.
-	*
-	* If verbose is true, the string will include class information.  This
-	* allows us to unambiguously identify the class.
-	*
-	* @param verbose	Whether to include class information.
-	*
-	* @return a string representation of this node for debugging purposes.
-	*/
+	 * Returns a string representation of this node for debugging purposes.
+	 *
+	 * If verbose is true, the string will include class information.  This
+	 * allows us to unambiguously identify the class.
+	 *
+	 * @param verbose	Whether to include class information.
+	 *
+	 * @return a string representation of this node for debugging purposes.
+	 */
 	std::string toString(bool verbose = false) const override;
 
 #pragma mark -
