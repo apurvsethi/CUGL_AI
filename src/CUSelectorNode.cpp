@@ -4,13 +4,66 @@
 //
 //  This module provides support for a selector composite behavior node.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 4/30/2018
 //
 
+#include <sstream>
 #include <cugl/ai/behaviorTree/CUSelectorNode.h>
 
 using namespace cugl;
+
+#pragma mark -
+#pragma mark Identifiers
+/**
+* Returns a string representation of this node for debugging purposes.
+*
+* If verbose is true, the string will include class information.  This
+* allows us to unambiguously identify the class.
+*
+* @param verbose	Whether to include class information.
+*
+* @return a string representation of this node for debugging purposes.
+*/
+std::string SelectorNode::toString(bool verbose) const {
+	std::stringstream ss;
+	ss << (verbose ? "cugl::SelectorNode(name:" : "(name:");
+	ss << "priority" << _priority;
+	ss << "children:[";
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		ss << (*it)->getName();
+	}
+	ss << "])";
+	return ss.str();
+}
+
+/**
+* Updates the priority value for this node and all children beneath it,
+* running the piority function provided or default priority function
+* if available for the class.
+*/
+void SelectorNode::updatePriority() {
+	std::shared_ptr<BehaviorNode> selectChild = nullptr;
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		(*it)->updatePriority();
+		if (!selectChild && (*it)->getPriority() != 0.0f) {
+			selectChild = *it;
+		}
+	}
+	if (_priorityFunc) {
+		_priority = _priorityFunc();
+		_priority = (_priority > 0 ? (_priority < 1 ? _priority : 1) : 0);
+	}
+	else if (_activeChildPos != -1) {
+		_priority = _children[_activeChildPos]->getPriority();
+	}
+	else if (selectChild) {
+		_priority = selectChild->getPriority();
+	}
+	else {
+		_priority = 0;
+	}
+}
 
 /**
  * Returns the BehaviorNode::State of the selector node.
@@ -28,41 +81,48 @@ using namespace cugl;
  * @return the BehaviorNode::State of the selector node.
  */
 BehaviorNode::State SelectorNode::update(float dt) {
-	if (_state == BehaviorNode::State::FINISHED) {
-		return _state;
+	if (_state == BehaviorNode::State::RUNNING) {
+		std::shared_ptr<BehaviorNode> activeChild;
+		if (_activeChildPos != -1) {
+			activeChild = _children[_activeChildPos];
+			if (activeChild->getState() == BehaviorNode::State::FINISHED) {
+				setState(BehaviorNode::State::FINISHED);
+				return getState();
+			}
+			if (_preempt) {
+				updatePriority();
+				std::shared_ptr<BehaviorNode> selectedChild = getSelectedChild();
+				if (selectedChild && selectedChild != activeChild) {
+					activeChild->preempt();
+					_activeChildPos = selectedChild->getChildOffset();
+					selectedChild->setState(BehaviorNode::State::RUNNING);
+					activeChild = selectedChild;
+				}
+			}
+			else {
+				updatePriority();
+				activeChild = getSelectedChild();
+				_activeChildPos = activeChild->getChildOffset();
+				activeChild->setState(BehaviorNode::State::RUNNING);
+			}
+			activeChild->update(dt);
+		}
+		return getState();
 	}
-	std::shared_ptr<BehaviorNode> activeChild = nullptr, selectChild = nullptr;
+}
+
+#pragma mark -
+#pragma mark Internal Helpers
+/**
+* Returns the child with the smallest position which has a non-zero priority.
+*
+* @return the first child with a non-zero priority.
+*/
+const std::shared_ptr<BehaviorNode>& SelectorNode::getSelectedChild() const {
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		(*it)->update(dt);
-		if (!selectChild && (*it)->getPriority() > 0) {
-			selectChild = *it;
-		}
-		if ((*it)->getState() != BehaviorNode::State::UNINITIALIZED) {
-			activeChild = *it;
+		if ((*it)->getPriority() > 0) {
+			return *it;
 		}
 	}
-	if (_state == BehaviorNode::State::UNINITIALIZED) {
-		if (activeChild) {
-			activeChild->setState(BehaviorNode::State::UNINITIALIZED);
-		}
-		_priority = _priorityFunc ? _priorityFunc() : 
-			(selectChild ? selectChild->getPriority() : 0);
-	}
-	else if (_state == BehaviorNode::State::RUNNING) {
-		if (!activeChild) {
-			selectChild->start();
-			activeChild = selectChild;
-		}
-		else if (selectChild && activeChild != selectChild && _preempt) {
-			activeChild->setState(BehaviorNode::State::UNINITIALIZED);
-			selectChild->start();
-			activeChild = selectChild;
-		}
-		else if (activeChild->getState() == BehaviorNode::State::FINISHED) {
-			_state = BehaviorNode::State::FINISHED;
-		}
-		_priority = _priorityFunc ? _priorityFunc() :
-			(activeChild ? activeChild->getPriority() : 0);
-	}
-	return _state;
+	return nullptr;
 }

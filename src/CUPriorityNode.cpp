@@ -1,10 +1,10 @@
 //
-//  CUPriorityNode.h
+//  CUPriorityNode.cpp
 //  Cornell University Game Library (CUGL)
 //
 //  This module provides support for a priority composite behavior node.
 //
-//  Author: Apurv Sethi
+//  Author: Apurv Sethi and Andrew Matsumoto
 //  Version: 4/30/2018
 //
 
@@ -50,13 +50,13 @@ void PriorityNode::updatePriority() {
 		(*it)->updatePriority();
 	}
 	if (_priorityFunc) {
-		_priority = _priorityFunc();
+		setPriority(_priorityFunc());
 	}
 	else if (_activeChildPos != -1) {
-		_priority = _children[_activeChildPos]->getPriority();
+		setPriority(_children[_activeChildPos]->getPriority());
 	}
 	else {
-		_priority = getMaxPriorityChild()->getPriority();
+		setPriority(getMaxPriorityChild()->getPriority());
 	}
 }
 
@@ -113,7 +113,7 @@ BehaviorNode::State PriorityNode::update(float dt) {
 *
 * @return the child with the maximum priority.
 */
-std::shared_ptr<BehaviorNode>& PriorityNode::getMaxPriorityChild() {
+const std::shared_ptr<BehaviorNode>& PriorityNode::getMaxPriorityChild() const {
 	return *std::max_element(_children.begin(), _children.end(),
 							 BehaviorNode::compareNodeSibs);
 }

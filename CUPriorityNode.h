@@ -4,7 +4,7 @@
 //
 //  This module provides support for a priority composite behavior node.
 //
-//  Author: Apurv Sethi
+//  Author: Apurv Sethi and Andrew Matsumoto
 //  Version: 3/28/2018
 //
 
@@ -118,7 +118,7 @@ protected:
 	 *
 	 * @return the child with the maximum priority.
 	 */
-	std::shared_ptr<BehaviorNode>& getMaxPriorityChild();
+	const std::shared_ptr<BehaviorNode>& getMaxPriorityChild() const;
 
 };
 

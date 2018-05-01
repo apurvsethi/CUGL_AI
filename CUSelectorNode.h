@@ -4,7 +4,7 @@
 //
 //  This module provides support for a selector composite behavior node.
 //
-//  Author: Apurv Sethi
+//  Author: Apurv Sethi and Andrew Matsumoto
 //  Version: 3/28/2018
 //
 
@@ -41,7 +41,7 @@ public:
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	SelectorNode();
+	SelectorNode() {};
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -87,6 +87,17 @@ public:
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
+	* Updates the priority value for this node and all children beneath it.
+	*
+	* If this node has a priority function, then the priority of this node
+	* is set by calling that function. Otherwise, if this node has a child
+	* that has a state other than uninitialized, this node's priority is set to
+	* that child's priority. Otherwise, this node's priority is the priority of
+	* the first child with a non-zero priority.
+	*/
+	virtual void updatePriority() override;
+
+	/**
 	 * Returns the BehaviorNode::State of the node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
@@ -100,6 +111,16 @@ public:
 	 * @return the BehaviorNode::State of the behavior node.
 	 */
 	BehaviorNode::State update(float dt) override;
+
+#pragma mark -
+#pragma mark Internal Helpers
+protected:
+	/**
+	 * Returns the child with the smallest position which has a non-zero priority.
+	 * 
+	 * @return the first child with a non-zero priority.
+	 */
+	 const std::shared_ptr<BehaviorNode>& getSelectedChild() const;
 };
 
 
