@@ -118,6 +118,78 @@ const std::shared_ptr<BehaviorNode>& CompositeNode::getChildByPriorityIndex(unsi
 	return ordered_children[index];
 }
 
+/**
+* Stops this node from running, and also stops any running nodes under
+* this node in the tree if they exist.
+*/
+void CompositeNode::preempt() {
+	if (_state != BehaviorNode::State::RUNNING) {
+		return;
+	}
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		if ((*it)->getState() == BehaviorNode::State::RUNNING) {
+			(*it)->preempt();
+		}
+	}
+	setState(BehaviorNode::State::UNINITIALIZED);
+}
+
+/**
+* Updates the priority value for this node and all children beneath it,
+* running the piority function provided or default priority function
+* if available for the class.
+*/
+void CompositeNode::updatePriority() {
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		(*it)->updatePriority();
+	}
+	if (_priorityFunc) {
+		setPriority(_priorityFunc());
+	}
+	else if (_activeChildPos != -1) {
+		setPriority(_children[_activeChildPos]->getPriority());
+	}
+	else {
+		setPriority(getChosenChild()->getPriority());
+	}
+}
+
+/**
+* Returns the BehaviorNode::State of the node.
+*
+* Runs an update function, meant to be used on each tick, for the
+* behavior node (and nodes chosen to run below it in the tree).
+*
+* Update priority may be run as part of this function, based on whether a
+* composite node uses preemption.
+*
+* @param dt	The elapsed time since the last frame.
+*
+* @return the BehaviorNode::State of the behavior node.
+*/
+BehaviorNode::State CompositeNode::update(float dt) {
+	if (_state == BehaviorNode::State::RUNNING) {
+		std::shared_ptr<BehaviorNode> activeChild;
+		if (_activeChildPos != -1 && _preempt) {
+			updatePriority();
+		}
+		if (_activeChildPos == -1 || _preempt) {
+			activeChild = getChosenChild();
+			if (_preempt && _children[_activeChildPos] != activeChild) {
+				_children[_activeChildPos]->preempt();
+				activeChild->setState(BehaviorNode::State::RUNNING);
+				_activeChildPos = activeChild->getChildOffset();
+			}
+		}
+		else {
+			activeChild = _children[_activeChildPos];
+		}
+		activeChild->update(dt);
+		setState(activeChild->update(dt));
+	}
+	return getState();
+}
+
 #pragma mark -
 #pragma mark Internal Helpers
 /**

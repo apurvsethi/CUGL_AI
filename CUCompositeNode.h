@@ -46,6 +46,8 @@ protected:
 	/** The array of children for this composite node. */
 	std::vector<std::shared_ptr<BehaviorNode>> _children;
 
+	/** The index of the child running (-1 if no child is currently running). */
+	int _activeChildPos;
 #pragma mark -
 #pragma mark Constructors
 public:
@@ -55,7 +57,7 @@ public:
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	CompositeNode() {};
+	CompositeNode() : BehaviorNode(), _activeChildPos(-1) {};
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -239,7 +241,7 @@ public:
 	 *
 	 * @return the BehaviorNode::State of the behavior node.
 	 */
-	virtual BehaviorNode::State update(float dt) override = 0;
+	virtual BehaviorNode::State update(float dt) override;
 
 	/**
 	 * Stops this node from running, and also stops any running nodes under
@@ -256,6 +258,16 @@ protected:
 	* @param pos   The position of the child node which will be removed.
 	*/
 	void removeChild(unsigned int pos) override;
+
+	/**
+	 * Returns the child choosen by this composite node.
+	 *
+	 * The algorithm for choosing the child of this node is implementation
+	 * specific to the subclasses of this node.
+	 *
+	 * @return the child choosen by this composite node. 
+	 */
+	virtual const std::shared_ptr<BehaviorNode>& getChosenChild() const = 0;
 };
 
 

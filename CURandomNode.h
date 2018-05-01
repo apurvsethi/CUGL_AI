@@ -138,24 +138,17 @@ public:
 	virtual std::string toString(bool verbose = false) const override;
 
 #pragma mark -
-#pragma mark Behavior Tree
+#pragma mark Internal Helpers
 	/**
-	 * Returns the BehaviorNode::State of the random node.
-	 *
-	 * Runs an update function, meant to be used on each tick, for the
-	 * random node (and all nodes below this node in the tree). The state for
-	 * this node is derived from the state of the running or most recently run
-	 * node.
-	 *
-	 * The priority value of the node is updated within this function or
-	 * based on the priority values of the children nodes if no priority
-	 * function has been provided.
-	 *
-	 * @param dt	The elapsed time since the last frame.
-	 *
-	 * @return the BehaviorNode::State of the selector node.
-	 */
-	BehaviorNode::State update(float dt) override;
+	* Returns the child choosen by this composite node.
+	*
+	* The algorithm for choosing the child of this node is implementation
+	* specific to the subclasses of this node.
+	*
+	* @return the child choosen by this composite node.
+	*/
+	virtual const std::shared_ptr<BehaviorNode>& getChosenChild() const override;
+
 };
 
 

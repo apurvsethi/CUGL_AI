@@ -39,81 +39,17 @@ std::string PriorityNode::toString(bool verbose) const {
 }
 
 #pragma mark -
-#pragma mark Behavior Tree
-/**
-* Updates the priority value for this node and all children beneath it,
-* running the priority function provided or default priority function
-* if available for the class.
-*/
-void PriorityNode::updatePriority() {
-	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		(*it)->updatePriority();
-	}
-	if (_priorityFunc) {
-		setPriority(_priorityFunc());
-	}
-	else if (_activeChildPos != -1) {
-		setPriority(_children[_activeChildPos]->getPriority());
-	}
-	else {
-		setPriority(getMaxPriorityChild()->getPriority());
-	}
-}
+#pragma mark Internal Helper
 
 /**
-* Returns the BehaviorNode::State of the priority node.
+* Returns the child choosen by this priority node.
 *
-* Runs an update function, meant to be used on each tick, for the
-* priority node (and all nodes below this node in the tree).
-* The state for this node is derived from the state of the running
-* or most recently run node.
+* A priority node will choose the child with the maximum priority, with ties broken
+* by the child with the earliest position.
 *
-* The priority value of the node is updated within this function, based
-* on the priority values of the nodes below the given node.
-*
-* @param dt	The elapsed time since the last frame.
-*
-* @return the BehaviorNode::State of the priority node.
+* @return the child choosen by this priority node.
 */
-BehaviorNode::State PriorityNode::update(float dt) {
-	if (_state == BehaviorNode::State::RUNNING) {
-		std::shared_ptr<BehaviorNode> activeChild = 
-				(_activeChildPos != -1 ? _children[_activeChildPos] : nullptr);
-		if (activeChild) {
-			if (activeChild->getState() == BehaviorNode::State::FINISHED) {
-				setState(BehaviorNode::State::FINISHED);
-				return getState();
-			}
-			if (_preempt) {
-				updatePriority();
-				std::shared_ptr<BehaviorNode> maxChild = getMaxPriorityChild();
-				if (maxChild != activeChild) {
-					activeChild->preempt();
-					_activeChildPos = maxChild->getChildOffset();
-					maxChild->setState(BehaviorNode::State::RUNNING);
-					activeChild = maxChild;
-				}
-			}
-		}
-		else {
-			updatePriority();
-			activeChild = getMaxPriorityChild();
-			activeChild->preempt();
-			_activeChildPos = activeChild->getChildOffset();
-			activeChild->setState(BehaviorNode::State::RUNNING);
-		}
-		activeChild->update(dt);
-	}
-	return getState();
-}
-
-/**
-* Returns the child with the maximum priority. Ties are broken by the
-* position of the child.
-*
-* @return the child with the maximum priority.
-*/
-const std::shared_ptr<BehaviorNode>& PriorityNode::getMaxPriorityChild() const {
+const std::shared_ptr<BehaviorNode>& PriorityNode::getChosenChild() const {
 	return *std::max_element(_children.begin(), _children.end(),
 							 BehaviorNode::compareNodeSibs);
 }

@@ -86,42 +86,18 @@ public:
 	virtual std::string toString(bool verbose = false) const override;
 
 #pragma mark -
-#pragma mark Behavior Tree
-	/**
-	* Updates the priority value for this node and all children beneath it,
-	* running the piority function provided or default priority function
-	* if available for the class.
-	*/
-	virtual void updatePriority() override;
-
-	/**
-	 * Returns the BehaviorNode::State of the node.
-	 *
-	 * Runs an update function, meant to be used on each tick, for the
-	 * behavior node (and nodes chosen to run below it in the tree).
-	 *
-	 * Update priority may be run as part of this function, based on whether a
-	 * composite node uses preemption.
-	 *
-	 * @param dt	The elapsed time since the last frame.
-	 *
-	 * @return the BehaviorNode::State of the behavior node.
-	 */
-	BehaviorNode::State update(float dt) override;
-
-#pragma mark -
 #pragma mark Internal Helpers
 protected:
 	/**
-	 * Returns the child with the maximum priority. Ties are broken by the
-	 * position of the child.
-	 *
-	 * @return the child with the maximum priority.
-	 */
-	const std::shared_ptr<BehaviorNode>& getMaxPriorityChild() const;
-
+	* Returns the child choosen by this priority node.
+	*
+	* A priority node will choose the child with the maximum priority, with ties broken
+	* by the child with the earliest position.
+	*
+	* @return the child choosen by this priority node.
+	*/
+	virtual const std::shared_ptr<BehaviorNode>& getChosenChild() const = 0;
 };
-
 
 }
 #endif /* __CU_PRIORITY_NODE_H__ */

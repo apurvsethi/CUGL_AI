@@ -81,7 +81,7 @@ void BehaviorNode::dispose() {
 */
 bool BehaviorNode::compareNodeSibs(const std::shared_ptr<BehaviorNode>& a, const std::shared_ptr<BehaviorNode>& b) {
 	return a->_priority > b->_priority 
-	|| (a->_priority == b->_priority && a->_childOffset > b->_childOffset);
+	|| (a->_priority == b->_priority && a->_childOffset < b->_childOffset);
 }
 
 /**

@@ -85,42 +85,18 @@ public:
 	virtual std::string toString(bool verbose = false) const override;
 
 #pragma mark -
-#pragma mark Behavior Tree
-	/**
-	* Updates the priority value for this node and all children beneath it.
-	*
-	* If this node has a priority function, then the priority of this node
-	* is set by calling that function. Otherwise, if this node has a child
-	* that has a state other than uninitialized, this node's priority is set to
-	* that child's priority. Otherwise, this node's priority is the priority of
-	* the first child with a non-zero priority.
-	*/
-	virtual void updatePriority() override;
-
-	/**
-	 * Returns the BehaviorNode::State of the node.
-	 *
-	 * Runs an update function, meant to be used on each tick, for the
-	 * behavior node (and nodes chosen to run below it in the tree).
-	 *
-	 * Update priority may be run as part of this function, based on whether a
-	 * composite node uses preemption.
-	 *
-	 * @param dt	The elapsed time since the last frame.
-	 *
-	 * @return the BehaviorNode::State of the behavior node.
-	 */
-	BehaviorNode::State update(float dt) override;
-
-#pragma mark -
 #pragma mark Internal Helpers
 protected:
 	/**
-	 * Returns the child with the smallest position which has a non-zero priority.
-	 * 
-	 * @return the first child with a non-zero priority.
+	 * Returns the child choosen by this selector node.
+	 *
+	 * A selector node will choose the first child with a nonzero priority. If all
+	 * children have a priority of zero, the selector node will choose the first 
+	 * child.
+	 *
+	 * @return the child choosen by this priority node.
 	 */
-	 const std::shared_ptr<BehaviorNode>& getSelectedChild() const;
+	 virtual const std::shared_ptr<BehaviorNode>& getChosenChild() const override;
 };
 
 
