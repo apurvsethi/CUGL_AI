@@ -88,6 +88,13 @@ public:
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
+	* Updates the priority value for this node and all children beneath it,
+	* running the piority function provided or default priority function
+	* if available for the class.
+	*/
+	virtual void updatePriority() override;
+
+	/**
 	 * Returns the BehaviorNode::State of the node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
@@ -101,6 +108,18 @@ public:
 	 * @return the BehaviorNode::State of the behavior node.
 	 */
 	BehaviorNode::State update(float dt) override;
+
+#pragma mark -
+#pragma mark Internal Helpers
+protected:
+	/**
+	 * Returns the child with the maximum priority. Ties are broken by the
+	 * position of the child.
+	 *
+	 * @return the child with the maximum priority.
+	 */
+	std::shared_ptr<BehaviorNode>& getMaxPriorityChild();
+
 };
 
 

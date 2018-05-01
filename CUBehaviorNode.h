@@ -353,7 +353,7 @@ public:
 
 	/**
 	 * Updates the priority value for this node and all children beneath it,
-	 * running the piority function provided or default priority function
+	 * running the priority function provided or default priority function
 	 * if available for the class.
 	 */
 	virtual void updatePriority() = 0;
@@ -387,6 +387,13 @@ public:
 	 * @param offset The child offset of this node.
 	 */
 	void setChildOffset(int pos) { _childOffset = pos; }
+
+	/**
+	 * Gets the child offset of this node.
+	 *
+	 * @returns The child offset of this node.
+	 */
+	int getChildOffset() const { return _childOffset; }
 
 protected:
 	/**
