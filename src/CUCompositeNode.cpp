@@ -123,14 +123,9 @@ const std::shared_ptr<BehaviorNode>& CompositeNode::getChildByPriorityIndex(unsi
  * running child.
  */
 void CompositeNode::preempt() {
-	if (_state != BehaviorNode::State::RUNNING) {
-		return;
-	}
-	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		if ((*it)->getState() == BehaviorNode::State::RUNNING) {
-			(*it)->preempt();
-		}
-	}
+	CUAssertLog(_activeChildPos != -1,
+				"Node can only be preempted when running.");
+	_children[_activeChildPos]->preempt();
 	setState(BehaviorNode::State::UNINITIALIZED);
 }
 
@@ -176,13 +171,12 @@ BehaviorNode::State CompositeNode::update(float dt) {
 		activeChild = getChosenChild();
 		if (_preempt && _children[_activeChildPos] != activeChild) {
 			_children[_activeChildPos]->preempt();
-			_activeChildPos = activeChild->getChildOffset();
 		}
+		_activeChildPos = activeChild->getChildOffset();
 	}
 	else {
 		activeChild = _children[_activeChildPos];
 	}
-	activeChild->update(dt);
 	setState(activeChild->update(dt));
 	return getState();
 }
