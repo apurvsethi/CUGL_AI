@@ -8,6 +8,8 @@
 //  Version: 3/28/2018
 //
 
+#include <cstdlib>
+#include <ctime>
 #include <cugl/ai/behaviorTree/CUBehaviorManager.h>
 #include <cugl/ai/behaviorTree/CUPriorityNode.h>
 #include <cugl/ai/behaviorTree/CUSelectorNode.h>
@@ -27,6 +29,16 @@ using namespace cugl;
  */
 void BehaviorManager::dispose() {
 	_trees.clear();
+}
+
+/**
+ * Initializes a behavior tree manager.
+ *
+ * @return true if initialization was successful.
+ */
+bool BehaviorManager::init() {
+	std::srand(static_cast<unsigned int>(time(NULL)));
+	return true;
 }
 
 #pragma mark -

@@ -48,7 +48,7 @@ public:
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	RandomNode();
+	RandomNode() : _uniformRandom(true) {};
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -56,7 +56,8 @@ public:
 	~RandomNode() { dispose(); }
 
 	/**
-	 * Disposes all of the resources used by this node.
+	 * Disposes all of the resources used by this node, and all descendants
+	 * in the tree.
 	 *
 	 * A disposed RandomNode can be safely reinitialized.
 	 *
@@ -136,6 +137,15 @@ public:
 	 * @return a string representation of this node for debugging purposes.
 	 */
 	std::string toString(bool verbose = false) const override;
+
+#pragma mark -
+#pragma mark Behavior Tree
+	/**
+	 * Updates the priority value for this node and all children beneath it,
+	 * running the piority function provided or default priority function
+	 * if available for the class.
+	 */
+	void updatePriority() override;
 
 #pragma mark -
 #pragma mark Internal Helpers

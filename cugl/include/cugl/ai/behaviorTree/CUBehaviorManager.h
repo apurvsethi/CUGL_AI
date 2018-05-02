@@ -61,7 +61,7 @@ public:
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool init() { return true; }
+	bool init();
 
 #pragma mark -
 #pragma mark Static Constructors
