@@ -97,7 +97,6 @@ BehaviorNode::State LeafNode::update(float dt) {
 			_state = BehaviorNode::State::RUNNING;
 			break;
 		case BehaviorAction::State::FINISHED:
-			_action->terminate();
 			_state = BehaviorNode::State::FINISHED;
 			break;
 	}
