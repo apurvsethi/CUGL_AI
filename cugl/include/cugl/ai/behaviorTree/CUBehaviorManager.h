@@ -13,7 +13,7 @@
 
 #include <functional>
 #include <string>
-#include <vector>
+#include <unordered_map>
 #include <cugl/ai/behaviorTree/CUBehaviorNode.h>
 #include <cugl/ai/behaviorTree/CUBehaviorAction.h>
 
@@ -24,14 +24,14 @@ namespace cugl {
  * runs, and updates all active behavior trees.
  *
  * Additionally, the behavior manager also acts as a factory for the
- * creation of actions, which are used to represent the actions taken
- * by leaf nodes in a behavior tree.
+ * creation of BehaviorNodes, which are used to represent the behavior trees
+ * defined by BehaviorNodeDefs.
  */
 class BehaviorManager {
 #pragma mark Values
 protected:
-	/** The trees currently being run by the manager. */
-	std::vector<std::shared_ptr<BehaviorNode>> _trees;
+	/** A map of the trees currently being run by the manager. */
+	std::unordered_map<std::string, std::shared_ptr<BehaviorNode>> _trees;
 
 #pragma mark -
 #pragma mark Constructors
@@ -78,60 +78,39 @@ public:
 #pragma mark -
 #pragma mark Behavior Trees
 	/**
-	 * Returns the tree at the given position.
+	 * Returns the tree with the given name.
 	 *
-	 * While trees are enumerated in the order by which they were added,
-	 * it is recommended to attempt to retrieve a tree by name instead.
-	 *
-	 * @param pos	The tree position.
-	 *
-	 * @return the tree at the given position.
-	 */
-	const std::shared_ptr<BehaviorNode>& getTree(unsigned int pos) const;
-
-	/**
-	 * Returns the (first) tree with the given name.
-	 *
-	 * If there is more than one tree of the given name, it returns the first
-	 * one that is found.
+	 * All trees must be stored with unique names in the BehaviorManager,
+	 * and thus there cannot be multiple possible return values.
 	 *
 	 * @param name	An identifier to find the tree.
 	 *
-	 * @return the (first) tree with the given name.
+	 * @return the tree with the given name.
 	 */
-	const std::shared_ptr<BehaviorNode>& getTreeWithName(const std::string& name) const;
+	const std::shared_ptr<BehaviorNode>& getTree(const std::string& name) const;
 
 	/**
-	 * Returns the state of the tree at the given position.
+	 * Returns the state of the tree with the given name.
 	 *
-	 * While trees are enumerated in the order by which they were added,
-	 * it is recommended to attempt to retrieve the state by name instead.
-	 *
-	 * @param pos	The tree position.
-	 *
-	 * @return the state of the tree at the given position.
-	 */
-	BehaviorNode::State getTreeState(unsigned int pos) const;
-
-	/**
-	 * Returns the state of the (first) tree with the given name.
-	 *
-	 * If there is more than one tree of the given name, it returns the state
-	 * of the first one that is found.
+	 * All trees must be stored with unique names in the BehaviorManager,
+	 * and thus there cannot be multiple possible return values.
 	 *
 	 * @param name	An identifier to find the tree.
 	 *
-	 * @return the state of the (first) tree with the given name.
+	 * @return the state of the tree with the given name.
 	 */
-	BehaviorNode::State getTreeStateWithName(const std::string& name) const;
+	BehaviorNode::State getTreeState(const std::string& name) const {
+		return getTree(name)->getState();
+	}
 
 	/**
 	 * Returns whether BehaviorNode tree was successfully created and added.
 	 *
 	 * Creates BehaviorNodes from template provided by BehaviorNodeDefs, and
-	 * adds it to the BehaviorManager. Returns falsereturns if a BehaviorNodeDef
-	 * provided does not allow creation of a matching BehaviorNode, true
-	 * otherwise.
+	 * adds it to the BehaviorManager. Returns false if a BehaviorNodeDef
+	 * provided does not allow creation of a matching BehaviorNode, or if the
+	 * name provided to the treeDef is equal to a name provided for another
+	 * tree in the manager. True otherwise.
 	 *
 	 * @param treeDef	BehaviorNodeDef tree template for a BehaviorNode tree.
 	 *
@@ -140,50 +119,25 @@ public:
 	bool addTree(const std::shared_ptr<BehaviorNodeDef>& treeDef);
 
 	/**
-	 * Removes the tree at the given position from the manager, if the
-	 * tree is not currently running.
+	 * Remove the tree with the given name, if the tree is not currently
+	 * running.
 	 *
-	 * While trees are enumerated in the order by which they were added,
-	 * it is recommended to access a tree by name instead.
-	 *
-	 * @param pos	The tree position.
-	 *
-	 * @warning The tree will only be removed if not currently running.
-	 */
-	void removeTree(unsigned int pos);
-
-	/**
-	 * Remove the (first) tree with the given name, if the tree is not
-	 * currently running.
-	 *
-	 * If there is more than one tree of the given name, it removes the
-	 * first one that is found.
-	 *
-	 * @param name	An identifier to find the tree.
-	 *
-	 * @warning The tree will only be removed if not currently running.
-	 */
-	void removeTreeWithName(const std::string& name);
-
-	/**
-	 * Starts running the tree at the given position.
-	 *
-	 * While trees are enumerated in the order by which they were added,
-	 * it is recommended to access them by name instead.
-	 *
-	 * @param pos	The tree position.
-	 */
-	void startTree(unsigned int pos);
-
-	/**
-	 * Starts running the (first) tree with the given name.
-	 *
-	 * If there is more than one tree of the given name, it starts running
-	 * the first one that is found.
+	 * All trees must be stored with unique names in the BehaviorManager,
+	 * and thus there cannot be multiple possible return values.
 	 *
 	 * @param name	An identifier to find the tree.
 	 */
-	void startTreeWithName(const std::string& name);
+	void removeTree(const std::string& name);
+
+	/**
+	 * Starts running the tree with the given name.
+	 *
+	 * All trees must be stored with unique names in the BehaviorManager,
+	 * and thus there cannot be multiple possible trees to start.
+	 *
+	 * @param name	An identifier to find the tree.
+	 */
+	void startTree(const std::string& name);
 
 	/**
 	 * Runs an update function, meant to be used on each tick, for each

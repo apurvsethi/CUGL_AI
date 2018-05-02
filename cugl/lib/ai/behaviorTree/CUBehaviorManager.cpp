@@ -26,172 +26,81 @@ using namespace cugl;
  * It is unsafe to call this while behavior trees are running.
  */
 void BehaviorManager::dispose() {
-	for(auto it = _trees.begin(); it != _trees.end(); ++it) {
-		(*it)->dispose();
-	}
 	_trees.clear();
 }
 
 #pragma mark -
 #pragma mark Behavior Trees
 /**
- * Returns the tree at the given position.
+ * Returns the tree with the given name.
  *
- * While trees are enumerated in the order by which they were added,
- * it is recommended to attempt to retrieve a tree by name instead.
- *
- * @param pos	The tree position.
- *
- * @return the tree at the given position.
- */
-const std::shared_ptr<BehaviorNode>& BehaviorManager::getTree(unsigned int pos) const {
-	CUAssertLog(pos < _trees.size(), "Position index out of bounds");
-	return _trees[pos];
-}
-
-/**
- * Returns the (first) tree with the given name.
- *
- * If there is more than one tree of the given name, it returns the first
- * one that is found.
+ * All trees must be stored with unique names in the BehaviorManager,
+ * and thus there cannot be multiple possible return values.
  *
  * @param name	An identifier to find the tree.
  *
- * @return the (first) tree with the given name.
+ * @return the tree with the given name.
  */
-const std::shared_ptr<BehaviorNode>& BehaviorManager::getTreeWithName(const std::string& name) const {
-	for(auto it = _trees.begin(); it != _trees.end(); ++it) {
-		if ((*it)->getName() == name) {
-			return *it;
-		}
-	}
-	return nullptr;
-}
-
-/**
- * Returns the state of the tree at the given position.
- *
- * While trees are enumerated in the order by which they were added,
- * it is recommended to attempt to retrieve the state by name instead.
- *
- * @param pos	The tree position.
- *
- * @return the state of the tree at the given position.
- */
-BehaviorNode::State BehaviorManager::getTreeState(unsigned int pos) const {
-	CUAssertLog(pos < _trees.size(), "Position index out of bounds");
-	return _trees[pos]->getState();
-}
-
-/**
- * Returns the state of the (first) tree with the given name.
- *
- * If there is more than one tree of the given name, it returns the state
- * of the first one that is found.
- *
- * @param name	An identifier to find the tree.
- *
- * @return the state of the (first) tree with the given name.
- */
-BehaviorNode::State BehaviorManager::getTreeStateWithName(const std::string& name) const {
-	for(auto it = _trees.begin(); it != _trees.end(); ++it) {
-		if ((*it)->getName() == name) {
-			return (*it)->getState();
-		}
-	}
-	return BehaviorNode::State::UNINITIALIZED;
+const std::shared_ptr<BehaviorNode>& BehaviorManager::getTree(const std::string& name) const {
+	CUAssertLog(_trees.find(name) != _trees.end(),
+				"Tree with given name does not exist in BehaviorManager.");
+	return _trees.at(name);
 }
 
 /**
  * Returns whether BehaviorNode tree was successfully created and added.
  *
+ * The name given to a treeDef must be unique amongst the trees added to the
+ * BehaviorManager, in order to ensure that trees are accessed properly.
+ *
  * Creates BehaviorNodes from template provided by BehaviorNodeDefs, and
- * adds it to the BehaviorManager. Returns falsereturns if a BehaviorNodeDef
- * provided does not allow creation of a matching BehaviorNode, true
- * otherwise.
+ * adds it to the BehaviorManager. Returns false if a BehaviorNodeDef
+ * provided does not allow creation of a matching BehaviorNode, true otherwise.
  *
  * @param treeDef	BehaviorNodeDef tree template for a BehaviorNode tree.
  *
  * @return whether BehaviorNode tree was successfully created and added.
  */
 bool BehaviorManager::addTree(const std::shared_ptr<BehaviorNodeDef>& treeDef) {
+	CUAssertLog(_trees.find(treeDef->_name) == _trees.end(),
+				"Tree with given already exists in BehaviorManager.");
 	std::shared_ptr<BehaviorNode> tree = createTree(treeDef);
 	if (tree == nullptr) {
 		return false;
 	}
-	_trees.push_back(tree);
+	_trees[tree->getName()] = tree;
 	return true;
 }
 
 /**
- * Removes the tree at the given position from the manager, if the
- * tree is not currently running.
+ * Remove the tree with the given name, if the tree is not currently
+ * running.
  *
- * While trees are enumerated in the order by which they were added,
- * it is recommended to access a tree by name instead.
- *
- * @param pos	The tree position.
- *
- * @warning The tree will only be removed if not currently running.
- */
-void BehaviorManager::removeTree(unsigned int pos) {
-	CUAssertLog(pos < _trees.size(), "Position index out of bounds");
-	CUAssertLog(_trees[pos]->getState() == BehaviorNode::State::RUNNING,
-				"Tree is currently running");
-	std::shared_ptr<BehaviorNode> child = _trees[pos];
-	for(int ii = pos; ii < _trees.size() - 1; ii++) {
-		_trees[ii] = _trees[ii + 1];
-	}
-	_trees.resize(_trees.size() - 1);
-}
-
-/**
- * Remove the (first) tree with the given name, if the tree is not
- * currently running.
- *
- * If there is more than one tree of the given name, it removes the
- * first one that is found.
- *
- * @param name	An identifier to find the tree.
- *
- * @warning The tree will only be removed if not currently running.
- */
-void BehaviorManager::removeTreeWithName(const std::string& name) {
-	for(int ii = 0; ii < _trees.size(); ii++) {
-		if (_trees[ii]->getName() == name) {
-			removeTree(ii);
-			break;
-		}
-	}
-}
-
-/**
- * Starts running the tree at the given position.
- *
- * While trees are enumerated in the order by which they were added,
- * it is recommended to access them by name instead.
- *
- * @param pos	The tree position.
- */
-void BehaviorManager::startTree(unsigned int pos) {
-	CUAssertLog(pos < _trees.size(), "Position index out of bounds");
-	_trees[pos]->start();
-}
-
-/**
- * Starts running the (first) tree with the given name.
- *
- * If there is more than one tree of the given name, it starts running
- * the first one that is found.
+ * All trees must be stored with unique names in the BehaviorManager,
+ * and thus there cannot be multiple possible return values.
  *
  * @param name	An identifier to find the tree.
  */
-void BehaviorManager::startTreeWithName(const std::string& name) {
-	for(auto it = _trees.begin(); it != _trees.end(); ++it) {
-		if ((*it)->getName() == name) {
-			(*it)->start();
-		}
+void BehaviorManager::removeTree(const std::string& name) {
+	CUAssertLog(_trees.find(name) != _trees.end(),
+				"Tree with given name does not exist in BehaviorManager.");
+	if (_trees.at(name)->getState() != BehaviorNode::State::RUNNING) {
+		_trees.erase(name);
 	}
+}
+
+/**
+ * Starts running the tree with the given name.
+ *
+ * All trees must be stored with unique names in the BehaviorManager,
+ * and thus there cannot be multiple possible trees to start.
+ *
+ * @param name	An identifier to find the tree.
+ */
+void BehaviorManager::startTree(const std::string& name) {
+	CUAssertLog(_trees.find(name) != _trees.end(),
+				"Tree with given name does not exist in BehaviorManager.");
+	_trees.at(name)->start();
 }
 
 /**
@@ -202,8 +111,8 @@ void BehaviorManager::startTreeWithName(const std::string& name) {
  */
 void BehaviorManager::update(float dt) {
 	for(auto it = _trees.begin(); it != _trees.end(); ++it) {
-		if ((*it)->getState() == BehaviorNode::State::RUNNING) {
-			(*it)->update(dt);
+		if (it->second->getState() == BehaviorNode::State::RUNNING) {
+			it->second->update(dt);
 		}
 	}
 }
