@@ -89,29 +89,17 @@ std::string LeafNode::toString(bool verbose) const {
  * @return the BehaviorNode::State of the last node.
  */
 BehaviorNode::State LeafNode::update(float dt) {
-	if (!_action) {
-		_priority = 0;
-		return _state;
+	if (_action->getState() == BehaviorAction::State::UNINITIALIZED) {
+		_action->start();
 	}
-	switch(_state) {
-		case BehaviorNode::State::UNINITIALIZED:
-			if (_action->getState() == BehaviorAction::State::RUNNING) {
-				_action->terminate();
-			}
+	switch(_action->update(dt)) {
+		case BehaviorAction::State::RUNNING:
+			_state = BehaviorNode::State::RUNNING;
 			break;
-		case BehaviorNode::State::RUNNING:
-			if (_action->getState() == BehaviorAction::State::UNINITIALIZED) {
-				_action->start();
-			}
-			else {
-				_action->update(dt);
-			}
+		case BehaviorAction::State::FINISHED:
+			_action->terminate();
+			_state = BehaviorNode::State::FINISHED;
 			break;
-		case BehaviorNode::State::FINISHED:
-			if (_action->getState() == BehaviorAction::State::RUNNING) {
-				_action->terminate();
-			}
 	}
-	_priority = _priorityFunc();
 	return _state;
 }
