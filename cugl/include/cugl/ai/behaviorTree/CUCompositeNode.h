@@ -241,13 +241,13 @@ public:
 	 *
 	 * @return the BehaviorNode::State of the behavior node.
 	 */
-	virtual BehaviorNode::State update(float dt) override;
+	BehaviorNode::State update(float dt) override;
 
 	/**
 	 * Stops this node from running, and also stops any running nodes under
 	 * this node in the tree if they exist.
 	 */
-	virtual void preempt() override;
+	void preempt() override;
 
 #pragma mark -
 #pragma mark Internal Helpers
