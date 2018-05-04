@@ -98,7 +98,7 @@ public:
 	 *
 	 * @return the node's child.
 	 */
-	const std::shared_ptr<BehaviorNode>& getChild() const { return _child; }
+	std::shared_ptr<const BehaviorNode> getChild() const { return _child; }
 
 	/**
 	 * Returns the node's child, typecast to a shared T pointer.

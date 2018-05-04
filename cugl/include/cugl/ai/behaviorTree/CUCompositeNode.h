@@ -124,7 +124,7 @@ public:
 	 *
 	 * @return the child at the given position.
 	 */
-	const std::shared_ptr<BehaviorNode>& getChild(unsigned int pos) const;
+	std::shared_ptr<const BehaviorNode> getChild(unsigned int pos) const;
 
 	/**
 	 * Returns the child at the given position, typecast to a shared T pointer.
@@ -156,7 +156,7 @@ public:
 	 *
 	 * @return the (first) child with the given name.
 	 */
-	const std::shared_ptr<BehaviorNode>& getChildByName(const std::string& name) const;
+	std::shared_ptr<const BehaviorNode> getChildByName(const std::string& name) const;
 
 	/**
 	 * Returns the (first) child with the given name, typecast to a shared T
@@ -190,7 +190,7 @@ public:
 	 *
 	 * @return the child with the given priority index.
 	 */
-	const std::shared_ptr<BehaviorNode>& getChildByPriorityIndex(unsigned int index) const;
+	std::shared_ptr<const BehaviorNode> getChildByPriorityIndex(unsigned int index) const;
 
 	/**
 	 * Returns the child with the given priority index, typecast to a shared T
@@ -219,7 +219,7 @@ public:
 	 *
 	 * @return the list of the node's children.
 	 */
-	const std::vector<std::shared_ptr<BehaviorNode>>& getChildren() const { return _children; }
+	std::vector<std::shared_ptr<const BehaviorNode>> getChildren() const;
 
 	/**
 	 * Updates the priority value for this node and all children beneath it,

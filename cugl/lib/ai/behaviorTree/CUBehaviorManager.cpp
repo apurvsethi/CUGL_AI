@@ -53,7 +53,7 @@ bool BehaviorManager::init() {
  *
  * @return the tree with the given name.
  */
-const std::shared_ptr<BehaviorNode>& BehaviorManager::getTree(const std::string& name) const {
+std::shared_ptr<const BehaviorNode> BehaviorManager::getTree(const std::string& name) const {
 	CUAssertLog(_trees.find(name) != _trees.end(),
 				"Tree with given name does not exist in BehaviorManager.");
 	return _trees.at(name);

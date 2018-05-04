@@ -77,7 +77,7 @@ void CompositeNode::dispose() {
  *
  * @return the child at the given position.
  */
-const std::shared_ptr<BehaviorNode>& CompositeNode::getChild(unsigned int pos) const {
+std::shared_ptr<const BehaviorNode> CompositeNode::getChild(unsigned int pos) const {
 	CUAssertLog(pos < _children.size(), "Position index out of bounds");
 	return _children[pos];
 }
@@ -92,7 +92,7 @@ const std::shared_ptr<BehaviorNode>& CompositeNode::getChild(unsigned int pos) c
  *
  * @return the (first) child with the given name.
  */
-const std::shared_ptr<BehaviorNode>& CompositeNode::getChildByName(const std::string& name) const {
+std::shared_ptr<const BehaviorNode> CompositeNode::getChildByName(const std::string& name) const {
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
 		if ((*it)->getName() == name) {
 			return *it;
@@ -111,11 +111,24 @@ const std::shared_ptr<BehaviorNode>& CompositeNode::getChildByName(const std::st
  *
  * @return the child with the given priority index.
  */
-const std::shared_ptr<BehaviorNode>& CompositeNode::getChildByPriorityIndex(unsigned int index) const {
+std::shared_ptr<const BehaviorNode> CompositeNode::getChildByPriorityIndex(unsigned int index) const {
 	CUAssertLog(index < _children.size(), "Priority index out of bounds");
 	std::vector<std::shared_ptr<BehaviorNode>> ordered_children = _children;
 	std::sort(ordered_children.begin(), ordered_children.end(), BehaviorNode::compareNodeSibs);
 	return ordered_children[index];
+}
+
+/**
+ * Returns the list of the node's children.
+ *
+ * @return the list of the node's children.
+ */
+std::vector<std::shared_ptr<const BehaviorNode>> CompositeNode::getChildren() const {
+	std::vector<std::shared_ptr<const BehaviorNode>> children;
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		children.push_back((*it));
+	}
+	return children;
 }
 
 /**

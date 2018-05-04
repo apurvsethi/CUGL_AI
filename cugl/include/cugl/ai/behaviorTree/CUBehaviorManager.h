@@ -87,7 +87,7 @@ public:
 	 *
 	 * @return the tree with the given name.
 	 */
-	const std::shared_ptr<BehaviorNode>& getTree(const std::string& name) const;
+	std::shared_ptr<const BehaviorNode> getTree(const std::string& name) const;
 
 	/**
 	 * Returns the state of the tree with the given name.
