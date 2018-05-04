@@ -50,3 +50,38 @@ void DecoratorNode::dispose() {
 	_child->dispose();
 	_child = nullptr;
 }
+
+#pragma mark -
+#pragma mark Behavior Tree
+/**
+ * Returns the BehaviorNode::State of the node.
+ *
+ * Runs an update function, meant to be used on each tick, for the
+ * behavior node (and nodes chosen to run below it in the tree).
+ *
+ * Update priority may be run as part of this function, based on whether a
+ * composite node uses preemption.
+ *
+ * @param dt	The elapsed time since the last frame.
+ *
+ * @return the BehaviorNode::State of the behavior node.
+ */
+BehaviorNode::State DecoratorNode::update(float dt) {
+	if (getState() == BehaviorNode::State::UNINITIALIZED
+		|| getState() == BehaviorNode::State::FINISHED) {
+		return getState();
+	}
+
+	_child->setState(BehaviorNode::State::RUNNING);
+	setState(_child->update(dt));
+	return getState();
+}
+
+/**
+ * Stops this node from running, and also stops any running nodes under
+ * this node in the tree if they exist.
+ */
+void DecoratorNode::preempt() {
+	_child->preempt();
+	setState(BehaviorNode::State::UNINITIALIZED);
+}

@@ -312,7 +312,7 @@ public:
 	 *
 	 * @param state The state of this node.
 	 */
-	void setState(BehaviorNode::State state) { _state = state; }
+	virtual void setState(BehaviorNode::State state) { _state = state; }
 
 	/**
 	 * Returns a (weak) pointer to the parent node.
@@ -348,6 +348,7 @@ public:
 	 */
 	void start() {
 		updatePriority();
+		setState(BehaviorNode::State::RUNNING);
 		update(0.0f);
 	}
 

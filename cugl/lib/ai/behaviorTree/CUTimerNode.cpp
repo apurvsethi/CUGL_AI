@@ -28,8 +28,9 @@ using namespace cugl;
 void TimerNode::dispose() {
 	DecoratorNode::dispose();
 	_timeDelay = false;
-	_delay = 0;
-	_currentDelay = 0;
+	_delay = 0.0f;
+	_delaying = false;
+	_currentDelay = 0.0f;
 }
 
 /**
@@ -49,7 +50,8 @@ bool TimerNode::init(const std::string& name,
 	DecoratorNode::init(name, child);
 	_timeDelay = timeDelay;
 	_delay = delay;
-	_currentDelay = 0;
+	_delaying = false;
+	_currentDelay = 0.0f;
 	return true;
 }
 
@@ -74,4 +76,75 @@ std::string TimerNode::toString(bool verbose) const {
 	ss << "delay time:" << _delay;
 	ss << ")";
 	return ss.str();
+}
+
+#pragma mark -
+#pragma mark Behavior Tree
+/**
+ * Sets the state of this node.
+ *
+ * This state is used to identify the state of the node. If the node
+ * has no parent, then this is the state of the behavior tree.
+ *
+ * @param state The state of this node.
+ */
+void TimerNode::setState(BehaviorNode::State state) {
+	if (state == BehaviorNode::State::RUNNING && _timeDelay) {
+		_delaying = true;
+	}
+	_state = state;
+}
+
+/**
+ * Updates the priority value for this node and all children beneath it,
+ * running the piority function provided or default priority function
+ * if available for the class.
+ */
+void TimerNode::updatePriority() {
+	if (_delaying && !_timeDelay) {
+		setPriority(0.0f);
+	}
+	else {
+		_child->updatePriority();
+		setPriority(_child->getPriority());
+	}
+}
+
+/**
+ * Returns the BehaviorNode::State of the node.
+ *
+ * Runs an update function, meant to be used on each tick, for the
+ * behavior node (and nodes chosen to run below it in the tree).
+ *
+ * Update priority may be run as part of this function, based on whether a
+ * composite node uses preemption.
+ *
+ * @param dt	The elapsed time since the last frame.
+ *
+ * @return the BehaviorNode::State of the behavior node.
+ */
+BehaviorNode::State TimerNode::update(float dt) {
+	if (_delaying) {
+		_currentDelay += dt;
+		if (_currentDelay >= _delay) {
+			_delaying = false;
+			_currentDelay = 0.0f;
+		}
+	}
+
+	if (_delaying && _timeDelay) {
+		return getState();
+	}
+	return DecoratorNode::update(dt);
+}
+
+/**
+ * Stops this node from running, and also stops any running nodes under
+ * this node in the tree if they exist.
+ */
+void TimerNode::preempt() {
+	if (!_timeDelay) {
+		_delaying = true;
+	}
+	DecoratorNode::preempt();
 }

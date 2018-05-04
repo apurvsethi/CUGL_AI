@@ -86,15 +86,6 @@ public:
 		_child->updatePriority();
 		_priority = 1 - _child->getPriority();
 	}
-
-	/**
-	 * Stops this node from running, and also stops any running nodes under
-	 * this node in the tree if they exist.
-	 */
-	void preempt() override {
-		_child->preempt();
-		setState(BehaviorNode::State::UNINITIALIZED);
-	}
 };
 
 

@@ -40,6 +40,9 @@ protected:
 	/** The delay before beginning executing in seconds. */
 	float _delay;
 
+	/** Whether this node is currently acting to delay. */
+	bool _delaying;
+
 	/** The current time that has been delayed. */
 	float _currentDelay;
 
@@ -174,12 +177,22 @@ public:
 	/**
 	 * Returns the current time that has been delayed.
 	 *
-	 * The child will be prevented from running until the current time delayed is
-	 * greater than the delay.
+	 * The child will be prevented from running until the current time delayed
+	 * is greater than the delay.
 	 *
 	 * @param The current time that has been delayed
 	 */
-	float getCurrentDelay() const { return _currentDelay;  }
+	float getCurrentDelay() const { return _currentDelay; }
+
+	/**
+	 * Sets the state of this node.
+	 *
+	 * This state is used to identify the state of the node. If the node
+	 * has no parent, then this is the state of the behavior tree.
+	 *
+	 * @param state The state of this node.
+	 */
+	void setState(BehaviorNode::State state) override;
 
 	/**
 	 * Updates the priority value for this node and all children beneath it,
@@ -187,6 +200,21 @@ public:
 	 * if available for the class.
 	 */
 	void updatePriority() override;
+
+	/**
+	 * Returns the BehaviorNode::State of the node.
+	 *
+	 * Runs an update function, meant to be used on each tick, for the
+	 * behavior node (and nodes chosen to run below it in the tree).
+	 *
+	 * Update priority may be run as part of this function, based on whether a
+	 * composite node uses preemption.
+	 *
+	 * @param dt	The elapsed time since the last frame.
+	 *
+	 * @return the BehaviorNode::State of the behavior node.
+	 */
+	BehaviorNode::State update(float dt) override;
 
 	/**
 	 * Stops this node from running, and also stops any running nodes under

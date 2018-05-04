@@ -135,16 +135,13 @@ public:
 	 *
 	 * @return the BehaviorNode::State of the behavior node.
 	 */
-	BehaviorNode::State update(float dt) override {
-		setState(_child->update(dt));
-		return getState();
-	}
+	virtual BehaviorNode::State update(float dt) override;
 
 	/**
 	 * Stops this node from running, and also stops any running nodes under
 	 * this node in the tree if they exist.
 	 */
-	virtual void preempt() override = 0;
+	virtual void preempt() override;
 
 protected:
 	/**

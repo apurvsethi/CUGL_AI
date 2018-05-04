@@ -179,7 +179,11 @@ public:
 	/**
 	 * Initializes the action to make it begin running.
 	 */
-	void start() { _start(); }
+	void start() {
+		setState(BehaviorAction::State::RUNNING);
+		_start();
+
+	}
 
 	/**
 	 * Returns the BehaviorAction::State of the action.
@@ -193,8 +197,10 @@ public:
 	 * @return the BehaviorAction::State of the action.
 	 */
 	BehaviorAction::State update(float dt) {
-		setState(_update(dt) ? BehaviorAction::State::FINISHED
-				 : BehaviorAction::State::RUNNING);
+		if (getState() == BehaviorAction::State::RUNNING) {
+			setState(_update(dt) ? BehaviorAction::State::FINISHED
+					 : BehaviorAction::State::RUNNING);
+		}
 		return getState();
 	}
 
