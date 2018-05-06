@@ -25,6 +25,7 @@
 
 namespace cugl {
 
+#pragma mark Behavior Node Defintion
 /**
  * This stuct is a reusable defintion the necessary information to construct a
  * {@link BehaviorNode}. This definition is used by the {@link BehaviorManager}
@@ -100,62 +101,57 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	std::function<float()> _priorityFunc;
 
 	/**
-	 * Whether or not a node should choose a new child node on each update,
-	 * possibly interrupting an old child node's execution if a different node
-	 * is chosen. If true, the node can interrupt a running child node,
+	 * Whether a node should choose a new child node on each update, possibly
+	 * interrupting an old child node's execution if a different child is
+	 * chosen. If true, the node can interrupt a running child node,
 	 * otherwise a choosen running child cannot be interrupted to run a
 	 * different child.
 	 *
-	 * This flag is only used for composite nodes ({@link PriorityNode},
-	 * {@link SelectorNode}, {@link RandomNode}).
+	 * This flag is only used if this node is a composite node
+	 * ({@link PriorityNode}, {@link SelectorNode}, {@link RandomNode}).
 	 */
 	bool _preempt;
 
 	/**
-	 * Whether or not the random node should choose the child for execution
-	 * based on a uniformly at random choice amongst its children, or should
-	 * choose the child randomly with weightage being provided for children
-	 * nodes through their priority values. If true, then the node chooses
-	 * uniformly at random, otherwise the node uses a weighted probability.
+	 * Whether a random node should choose the a child for execution uniformly
+	 * at random among its children, or choose a child randomly with each
+	 * child's probability of being choosen weighted by its priority. If true,
+	 * then the node chooses uniformly at random, otherwise, the node uses a
+	 * weighted probability.
 	 *
-	 * This flag is only useful for {@link RandomNode}.
+	 * This flag is only used if this node is a {@link RandomNode}.
 	 */
 	bool _uniformRandom;
 
 	/**
 	 * The array of children for this node.
 	 *
-	 * This should only be used if the node is a composite (PriorityNode,
-	 * SelectorNode, RandomNode) or decorator node (Inverter Node, TimerNode)
-	 * and cannot be used for a leaf node.
-	 *
-	 * Additionally, there should only be one child in this vector for decorator
-	 * nodes (InverterNode and TimerNode).
+	 * If this node is a leaf node, then this vector should be empty. If this
+	 * node is a decorator node, then this vector should have exactly one
+	 * element.
 	 */
 	std::vector<std::shared_ptr<BehaviorNodeDef>> _children;
 
 	/**
-	 * Whether the time provided to the TimerNode should be used to delay
-	 * execution of its child node, or should be used to ensure that the child
-	 * node is not chosen again for the given amount of time. If true, then
-	 * execution is delayed, otherwise the child is not chosen after execution
-	 * for the given time.
+	 * Whether a timer node should delay before execution or after preemption.
+	 * If true, then the node will delay before running its child, otherwise,
+	 * the node cannot be choosen for a certain amount of time after preemption.
 	 *
-	 * This flag is only useful for TimerNode.
+	 * This flag is only used if this node is a {@link TimerNode}.
 	 */
 	bool _timeDelay;
 
 	/**
-	 * The delay before beginning executing in seconds.
+	 * The amount of time to delay in seconds.
 	 *
-	 * This flag is only useful for TimerNode.
+	 * This value is only used if this node is a {@link TimerNode}.
 	 */
 	float _delay;
 
 	/**
-	 * The action used when this node is run.
+	 * The action performed when this node is run.
 	 *
-	 * This should only be used when this node is of type LeafNode.
+	 * This value is only used when this node is a {@link LeafNode}.
 	 */
 	std::shared_ptr<BehaviorAction> _action;
 
@@ -176,6 +172,8 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	 */
 	std::shared_ptr<BehaviorNodeDef> getNodeByName(const std::string& name);
 };
+
+#pragma mark -
 
 /**
  * This class provides a behavior node for a behavior tree.
