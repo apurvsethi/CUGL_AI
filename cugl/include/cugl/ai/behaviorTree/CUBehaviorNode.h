@@ -2,15 +2,16 @@
 //  CUBehaviorNode.h
 //  Cornell University Game Library (CUGL)
 //
-//  This module provides support for a behavior node as part of a
-//  behavior tree.
+//  This module provides support for a behavior node as part of a behavior tree.
+//  The behavior tree node chooses an action by setting a priority for each node
+//  and traversing down the tree to select an action
 //
-//  You should never instantiate an object of this class.  Instead, you should
-//  use one of the concrete subclasses of BehaviorNode. Because this is an
-//  abstract class, it has no allocators.  It only has an initializer.
+//  As this is an abstract class, it has no static constructors.  However, we
+//  still separate initialization from the constructor as with all classes in
+//  this engine.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 3/28/2018
+//  Version: 5/6/2018
 //
 
 #ifndef __CU_BEHAVIOR_NODE_H__
@@ -25,25 +26,26 @@
 namespace cugl {
 
 /**
- * A def through which a behavior node is constructed; a template to use in
- * order to create a node and thus a behavior tree.
+ * This stuct is a reusable defintion the necessary information to construct a
+ * {@link BehaviorNode}. This definition is used by the {@link BehaviorManager}
+ * to create a behavior tree node.
  */
 struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	/**
-	 * This enum is used to determine the type of the BehaviorNode. When
-	 * creating an instance of a behavior node from a BehaviorNodeDef, this
-	 * enum is used to determine the type of behavior node created.
+	 * This enum is used to describe the type of the {@link BehaviorNode}.
+	 *
+	 * When creating an instance of a behavior node from a BehaviorNodeDef, this
+	 * enum is used to determine the type of behavior tree node created.
 	 */
 	enum class Type {
 		/**
 		 * A priority node is a composite node, or a node with one or more
-		 * children, that uses the priority value of its children to choose the
-		 * child that will run.
+		 * children, that chooses the child with the highest priority to run.
 		 */
 		PRIORITY_NODE,
 		/**
 		 * A selector node is a composite node, or a node with one or more
-		 * children, that runs the first child in its list of children with
+		 * children, that runs the first child in its list of children with a
 		 * non-zero priority.
 		 */
 		SELECTOR_NODE,
@@ -81,27 +83,31 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	/** The descriptive, identifying name of the node. */
 	std::string _name;
 
-	/** The type of behavior node this def is for. */
+	/** The type of behavior tree node this definition describes. */
 	Type _type;
 
 	/**
-	 * The priority function for this behavior node.
+	 * The priority function for this behavior tree node.
 	 *
-	 * This should return a value between 0 and 1 representing the priority.
-	 * This function can be user defined, and the default values are defined
-	 * by the type of node.
+	 * This function is used to assign a priority to a particular node. This
+	 * function must return a value between 0 and 1.
+	 *
+	 * This function must be provided if this node is a {@link LeafNode} and
+	 * is optional if this node is a composite node ({@link PriorityNode},
+	 * {@link SelectorNode}, {@link RandomNode}). This function is not used if
+	 * this node is a decorator node ({@link InverterNode}, {@link TimerNode}).
 	 */
 	std::function<float()> _priorityFunc;
 
 	/**
-	 * Whether or not the composite node should choose a new child node on each
-	 * execution, possibly interrupting an old child node's execution if a
-	 * different node would be chosen now. If true, the composite node can
-	 * interrupt a running child node, otherwise a chosen node cannot be
-	 * interrupted.
+	 * Whether or not a node should choose a new child node on each update,
+	 * possibly interrupting an old child node's execution if a different node
+	 * is chosen. If true, the node can interrupt a running child node,
+	 * otherwise a choosen running child cannot be interrupted to run a
+	 * different child.
 	 *
-	 * This flag is only useful for composite nodes (PriorityNode, SelectorNode,
-	 * RandomNode).
+	 * This flag is only used for composite nodes ({@link PriorityNode},
+	 * {@link SelectorNode}, {@link RandomNode}).
 	 */
 	bool _preempt;
 
@@ -112,7 +118,7 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	 * nodes through their priority values. If true, then the node chooses
 	 * uniformly at random, otherwise the node uses a weighted probability.
 	 *
-	 * This flag is only useful for RandomNode.
+	 * This flag is only useful for {@link RandomNode}.
 	 */
 	bool _uniformRandom;
 
