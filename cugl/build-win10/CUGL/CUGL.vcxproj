@@ -71,6 +71,7 @@
     <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CURandomNode.h" />
     <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUSelectorNode.h" />
     <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUTimerNode.h" />
+    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\cu_behavior_tree.h" />
     <ClInclude Include="..\..\include\cugl\assets\CUAsset.h" />
     <ClInclude Include="..\..\include\cugl\assets\CUAssetManager.h" />
     <ClInclude Include="..\..\include\cugl\assets\CUFontLoader.h" />

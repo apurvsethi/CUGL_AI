@@ -10,8 +10,10 @@
 //  still separate initialization from the constructor as with all classes in
 //  this engine.
 //
+//  This class uses our standard shared-pointer architecture.
+//
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/6/2018
+//  Version: 5/7/2018
 //
 
 #ifndef __CU_BEHAVIOR_NODE_H__
@@ -35,8 +37,8 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	/**
 	 * This enum is used to describe the type of the {@link BehaviorNode}.
 	 *
-	 * When creating an instance of a behavior node from a BehaviorNodeDef, this
-	 * enum is used to determine the type of behavior tree node created.
+	 * When creating an instance of a behavior tree node from a BehaviorNodeDef,
+	 * this enum is used to determine the type of behavior tree node created.
 	 */
 	enum class Type {
 		/**
@@ -176,18 +178,24 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 #pragma mark -
 
 /**
- * This class provides a behavior node for a behavior tree.
+ * An abstract class for a behavior tree node.
  *
- * A behavior node refers to any given node within a beahvior tree,
- * whether it is a CompositeNode, DecoratorNode, or LeafNode.
+ * This class is a base class for the individual nodes of the behavior tree.
+ * Behavior tree nodes are either composite, decorator, or leaf nodes.
  *
- * A behavior tree is a construction of behavior nodes, with the top
- * node that does not have a parent referring to the root of the tree.
- * The tree must use an update function to run on each tick, updating
- * the state of each node.
+ * A behavior tree is a construction of behavior nodes. The top node without
+ * a parent is the the root of the tree. The tree chooses the action to run
+ * based on the priority value of each of the root's descendents. The tree
+ * must use an update function to run on each tick, updating the state of each
+ * node. The root node of a behavior tree returns the state of the currently
+ * running node or of the node that ran during the behavior tree's execution.
  *
- * The root node of a behavior tree returns the state of the currently
- * running node, or the node that ran during the update cycle.
+ * This class has abstract methods for calculating the priority and updating,
+ * which are implemented by the subclasses.
+ *
+ * Behavior trees should be managed by a {@link BehaviorManager}, which creates
+ * each BehaviorNode from a {@link BehaviorNodeDef} and runs and updates the
+ * behavior trees.
  */
 class BehaviorNode {
 #pragma mark Values
@@ -196,9 +204,9 @@ public:
 	enum class State : unsigned int {
 		/** The node is finished with an action. */
 		FINISHED = 0,
-		/** The node is currently running and has yet to succeed or fail. */
+		/** The node is currently running. */
 		RUNNING = 1,
-		/** The node has not yet been run. */
+		/** The node is neither running nor has already finished with an action. */
 		UNINITIALIZED = 2
 	};
 
@@ -216,16 +224,16 @@ protected:
 	 * The current priority, or relevance of this node.
 	 *
 	 * This should be a value between 0 and 1, and be updated when the
-	 * update() function runs for any given behavior node.
+	 * {@link updatePriority()} function runs for any given behavior node.
 	 */
 	float _priority;
 
 	/**
 	 * The current priority function for this behavior node.
 	 *
-	 * This should return a value between 0 and 1 representing the priority.
-	 * This function can be user defined, and the default values can be defined
-	 * by the subclasses.
+	 * This function should return a value between 0 and 1 representing the
+	 * priority. This function can be user defined, and the default methods
+	 * for calculating the priority can be defined by the subclasses.
 	 */
 	std::function<float()> _priorityFunc;
 
@@ -238,8 +246,8 @@ public:
 	/**
 	 * Creates an uninitialized node.
 	 *
-	 * This constructor should never be called directly, as this is an abstract
-	 * class.
+	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
+	 * the heap, use one of the static constructors instead.
 	 */
 	BehaviorNode() : _parent(nullptr), _priorityFunc(nullptr),
 	_state(BehaviorNode::State::UNINITIALIZED), _childOffset(-2) {}
@@ -253,7 +261,9 @@ public:
 	 * Disposes all of the resources used by this node, and any descendants
 	 * in the tree.
 	 *
-	 * A disposed BehaviorNode can be safely reinitialized.
+	 * A disposed BehaviorNode can be safely reinitialized. Any children owned
+	 * by this node will be released. They will be deleted if no other object
+	 * owns them.
 	 *
 	 * It is unsafe to call this on a BehaviorNode that is still currently
 	 * inside of a running behavior tree.
@@ -289,29 +299,29 @@ public:
 #pragma mark -
 #pragma mark Behavior Trees
 	/**
-	 * Returns a float that signifies the priority of the behavior node.
+	 * Returns a float that signifies the priority of this behavior tree node.
 	 *
 	 * This priority value is used to determine the relevance of a node in
 	 * comparison to other nodes. This value is between 0 and 1.
 	 *
-	 * @return a float that signifies the priority of the behavior node.
+	 * @return a float that signifies the priority of this behavior tree node.
 	 */
 	float getPriority() const { return _priority; }
 
 	/**
-	 * Returns a BehaviorNode::State that represents the node state.
+	 * Returns a BehaviorNode::State that represents this node's state.
 	 *
-	 * This state is used to identify the state of the node. If the node
+	 * This state is used to identify the state of this node. If this node
 	 * has no parent, then this is the state of the behavior tree.
 	 *
-	 * @return a BehaviorNode::State that represents the node state.
+	 * @return a BehaviorNode::State that represents this node's state.
 	 */
 	BehaviorNode::State getState() const { return _state; }
 
 	/**
 	 * Sets the state of this node.
 	 *
-	 * This state is used to identify the state of the node. If the node
+	 * This state is used to identify the state of this node. If this node
 	 * has no parent, then this is the state of the behavior tree.
 	 *
 	 * @param state The state of this node.
@@ -339,14 +349,14 @@ public:
 	void setParent(BehaviorNode* parent) { _parent = parent; }
 
 	/**
-	 * Removes this node from the parent.
+	 * Removes this node from its parent.
 	 *
 	 * If this node has no parent, nothing happens.
 	 */
 	void removeFromParent() { if (_parent) _parent->removeChild(_childOffset); }
 
 	/**
-	 * Begin running the node, moving from an uninitialized state to a running
+	 * Begin running this node, moving from an uninitialized state to a running
 	 * state as the correct action to perform as all priority values are updated
 	 * and the correct node to run is found through choosing a leaf node.
 	 */
@@ -364,7 +374,7 @@ public:
 	virtual void updatePriority() = 0;
 
 	/**
-	 * Returns the BehaviorNode::State of the node.
+	 * Returns the BehaviorNode::State of this node.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
 	 * behavior node (and nodes chosen to run below it in the tree).
@@ -374,7 +384,7 @@ public:
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
-	 * @return the BehaviorNode::State of the behavior node.
+	 * @return the BehaviorNode::State of this behavior tree node.
 	 */
 	virtual BehaviorNode::State update(float dt) = 0;
 
