@@ -19,6 +19,7 @@
 
 using namespace cugl;
 
+#pragma mark Behavior Node Defintion
 /**
  * Returns the (first) node with the given name found using a recursive
  * search down from this BehaviorNodeDef.
@@ -47,14 +48,16 @@ std::shared_ptr<BehaviorNodeDef> BehaviorNodeDef::getNodeByName(const std::strin
 #pragma mark -
 #pragma mark Constructors
 /**
- * Disposes all of the resources used by this node, and any descendants
- * in the tree.
- *
- * A disposed BehaviorNode can be safely reinitialized.
- *
- * It is unsafe to call this on a BehaviorNode that is still currently
- * inside of a running behavior tree.
- */
+* Disposes all of the resources used by this node, and any descendants
+* in the tree.
+*
+* A disposed BehaviorNode can be safely reinitialized. Any children owned
+* by this node will be released. They will be deleted if no other object
+* owns them.
+*
+* It is unsafe to call this on a BehaviorNode that is still currently
+* inside of a running behavior tree.
+*/
 void BehaviorNode::dispose() {
 	_name = "";
 	_state = BehaviorNode::State::UNINITIALIZED;
