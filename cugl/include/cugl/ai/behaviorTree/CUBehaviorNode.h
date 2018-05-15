@@ -35,59 +35,57 @@ namespace cugl {
  */
 struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	/**
-	 * This enum is used to describe the type of the {@link BehaviorNode}.
-	 *
-	 * When creating an instance of a behavior tree node from a BehaviorNodeDef,
-	 * this enum is used to determine the type of behavior tree node created.
-	 */
+	* This enum is used to describe the type of the {@link BehaviorNode}.
+	*
+	* When creating an instance of a behavior tree node from a BehaviorNodeDef,
+	* this enum is used to determine the type of behavior tree node created.
+	*/
 	enum class Type {
 		/**
-		 * A priority node is a composite node, or a node with one or more
-		 * children, that chooses the child with the highest priority to run.
-		 */
+		* A priority node is a composite node, or a node with one or more
+		* children, that chooses the child with the highest priority to run.
+		*/
 		PRIORITY_NODE,
 		/**
-		 * A selector node is a composite node, or a node with one or more
-		 * children, that runs the first child in its list of children with a
-		 * non-zero priority.
-		 */
+		* A selector node is a composite node, or a node with one or more
+		* children, that runs the first child in its list of children with a
+		* non-zero priority.
+		*/
 		SELECTOR_NODE,
 		/**
-		 * A random node is a composite node, or a node with one or more
-		 * children, that runs a child either uniformly at random or uses a
-		 * weighted random based on priority values. This choice is based on
-		 * the _uniformRandom flag described below.
-		 */
+		* A random node is a composite node, or a node with one or more
+		* children, that runs a child either uniformly at random or uses a
+		* weighted random based on priority values..
+		*/
 		RANDOM_NODE,
 		/**
-		 * An inverter node is a decorator node, or a node with one child,
-		 * that sets its priority value by inverting its child's priority value.
-		 * In other words, 1 - priority of child where priority is from 0 to 1.
-		 * This node does not use the priority function provided by the user.
-		 */
+		* An inverter node is a decorator node, or a node with one child,
+		* that sets its priority value by inverting its child's priority value.
+		* In other words, 1 - priority of child where priority is from 0 to 1.
+		* This node does not use the priority function provided by the user.
+		*/
 		INVERTER_NODE,
 		/**
-		 * A timer node is a decorator node, or a node with one child, that
-		 * either delays execution of its child node when the child is chosen
-		 * for execution by a given time, or ensures that the child is not run
-		 * again after its execution for a given time. This choice is based on
-		 * the _timeDelay flag described below.
-		 */
+		* A timer node is a decorator node, or a node with one child, that
+		* either delays execution of its child node when the child is chosen
+		* for execution by a given time, or ensures that the child is not run
+		* again after its execution for a given time. This choice is based on
+		* the _timeDelay flag described below.
+		*/
 		TIMER_NODE,
 		/**
-		 * A leaf node is a node in charge of running an action, and the base
-		 * node used for conditional execution (through the priority function).
-		 * A leaf node must have an action associated with it, and cannot have
-		 * any children.
-		 */
+		* A leaf node is a node in charge of running an action, and the base
+		* node used for conditional execution (through the priority function).
+		* A leaf node must have an action associated with it, and cannot have
+		* any children.
+		*/
 		LEAF_NODE
 	};
-
 	/** The descriptive, identifying name of the node. */
 	std::string _name;
 
 	/** The type of behavior tree node this definition describes. */
-	Type _type;
+	BehaviorNodeDef::Type _type;
 
 	/**
 	 * The priority function for this behavior tree node.
@@ -157,8 +155,8 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	 */
 	std::shared_ptr<BehaviorAction> _action;
 
-	BehaviorNodeDef() : _type(Type::LEAF_NODE),	_priorityFunc(nullptr),
-	_action(nullptr) {}
+	BehaviorNodeDef() : _type(BehaviorNodeDef::Type::LEAF_NODE),
+	_priorityFunc(nullptr), _action(nullptr) {}
 
 	/**
 	 * Returns the (first) node with the given name found using a recursive
@@ -237,6 +235,9 @@ protected:
 	 */
 	std::function<float()> _priorityFunc;
 
+	/** The array of children for this composite node. */
+	std::vector<std::shared_ptr<BehaviorNode>> _children;
+
 	/** The (current) child offset of this node (-1 if root) */
 	int _childOffset;
 
@@ -256,6 +257,20 @@ public:
 	 * Deletes this node, disposing all resources.
 	 */
 	~BehaviorNode() { dispose(); }
+
+	/**
+	* Initializes a behavior node with the given name, children, and priority
+	* function.
+	*
+	* @param name		The name of the behavior node
+	* @param priority	The priority function of the behavior node
+	* @param children 	The children of the behavior node
+	*
+	* @return true if initialization was successful.
+	*/
+	bool init(const std::string& name,
+			  const std::function<float()> priority,
+			  const std::vector<std::shared_ptr<BehaviorNode>>& children);
 
 	/**
 	 * Disposes all of the resources used by this node, and any descendants
@@ -374,13 +389,12 @@ public:
 	virtual void updatePriority() = 0;
 
 	/**
-	 * Returns the BehaviorNode::State of this node.
+	 * Updates this node and any children.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
-	 * behavior node (and nodes chosen to run below it in the tree).
+	 * behavior node and nodes below it in the tree.
 	 *
-	 * Update priority may be run as part of this function, based on whether a
-	 * composite node uses preemption.
+	 * Update priority may be run as part of this function.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
@@ -397,20 +411,27 @@ public:
 #pragma mark -
 #pragma mark Internal Helpers
 	/**
-	 * Sets child offset of this node.
+	 * Returns the child offset of this behavior tree node.
 	 *
-	 * @param offset The child offset of this node.
+	 * @return The child offset of this behavior node.
 	 */
-	void setChildOffset(int pos) { _childOffset = pos; }
-
-	/**
-	 * Gets the child offset of this node.
-	 *
-	 * @returns The child offset of this node.
-	 */
-	int getChildOffset() const { return _childOffset; }
+	int getChildOffset() const { return _childOffset;  }
 
 protected:
+	/**
+	 * Sets the priority of this node.
+	 *
+	 * @param priority The priority of this node.
+	 */
+	void setPriority(float priority);
+
+	/**
+	 * Removes the child at the given position from this node.
+	 *
+	 * @param pos   The position of the child node which will be removed.
+	 */
+	void removeChild(unsigned int pos);
+
 	/**
 	 * Returns true if sibling a has a larger priority than sibling b.
 	 *
@@ -424,20 +445,6 @@ protected:
 	 */
 	static bool compareNodeSibs(const std::shared_ptr<BehaviorNode>& a,
 								const std::shared_ptr<BehaviorNode>& b);
-
-	/**
-	 * Sets the priority of this node.
-	 *
-	 * @param priority The priority of this node.
-	 */
-	void setPriority(float priority);
-
-	/**
-	 * Removes the child at the given position from this node.
-	 *
-	 * @param pos   The position of the child node which will be removed.
-	 */
-	virtual void removeChild(unsigned int pos) = 0;
 };
 
 

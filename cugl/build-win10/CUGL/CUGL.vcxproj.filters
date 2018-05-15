@@ -539,6 +539,9 @@
     <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUTimerNode.h">
       <Filter>Header Files\ai\behaviorTree</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\cu_behavior_tree.h">
+      <Filter>Header Files\ai\behaviorTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\external\cJSON\cJSON.c">

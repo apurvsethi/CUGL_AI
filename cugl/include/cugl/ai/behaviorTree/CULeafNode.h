@@ -112,6 +112,12 @@ public:
 
 #pragma mark -
 #pragma mark Behavior Tree
+	/**
+	 * Return the action used by this leaf node.
+	 *
+	 * @return the action used by this leaf node.
+	 */
+	const BehaviorAction* getAction() const { return _action.get(); }
 
 	/**
 	 * Updates the priority value for this node and all children beneath it,
@@ -148,16 +154,6 @@ public:
 		_action->terminate();
 		setState(BehaviorNode::State::UNINITIALIZED);
 	}
-
-#pragma mark -
-#pragma mark Internal Helpers
-protected:
-	/**
-	 * Removes the child at the given position from this node.
-	 *
-	 * @param pos   The position of the child node which will be removed.
-	 */
-	void removeChild(unsigned int pos) override {}
 };
 
 

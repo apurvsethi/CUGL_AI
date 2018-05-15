@@ -28,27 +28,9 @@ using namespace cugl;
  * @return true if initialization was successful.
  */
 bool DecoratorNode::init(const std::string& name, const std::shared_ptr<BehaviorNode>& child) {
-	_child = child;
-	_name = name;
-	_childOffset = -1;
-	_child->setParent(this);
-	_child->setChildOffset(-1);
+	std::vector<std::shared_ptr<BehaviorNode>> children = { child };
+	BehaviorNode::init(name, nullptr, children);
 	return true;
-}
-
-/**
- * Disposes all of the resources used by this node, and all descendants
- * in the tree.
- *
- * A disposed DecoratorNode can be safely reinitialized.
- *
- * It is unsafe to call this on a DecoratorNode that is still currently
- * inside of a running behavior tree.
- */
-void DecoratorNode::dispose() {
-	BehaviorNode::dispose();
-	_child->dispose();
-	_child = nullptr;
 }
 
 #pragma mark -
@@ -72,8 +54,8 @@ BehaviorNode::State DecoratorNode::update(float dt) {
 		return getState();
 	}
 
-	_child->setState(BehaviorNode::State::RUNNING);
-	setState(_child->update(dt));
+	_children[0]->setState(BehaviorNode::State::RUNNING);
+	setState(_children[0]->update(dt));
 	return getState();
 }
 
@@ -82,6 +64,6 @@ BehaviorNode::State DecoratorNode::update(float dt) {
  * this node in the tree if they exist.
  */
 void DecoratorNode::preempt() {
-	_child->preempt();
+	_children[0]->preempt();
 	setState(BehaviorNode::State::UNINITIALIZED);
 }

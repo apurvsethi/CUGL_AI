@@ -35,10 +35,6 @@ namespace cugl {
  * node.
  */
 class DecoratorNode : public BehaviorNode {
-#pragma mark Values
-protected:
-	/** The child of this decorator node. */
-	std::shared_ptr<BehaviorNode> _child;
 
 #pragma mark -
 #pragma mark Constructors
@@ -49,23 +45,12 @@ public:
 	 * This constructor should never be called directly, as this is an abstract
 	 * class.
 	 */
-	DecoratorNode() : BehaviorNode(), _child(nullptr) {};
+	DecoratorNode() : BehaviorNode() {};
 
 	/**
 	 * Deletes this node, disposing all resources.
 	 */
 	~DecoratorNode() { dispose(); }
-
-	/**
-	 * Disposes all of the resources used by this node, and all descendants
-	 * in the tree.
-	 *
-	 * A disposed DecoratorNode can be safely reinitialized.
-	 *
-	 * It is unsafe to call this on a DecoratorNode that is still currently
-	 * inside of a running behavior tree.
-	 */
-	virtual void dispose() override;
 
 	/**
 	 * Initializes a decorator node with the given name and child.
@@ -98,7 +83,9 @@ public:
 	 *
 	 * @return the node's child.
 	 */
-	std::shared_ptr<const BehaviorNode> getChild() const { return _child; }
+	const BehaviorNode* getChild() const {
+		return _children[0].get();
+	}
 
 	/**
 	 * Returns the node's child, typecast to a shared T pointer.
@@ -111,7 +98,7 @@ public:
 	 * @return the child at the given position, typecast to a shared T pointer.
 	 */
 	template <typename T>
-	inline std::shared_ptr<T> getChild() const {
+	inline const T* getChild() const {
 		return std::dynamic_pointer_cast<T>(getChild());
 	}
 
@@ -142,18 +129,6 @@ public:
 	 * this node in the tree if they exist.
 	 */
 	virtual void preempt() override;
-
-protected:
-	/**
-	 * Removes the child at the given position from this node.
-	 *
-	 * @param pos   The position of the child node which will be removed.
-	 */
-	void removeChild(unsigned int pos) override {
-		_child->setParent(nullptr);
-		_child->setChildOffset(-1);
-		_child = nullptr;
-	}
 };
 
 

@@ -71,7 +71,7 @@ std::string TimerNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::TimerNode(name:" : "(name:") << _name;
 	ss << "priority:" << _priority;
-	ss << "child:" << (_child ? _child->getName() : "None");
+	ss << "child:" << (_children[0] ? _children[0]->getName() : "None");
 	ss << "delay type:" << (_timeDelay ? "Before" : "After");
 	ss << "delay time:" << _delay;
 	ss << ")";
@@ -105,8 +105,8 @@ void TimerNode::updatePriority() {
 		setPriority(0.0f);
 	}
 	else {
-		_child->updatePriority();
-		setPriority(_child->getPriority());
+		_children[0]->updatePriority();
+		setPriority(_children[0]->getPriority());
 	}
 }
 

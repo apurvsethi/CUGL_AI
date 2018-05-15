@@ -37,6 +37,7 @@
 #include "assets/cu_assets.h"
 #include "renderer/cu_renderer.h"
 #include "audio/cu_audio.h"
+#include "ai/behaviorTree/cu_behavior_tree.h"
 #include "2d/cu_2d.h"
 #include "2d/actions/cu_actions.h"
 #include "2d/layout/cu_layout.h"

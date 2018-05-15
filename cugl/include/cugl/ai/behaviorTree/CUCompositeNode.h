@@ -18,36 +18,37 @@
 namespace cugl {
 
 /**
- * This class provides a composite behavior node for a behavior tree.
+ * This class provides a composite node for a behavior tree.
  *
- * A composite node within a behavior tree refers to the set of nodes that have
- * multiple children under them and run the children in some order. If a child
- * successfully finishes running, the composite node will return.
+ * A composite node is a node that has multiple children. When a composite node
+ * starts, it chooses a child to run in some order specified in the subclasses.
+ * If a child successfully finished running, the composite node will return.
  *
- * A composite node can be either a priority node, a selector node, or a random
- * node. A priority node will run in descending order of priority, where higher
- * priority children can interrupt lower priority chidren, until one runs
- * successfully. A selector node will run the children in order until it finds
- * a child with a nonzero priority. A random node will run a random child
- * node, based on either uniform probability or weighted probability.
+ * A composite node can be provided with a priority function to call when
+ * updating its own priority. If a function is not provided, the composite node
+ * will set its priority to using a default algorithm, which is specified in
+ * the subclasses.
+ *
+ * This class should not be instantiated directly. Instead, you should use
+ * one of the subclasses ({@link PriorityNode}, {@link SelectorNode},
+ * {@link RandomNode}).
  */
 class CompositeNode : public BehaviorNode {
 #pragma mark Values
 protected:
 	/**
-	 * Whether or not the composite node should choose a new child node on each
-	 * execution, possibly interrupting an old child node's execution if a
-	 * different node would be chosen now. If true, the composite node can
-	 * interrupt a running child node, otherwise a chosen node cannot be
-	 * interrupted.
+	 * Whether to allow preemption among this nodes children.
+	 *
+	 * If preemption is allowed, this node may choose a new child not to run
+	 * during an update, possibly interrupting an old child node if a different
+	 * new child is chosen. Otherwise, while this node is running, its chosen
+	 * child cannot be interrupted.
 	 */
 	bool _preempt;
 
-	/** The array of children for this composite node. */
-	std::vector<std::shared_ptr<BehaviorNode>> _children;
-
 	/** The index of the child running (-1 if no child is currently running). */
 	int _activeChildPos;
+
 #pragma mark -
 #pragma mark Constructors
 public:
@@ -65,26 +66,27 @@ public:
 	~CompositeNode() { dispose(); }
 
 	/**
-	 * Disposes all of the resources used by this node, and all descendants
-	 * in the tree.
+	 * Disposes all of the resources used by this node.
 	 *
-	 * A disposed CompositeNode can be safely reinitialized.
+	 * A disposed BehaviorNode can be safely reinitialized. Any children owned
+	 * by this node will be released. They will be deleted if no other object
+	 * owns them.
 	 *
-	 * It is unsafe to call this on a CompositeNode that is still currently
+	 * It is unsafe to call this on a composite node that is still currently
 	 * inside of a running behavior tree.
 	 */
 	virtual void dispose() override;
 
 	/**
-	 * Initializes a composite node with the given name, children, and priority
-	 * function.
+	 * Initializes a composite node with the given name, type, children, and
+	 * priority function.
 	 *
-	 * @param name		The name of the composite node.
-	 * @param priority	The priority function of the composite node.
-	 * @param children 	The children of the composite node.
-	 * @param preempt	Whether child nodes can be preempted.
+	 * @param name		The name of the composite node
+	 * @param priority	The priority function of the composite node
+	 * @param children 	The children of the composite node
+	 * @param preempt	Whether child nodes can be preempted
 	 *
-	 * @return true if initialization was successful.
+	 * @return true if initialization was successful
 	 */
 	virtual bool init(const std::string& name,
 					  const std::function<float()> priority,
@@ -124,10 +126,10 @@ public:
 	 *
 	 * @return the child at the given position.
 	 */
-	std::shared_ptr<const BehaviorNode> getChild(unsigned int pos) const;
+	 const BehaviorNode* getChild(unsigned int pos) const;
 
 	/**
-	 * Returns the child at the given position, typecast to a shared T pointer.
+	 * Returns the child at the given position, typecast to a const T pointer.
 	 *
 	 * This method is provided to simplify the polymorphism of a behavior tree.
 	 * While all children are a subclass of type BehaviorNode, you may want to
@@ -139,11 +141,11 @@ public:
 	 *
 	 * @param pos	The child position.
 	 *
-	 * @return the child at the given position, typecast to a shared T pointer.
+	 * @return the child at the given position, typecast to a const T pointer.
 	 */
 	template <typename T>
-	inline std::shared_ptr<T> getChild(unsigned int pos) const {
-		return std::dynamic_pointer_cast<T>(getChild(pos));
+	inline const T* getChild(unsigned int pos) const {
+		return std::dynamic_pointer_cast<const T*>(getChild(pos));
 	}
 
 	/**
@@ -156,10 +158,10 @@ public:
 	 *
 	 * @return the (first) child with the given name.
 	 */
-	std::shared_ptr<const BehaviorNode> getChildByName(const std::string& name) const;
+	const BehaviorNode* getChildByName(const std::string& name) const;
 
 	/**
-	 * Returns the (first) child with the given name, typecast to a shared T
+	 * Returns the (first) child with the given name, typecast to a const T
 	 * pointer.
 	 *
 	 * This method is provided to simplify the polymorphism of a behavior tree.
@@ -172,12 +174,12 @@ public:
 	 *
 	 * @param name	An identifier to find the child node.
 	 *
-	 * @return the (first) child with the given name, typecast to a shared T
+	 * @return the (first) child with the given name, typecast to a const T
 	 * pointer.
 	 */
 	template <typename T>
-	inline std::shared_ptr<T> getChildByName(const std::string& name) const {
-		return std::dynamic_pointer_cast<T>(getChildByName(name));
+	inline const T* getChildByName(const std::string& name) const {
+		return std::dynamic_pointer_cast<const T*>(getChildByName(name));
 	}
 
 	/**
@@ -190,7 +192,7 @@ public:
 	 *
 	 * @return the child with the given priority index.
 	 */
-	std::shared_ptr<const BehaviorNode> getChildByPriorityIndex(unsigned int index) const;
+	const BehaviorNode* getChildByPriorityIndex(unsigned int index) const;
 
 	/**
 	 * Returns the child with the given priority index, typecast to a shared T
@@ -210,8 +212,8 @@ public:
 	 * pointer.
 	 */
 	template <typename T>
-	inline std::shared_ptr<T> getChildByPriorityIndex(unsigned int index) const {
-		return std::dynamic_pointer_cast<T>(getChildByPriorityIndex(index));
+	const T* getChildByPriorityIndex(unsigned int index) const {
+		return std::dynamic_pointer_cast<const T*>(getChildByPriorityIndex(index));
 	}
 
 	/**
@@ -219,7 +221,7 @@ public:
 	 *
 	 * @return the list of the node's children.
 	 */
-	std::vector<std::shared_ptr<const BehaviorNode>> getChildren() const;
+	std::vector<const BehaviorNode*> getChildren() const;
 
 	/**
 	 * Updates the priority value for this node and all children beneath it,
@@ -252,13 +254,6 @@ public:
 #pragma mark -
 #pragma mark Internal Helpers
 protected:
-	/**
-	 * Removes the child at the given position from this node.
-	 *
-	 * @param pos   The position of the child node which will be removed.
-	 */
-	void removeChild(unsigned int pos) override;
-
 	/**
 	 * Returns the child choosen by this composite node.
 	 *

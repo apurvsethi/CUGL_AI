@@ -83,8 +83,8 @@ public:
 	 * if available for the class.
 	 */
 	void updatePriority() override {
-		_child->updatePriority();
-		_priority = 1 - _child->getPriority();
+		_children[0]->updatePriority();
+		_priority = 1 - _children[0]->getPriority();
 	}
 };
 

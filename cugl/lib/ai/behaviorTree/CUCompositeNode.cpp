@@ -4,8 +4,8 @@
 //
 //  This module provides support for a composite behavior node.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/15/2018
 //
 
 #include <cugl/ai/behaviorTree/CUCompositeNode.h>
@@ -18,9 +18,8 @@ using namespace cugl;
 #pragma mark -
 #pragma mark Constructors
 /**
- * Initializes a composite node with the given name and children.
- *
- * The priority of this node is dependant of the children's priorities.
+ * Initializes a composite node with the given name, type, children, and
+ * priority function.
  *
  * @param name		The name of the composite node.
  * @param priority	The priority function of the composite node.
@@ -33,14 +32,7 @@ bool CompositeNode::init(const std::string& name,
 						 const std::function<float()> priority,
 						 const std::vector<std::shared_ptr<BehaviorNode>>& children,
 						 bool preempt) {
-	_name = name;
-	_priorityFunc = priority;
-	_children = children;
-	_childOffset = -1;
-	for (int ii = 0; ii < _children.size(); ii++) {
-		_children[ii]->setParent(this);
-		_children[ii]->setChildOffset(ii);
-	}
+	BehaviorNode::init(name, priority, children);
 	_preempt = preempt;
 	return true;
 }
@@ -57,12 +49,6 @@ bool CompositeNode::init(const std::string& name,
 void CompositeNode::dispose() {
 	BehaviorNode::dispose();
 	_preempt = false;
-	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		(*it)->dispose();
-	}
-	_children.clear();
-	removeFromParent();
-	_parent = nullptr;
 }
 
 #pragma mark -
@@ -77,9 +63,9 @@ void CompositeNode::dispose() {
  *
  * @return the child at the given position.
  */
-std::shared_ptr<const BehaviorNode> CompositeNode::getChild(unsigned int pos) const {
+const BehaviorNode* CompositeNode::getChild(unsigned int pos) const {
 	CUAssertLog(pos < _children.size(), "Position index out of bounds");
-	return _children[pos];
+	return _children[pos].get();
 }
 
 /**
@@ -92,10 +78,10 @@ std::shared_ptr<const BehaviorNode> CompositeNode::getChild(unsigned int pos) co
  *
  * @return the (first) child with the given name.
  */
-std::shared_ptr<const BehaviorNode> CompositeNode::getChildByName(const std::string& name) const {
+const BehaviorNode* CompositeNode::getChildByName(const std::string& name) const {
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
 		if ((*it)->getName() == name) {
-			return *it;
+			return (*it).get();
 		}
 	}
 	return nullptr;
@@ -111,11 +97,11 @@ std::shared_ptr<const BehaviorNode> CompositeNode::getChildByName(const std::str
  *
  * @return the child with the given priority index.
  */
-std::shared_ptr<const BehaviorNode> CompositeNode::getChildByPriorityIndex(unsigned int index) const {
+const BehaviorNode* CompositeNode::getChildByPriorityIndex(unsigned int index) const {
 	CUAssertLog(index < _children.size(), "Priority index out of bounds");
 	std::vector<std::shared_ptr<BehaviorNode>> ordered_children = _children;
 	std::sort(ordered_children.begin(), ordered_children.end(), BehaviorNode::compareNodeSibs);
-	return ordered_children[index];
+	return ordered_children[index].get();
 }
 
 /**
@@ -123,10 +109,10 @@ std::shared_ptr<const BehaviorNode> CompositeNode::getChildByPriorityIndex(unsig
  *
  * @return the list of the node's children.
  */
-std::vector<std::shared_ptr<const BehaviorNode>> CompositeNode::getChildren() const {
-	std::vector<std::shared_ptr<const BehaviorNode>> children;
+std::vector<const BehaviorNode*> CompositeNode::getChildren() const {
+	std::vector<const BehaviorNode*> children;
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		children.push_back((*it));
+		children.push_back((*it).get());
 	}
 	return children;
 }
@@ -176,8 +162,7 @@ void CompositeNode::updatePriority() {
  * @return the BehaviorNode::State of the behavior node.
  */
 BehaviorNode::State CompositeNode::update(float dt) {
-	if (getState() == BehaviorNode::State::UNINITIALIZED
-		|| getState() == BehaviorNode::State::FINISHED) {
+	if (getState() != BehaviorNode::State::RUNNING) {
 		return getState();
 	}
 
@@ -200,23 +185,4 @@ BehaviorNode::State CompositeNode::update(float dt) {
 	}
 	setState(activeChild->update(dt));
 	return getState();
-}
-
-#pragma mark -
-#pragma mark Internal Helpers
-/**
- * Removes the child at the given position from this node.
- *
- * @param pos   The position of the child node which will be removed.
- */
-void CompositeNode::removeChild(unsigned int pos) {
-	CUAssertLog(pos < _children.size(), "Index out of bounds");
-	std::shared_ptr<BehaviorNode> child = _children[pos];
-	child->setParent(nullptr);
-	child->setChildOffset(-1);
-	for (int ii = pos; ii < _children.size() - 1; ii++) {
-		_children[ii] = _children[ii + 1];
-		_children[ii]->setChildOffset(ii);
-	}
-	_children.resize(_children.size() - 1);
 }
