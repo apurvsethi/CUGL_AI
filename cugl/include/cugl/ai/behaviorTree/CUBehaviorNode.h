@@ -12,8 +12,17 @@
 //
 //  This class uses our standard shared-pointer architecture.
 //
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
+//
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/7/2018
+//  Version: 5/15/2018
 //
 
 #ifndef __CU_BEHAVIOR_NODE_H__
@@ -40,7 +49,7 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	* When creating an instance of a behavior tree node from a BehaviorNodeDef,
 	* this enum is used to determine the type of behavior tree node created.
 	*/
-	enum class Type {
+	enum class Type : int {
 		/**
 		* A priority node is a composite node, or a node with one or more
 		* children, that chooses the child with the highest priority to run.
@@ -155,6 +164,12 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	 */
 	std::shared_ptr<BehaviorAction> _action;
 
+	/**
+	 * Creates an uninitialized BehaviorNodeDef.
+	 *
+	 * To create a definition for a behavior tree node, you should
+	 * set the fields for this struct.
+	 */
 	BehaviorNodeDef() : _type(BehaviorNodeDef::Type::LEAF_NODE),
 	_priorityFunc(nullptr), _action(nullptr) {}
 
