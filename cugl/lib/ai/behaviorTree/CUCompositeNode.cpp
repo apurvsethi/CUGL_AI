@@ -165,13 +165,13 @@ BehaviorNode::State CompositeNode::update(float dt) {
 	if (getState() != BehaviorNode::State::RUNNING) {
 		return getState();
 	}
-
 	std::shared_ptr<BehaviorNode> activeChild;
 	if (_activeChildPos != -1 && _preempt) {
 		updatePriority();
 	}
 	if (_activeChildPos == -1 || _preempt) {
 		activeChild = getChosenChild();
+		CUAssertLog(getPriority() == 0, "Should never run child with 0 priority");
 		if (_activeChildPos != -1 && _children[_activeChildPos] != activeChild) {
 			_children[_activeChildPos]->preempt();
 		}
