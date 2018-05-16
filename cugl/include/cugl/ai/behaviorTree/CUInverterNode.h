@@ -4,8 +4,19 @@
 //
 //  This module provides support for an inverter decorator behavior node.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  This class uses our standard shared-pointer architecture.
+//
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
+//
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/16/2018
 //
 
 #ifndef __CU_INVERTER_NODE_H__
@@ -21,10 +32,13 @@ namespace cugl {
  * This class provides an inverter decorator node for a behavior tree.
  *
  * An inverter node is a decorator node which is designed to run the node below
- * it and set its state to the opposite of the state of its child node (when the
- * child node has finished running.
+ * it and set its priority equal to the opposite of its child's priority. As
+ * the priority values for behavior tree nodes are between 0 to 1, the priority
+ * of this node is 1 - the child's priority value.
  *
- * An inverter node's priority is directly based upon the child node's priority.
+ * An inverter node's state is directly based on its child's state. When an
+ * inverter node starts, it immediately starts its child. When the child
+ * finishes execution, the inverter node also finishes execution.
  */
 class InverterNode : public DecoratorNode {
 #pragma mark -
@@ -50,8 +64,8 @@ public:
 	/**
 	 * Returns a newly allocated InverterNode with the given name and child.
 	 *
-	 * @param name  The name of the decorator node.
-	 * @param child The child of the decorator node.
+	 * @param name  The name of the inverter node.
+	 * @param child The child of the inverter node.
 	 *
 	 * @return a newly allocated InverterNode with the given name and child.
 	 */
@@ -78,9 +92,9 @@ public:
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
-	 * Updates the priority value for this node and all children beneath it,
-	 * running the piority function provided or default priority function
-	 * if available for the class.
+	 * Updates the priority value for this node and all nodes beneath it.
+	 *
+	 * The priority of the inverter node is 1 - the priority of its child.
 	 */
 	void updatePriority() override {
 		_children[0]->updatePriority();

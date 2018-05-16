@@ -121,7 +121,7 @@ public:
 	}
 
 	/**
-	 * Updates the priority value for this node and its child.
+	 * Updates the priority value for this node and all nodes beneath it.
 	 *
 	 * The priority of this node is directly related to its child's priority.
 	 * in a method specified by the different types of decorator nodes.

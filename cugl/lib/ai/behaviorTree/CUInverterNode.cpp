@@ -4,8 +4,19 @@
 //
 //  This module provides support for an inverter decorator behavior node.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  This class uses our standard shared-pointer architecture.
+//
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
+//
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/16/2018
 //
 
 #include <sstream>

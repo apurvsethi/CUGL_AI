@@ -102,7 +102,8 @@ public:
 	 *
 	 * This constructor should never be called directly.
 	 */
-	BehaviorAction();
+	BehaviorAction() : _state(BehaviorAction::State::UNINITIALIZED),
+	_start(nullptr), _update(nullptr), _terminate(nullptr) {};
 
 	/**
 	 * Deletes this action, disposing all resources.
@@ -115,7 +116,11 @@ public:
 	 * It is unsafe to call this on an Action that is still currently
 	 * inside of a running behavior tree.
 	 */
-	void dispose();
+	void dispose() {
+		_start = nullptr;
+		_update = nullptr;
+		_terminate = nullptr;
+	}
 
 	/**
 	 * Initializes an action with the given name, using the def as a
