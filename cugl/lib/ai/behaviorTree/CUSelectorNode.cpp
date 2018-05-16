@@ -4,8 +4,19 @@
 //
 //  This module provides support for a selector composite behavior node.
 //
+//  This class uses our standard shared-pointer architecture.
+//
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
+//
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 4/30/2018
+//  Version: 5/15/2018
 //
 
 #include <sstream>
@@ -40,9 +51,13 @@ std::string SelectorNode::toString(bool verbose) const {
 #pragma mark -
 #pragma mark Internal Helpers
 /**
- * Returns the child with the smallest position which has a non-zero priority.
+ * Returns the child choosen by this selector node.
  *
- * @return the first child with a non-zero priority.
+ * A selector node will choose the first child with a nonzero priority. If all
+ * children have a priority of zero, the selector node will choose the first
+ * child.
+ *
+ * @return the child choosen by this priority node.
  */
 const std::shared_ptr<BehaviorNode>& SelectorNode::getChosenChild() const {
 	for (auto it = _children.begin(); it != _children.end(); ++it) {

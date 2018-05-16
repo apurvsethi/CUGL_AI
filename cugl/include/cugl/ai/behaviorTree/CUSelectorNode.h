@@ -2,10 +2,19 @@
 //  CUSelectorNode.h
 //  Cornell University Game Library (CUGL)
 //
-//  This module provides support for a selector composite behavior node.
+//  This class uses our standard shared-pointer architecture.
+//
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 3/28/2018
+//  Version: 5/15/2018
 //
 
 #ifndef __CU_SELECTOR_NODE_H__
@@ -20,14 +29,19 @@ namespace cugl {
 /**
  * This class provides a selector composite node for a behavior tree.
  *
- * A selector node is a composite node which is designed to run the nodes below
- * it in order, on the basis of failure for previous nodes. SelectorNode
- * "selects" one of the nodes below it as the option taken based on failure of
- * the options given as child nodes before it.
+ * A selector node is a composite node which is designed to select and
+ * run the first child with a non-zero priority and run it. If the selector
+ * node is allowed to preempt, a child that is running may be overridden by an
+ * earlier child with a non-zero priority during the update function.
  *
- * The first node is run and if it is successful, then the SelectorNode's state
- * is set to success. Otherwise, the next node is run. If all child nodes fail,
- * then the SelectorNode has failed. It is running in the meantime.
+ * If the selector node is not assigned a priority function, its priority
+ * will be assigned as the running child if this node is currently running,
+ * or as the the first child with a non-zero priority. If all children have
+ * a priority of 0, then this node's priority will also be 0.
+ *
+ * A selector node's state is directly based upon the child node currently
+ * running or the child node that has finished running. Only one child node
+ * will finish running as part of the SelectorNode.
  */
 class SelectorNode : public CompositeNode {
 #pragma mark -
