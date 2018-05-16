@@ -1,65 +1,39 @@
 //
-//  HelloApp.h
-//  Cornell University Game Library (CUGL)
+//  SDApp.cpp
+//  Ship Demo
 //
-//  This is the header for the custom application.  It is necessary so that
-//  main.cpp can access your custom class.
-//
-//  CUGL zlib License:
-//      This software is provided 'as-is', without any express or implied
-//      warranty.  In no event will the authors be held liable for any damages
-//      arising from the use of this software.
-//
-//      Permission is granted to anyone to use this software for any purpose,
-//      including commercial applications, and to alter it and redistribute it
-//      freely, subject to the following restrictions:
-//
-//      1. The origin of this software must not be misrepresented; you must not
-//      claim that you wrote the original software. If you use this software
-//      in a product, an acknowledgment in the product documentation would be
-//      appreciated but is not required.
-//
-//      2. Altered source versions must be plainly marked as such, and must not
-//      be misrepresented as being the original software.
-//
-//      3. This notice may not be removed or altered from any source distribution.
+//  This is the root class for your game.  The file main.cpp accesses this class
+//  to run the application.  While you could put most of your game logic in
+//  this class, we prefer to break the game up into player modes and have a
+//  class for each mode.
 //
 //  Author: Walker White
-//  Version: 1/8/17
+//  Version: 1/10/17
 //
-#ifndef __HELLO_APP_H__
-#define __HELLO_APP_H__
+#ifndef __SD_APP_H__
+#define __SD_APP_H__
 #include <cugl/cugl.h>
+#include "SDGameScene.h"
+#include "SDLoadingScene.h"
 
 /**
- * Class for a simple Hello World style application
- *
- * The application simply moves the CUGL logo across the screen.  It also
- * provides a button to quit the application.
+ * This class represents the application root for the ship demo.
  */
-class HelloApp : public cugl::Application {
+class ShipApp : public cugl::Application {
 protected:
-    /** The loaders to (synchronously) load in assets */
+    /** The global sprite batch for drawing (only want one of these) */
+    std::shared_ptr<cugl::SpriteBatch> _batch;
+    /** The global asset manager */
     std::shared_ptr<cugl::AssetManager> _assets;
 
-    /** A scene graph, used to display our 2D scenes */
-    std::shared_ptr<cugl::Scene> _scene;
-    /** A 3152 style SpriteBatch to render the scene */
-    std::shared_ptr<cugl::SpriteBatch>  _batch;
-    /** A reference to the logo, so that we can move it around */
-    std::shared_ptr<cugl::Node>  _logo;
+    // Player modes
+    /** The primary controller for the game world */
+    GameScene _gameplay;
+    /** The controller for the loading screen */
+    LoadingScene _loading;
 
-    /** A countdown used to move the logo */
-    int  _countdown;
-    
-    /** 
-     * Internal helper to build the scene graph.
-     *
-     * Scene graphs are not required.  You could manage all scenes just like
-     * you do in 3152.  However, they greatly simplify scene management, and
-     * have become standard in most game engines.
-     */
-    void buildScene();
+    /** Whether or not we have finished loading all assets */
+    bool _loaded;
     
 public:
     /**
@@ -71,16 +45,16 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    HelloApp() : Application(), _countdown(-1) {}
+    ShipApp() : cugl::Application(), _loaded(false) {}
     
     /**
      * Disposes of this application, releasing all resources.
      *
-     * This destructor is called by main.cpp when the application quits. 
+     * This destructor is called by main.cpp when the application quits.
      * It simply calls the dispose() method in Application.  There is nothing
      * special to do here.
      */
-    ~HelloApp() { }
+    ~ShipApp() { }
     
     /**
      * The method called after OpenGL is initialized, but before running the application.
@@ -93,7 +67,7 @@ public:
      * causing the application to run.
      */
     virtual void onStartup() override;
-
+    
     /**
      * The method called when the application is ready to quit.
      *
@@ -130,7 +104,6 @@ public:
      * at all. The default implmentation does nothing.
      */
     virtual void draw() override;
-    
 };
 
-#endif /* __HELLO_APP_H__ */
+#endif /* __SD_APP_H__ */
