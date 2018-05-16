@@ -60,28 +60,49 @@ std::shared_ptr<const BehaviorNode> BehaviorManager::getTree(const std::string& 
 }
 
 /**
- * Returns whether BehaviorNode tree was successfully created and added.
+ * Starts running the tree with the given name.
  *
- * The name given to a treeDef must be unique amongst the trees added to the
- * BehaviorManager, in order to ensure that trees are accessed properly.
+ * All trees must be stored with unique names in the BehaviorManager,
+ * and thus there cannot be multiple possible trees to start.
  *
- * Creates BehaviorNodes from template provided by BehaviorNodeDefs, and
- * adds it to the BehaviorManager. Returns false if a BehaviorNodeDef
- * provided does not allow creation of a matching BehaviorNode, true otherwise.
- *
- * @param treeDef	BehaviorNodeDef tree template for a BehaviorNode tree.
- *
- * @return whether BehaviorNode tree was successfully created and added.
+ * @param name	An identifier to find the tree.
  */
-bool BehaviorManager::addTree(const std::shared_ptr<BehaviorNodeDef>& treeDef) {
-	CUAssertLog(_trees.find(treeDef->_name) == _trees.end(),
-				"Tree with given already exists in BehaviorManager.");
-	std::shared_ptr<BehaviorNode> tree = createTree(treeDef);
-	if (tree == nullptr) {
-		return false;
+void BehaviorManager::startTree(const std::string& name) {
+	CUAssertLog(_trees.find(name) != _trees.end(),
+				"Tree with given name does not exist in BehaviorManager.");
+	_trees.at(name)->start();
+}
+
+/**
+ * Pauses the tree with the given name.
+ *
+ * All trees must be stored with unique names in the BehaviorManager,
+ * and thus there cannot be multiple possible trees to start.
+ *
+ * @param name	An identifier to find the tree.
+ */
+void BehaviorManager::pauseTree(const std::string& name) {
+	CUAssertLog(_trees.find(name) != _trees.end(),
+				"Tree with given name does not exist in BehaviorManager.");
+	if (_trees.at(name)->getState() == BehaviorNode::State::RUNNING) {
+		_trees.at(name)->pause();
 	}
-	_trees[tree->getName()] = tree;
-	return true;
+}
+
+/**
+ * Resumes running the paused tree with the given name.
+ *
+ * All trees must be stored with unique names in the BehaviorManager,
+ * and thus there cannot be multiple possible trees to start.
+ *
+ * @param name	An identifier to find the tree.
+ */
+void BehaviorManager::resumeTree(const std::string& name) {
+	CUAssertLog(_trees.find(name) != _trees.end(),
+				"Tree with given name does not exist in BehaviorManager.");
+	if (_trees.at(name)->getState() == BehaviorNode::State::PAUSED) {
+		_trees.at(name)->resume();
+	}
 }
 
 /**
@@ -102,20 +123,6 @@ void BehaviorManager::removeTree(const std::string& name) {
 }
 
 /**
- * Starts running the tree with the given name.
- *
- * All trees must be stored with unique names in the BehaviorManager,
- * and thus there cannot be multiple possible trees to start.
- *
- * @param name	An identifier to find the tree.
- */
-void BehaviorManager::startTree(const std::string& name) {
-	CUAssertLog(_trees.find(name) != _trees.end(),
-				"Tree with given name does not exist in BehaviorManager.");
-	_trees.at(name)->start();
-}
-
-/**
  * Runs an update function, meant to be used on each tick, for each
  * behavior tree that is currently running within the manager.
  *
@@ -127,6 +134,31 @@ void BehaviorManager::update(float dt) {
 			it->second->update(dt);
 		}
 	}
+}
+
+/**
+ * Returns whether BehaviorNode tree was successfully created and added.
+ *
+ * The name given to a treeDef must be unique amongst the trees added to the
+ * BehaviorManager, in order to ensure that trees are accessed properly.
+ *
+ * Creates BehaviorNodes from template provided by BehaviorNodeDefs, and
+ * adds it to the BehaviorManager. Returns false if a BehaviorNodeDef
+ * provided does not allow creation of a matching BehaviorNode, true otherwise.
+ *
+ * @param treeDef	BehaviorNodeDef tree template for a BehaviorNode tree.
+ *
+ * @return whether BehaviorNode tree was successfully created and added.
+ */
+bool BehaviorManager::addTree(const std::shared_ptr<BehaviorNodeDef>& treeDef) {
+	CUAssertLog(_trees.find(treeDef->_name) == _trees.end(),
+				"Tree with given name already exists in BehaviorManager.");
+	std::shared_ptr<BehaviorNode> tree = createTree(treeDef);
+	if (tree == nullptr) {
+		return false;
+	}
+	_trees[tree->getName()] = tree;
+	return true;
 }
 
 /**
@@ -164,7 +196,7 @@ std::shared_ptr<BehaviorNode> BehaviorManager::createTree(const std::shared_ptr<
 	else if (treeDef->_type == BehaviorNodeDef::Type::SELECTOR_NODE) {
 		CUAssertLog(treeDef->_children.size() > 0,
 					"Incorrect number of children for composite node");
-		return PriorityNode::alloc(treeDef->_name, treeDef->_priorityFunc,
+		return SelectorNode::alloc(treeDef->_name, treeDef->_priorityFunc,
 								   createTrees(treeDef->_children),
 								   treeDef->_preempt);
 	}

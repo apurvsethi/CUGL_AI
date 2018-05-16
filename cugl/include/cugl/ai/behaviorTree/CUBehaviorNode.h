@@ -44,50 +44,50 @@ namespace cugl {
  */
 struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	/**
-	* This enum is used to describe the type of the {@link BehaviorNode}.
-	*
-	* When creating an instance of a behavior tree node from a BehaviorNodeDef,
-	* this enum is used to determine the type of behavior tree node created.
-	*/
+	 * This enum is used to describe the type of the {@link BehaviorNode}.
+	 *
+	 * When creating an instance of a behavior tree node from a BehaviorNodeDef,
+	 * this enum is used to determine the type of behavior tree node created.
+	 */
 	enum class Type : int {
 		/**
-		* A priority node is a composite node, or a node with one or more
-		* children, that chooses the child with the highest priority to run.
-		*/
+		 * A priority node is a composite node, or a node with one or more
+		 * children, that chooses the child with the highest priority to run.
+		 */
 		PRIORITY_NODE,
 		/**
-		* A selector node is a composite node, or a node with one or more
-		* children, that runs the first child in its list of children with a
-		* non-zero priority.
-		*/
+		 * A selector node is a composite node, or a node with one or more
+		 * children, that runs the first child in its list of children with a
+		 * non-zero priority.
+		 */
 		SELECTOR_NODE,
 		/**
-		* A random node is a composite node, or a node with one or more
-		* children, that runs a child either uniformly at random or uses a
-		* weighted random based on priority values..
-		*/
+		 * A random node is a composite node, or a node with one or more
+		 * children, that runs a child either uniformly at random or uses a
+		 * weighted random based on priority values..
+		 */
 		RANDOM_NODE,
 		/**
-		* An inverter node is a decorator node, or a node with one child,
-		* that sets its priority value by inverting its child's priority value.
-		* In other words, 1 - priority of child where priority is from 0 to 1.
-		* This node does not use the priority function provided by the user.
-		*/
+		 * An inverter node is a decorator node, or a node with one child,
+		 * that sets its priority value by inverting its child's priority value.
+		 * In other words, 1 - priority of child where priority is from 0 to 1.
+		 * This node does not use the priority function provided by the user.
+		 */
 		INVERTER_NODE,
 		/**
-		* A timer node is a decorator node, or a node with one child, that
-		* either delays execution of its child node when the child is chosen
-		* for execution by a given time, or ensures that the child is not run
-		* again after its execution for a given time. This choice is based on
-		* the _timeDelay flag described below.
-		*/
+		 * A timer node is a decorator node, or a node with one child, that
+		 * either delays execution of its child node when the child is chosen
+		 * for execution by a given time, or ensures that the child is not run
+		 * again after its execution for a given time. This choice is based on
+		 * the _timeDelay flag described below.
+		 */
 		TIMER_NODE,
 		/**
-		* A leaf node is a node in charge of running an action, and the base
-		* node used for conditional execution (through the priority function).
-		* A leaf node must have an action associated with it, and cannot have
-		* any children.
-		*/
+		 * A leaf node is a node in charge of running an action, and the base
+		 * node used for conditional execution (through the priority function).
+		 * A leaf node must have an action associated with it, and cannot have
+		 * any children.
+		 */
 		LEAF_NODE
 	};
 	/** The descriptive, identifying name of the node. */
@@ -217,12 +217,14 @@ class BehaviorNode {
 public:
 	/** The current state of the node. */
 	enum class State : unsigned int {
-		/** The node is finished with an action. */
-		FINISHED = 0,
-		/** The node is currently running. */
-		RUNNING = 1,
 		/** The node is neither running nor has already finished with an action. */
-		UNINITIALIZED = 2
+		UNINITIALIZED = 0,
+		/** The node is active and currently running. */
+		RUNNING = 1,
+		/** The node is active but currently paused. */
+		PAUSED = 2,
+		/** The node is finished with an action. */
+		FINISHED = 3
 	};
 
 protected:
@@ -276,15 +278,15 @@ public:
 	~BehaviorNode() { dispose(); }
 
 	/**
-	* Initializes a behavior node with the given name, children, and priority
-	* function.
-	*
-	* @param name		The name of the behavior node
-	* @param priority	The priority function of the behavior node
-	* @param children 	The children of the behavior node
-	*
-	* @return true if initialization was successful.
-	*/
+	 * Initializes a behavior node with the given name, children, and priority
+	 * function.
+	 *
+	 * @param name		The name of the behavior node
+	 * @param priority	The priority function of the behavior node
+	 * @param children 	The children of the behavior node
+	 *
+	 * @return true if initialization was successful.
+	 */
 	bool init(const std::string& name,
 			  const std::function<float()> priority,
 			  const std::vector<std::shared_ptr<BehaviorNode>>& children);
@@ -358,7 +360,7 @@ public:
 	 *
 	 * @param state The state of this node.
 	 */
-	virtual void setState(BehaviorNode::State state) { _state = state; }
+	virtual void setState(BehaviorNode::State state);
 
 	/**
 	 * Returns a (weak) pointer to the parent node.
@@ -388,15 +390,35 @@ public:
 	void removeFromParent() { if (_parent) _parent->removeChild(_childOffset); }
 
 	/**
+	 * Reset this node and all nodes below it to an uninitialized state. Also
+	 * resets any class values to those set at the start of the tree.
+	 */
+	virtual void reset();
+
+	/**
+	 * Pause this running node and all running nodes below it in the tree,
+	 * allowing them to be resumed later.
+	 *
+	 * This method has no effect on values stored within nodes, and values will
+	 * not be updated while nodes are paused.
+	 */
+	void pause();
+
+	/**
+	 * Resumes a paused node and all paused nodes below it in the tree, allowing
+	 * them to run again.
+	 *
+	 * Values such as priority or delay for a timer node will not have
+	 * been updated while the node was paused.
+	 */
+	void resume();
+
+	 /**
 	 * Begin running this node, moving from an uninitialized state to a running
 	 * state as the correct action to perform as all priority values are updated
 	 * and the correct node to run is found through choosing a leaf node.
 	 */
-	void start() {
-		updatePriority();
-		setState(BehaviorNode::State::RUNNING);
-		update(0.0f);
-	}
+	void start();
 
 	/**
 	 * Updates the priority value for this node and all children beneath it,

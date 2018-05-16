@@ -96,15 +96,89 @@ void BehaviorNode::dispose() {
 }
 
 #pragma mark -
-#pragma mark Internal Helpers
+#pragma mark Behavior Trees
+/**
+ * Sets the state of this node.
+ *
+ * This state is used to identify the state of this node. If this node
+ * has no parent, then this is the state of the behavior tree.
+ *
+ * @param state The state of this node.
+ */
+void BehaviorNode::setState(BehaviorNode::State state) {
+	CUAssertLog(state != BehaviorNode::State::RUNNING || getPriority() != 0.0f,
+				"Running node cannot have 0 priority.");
+	_state = state;
+}
 
+/**
+ * Reset this node and all nodes below it to an uninitialized state. Also
+ * resets any class values to those set at the start of the tree.
+ */
+void BehaviorNode::reset() {
+	setState(BehaviorNode::State::UNINITIALIZED);
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		(*it)->reset();
+	}
+}
+
+/**
+ * Pause this running node and all running nodes below it in the tree,
+ * allowing them to be resumed later.
+ *
+ * This method has no effect on values stored within nodes, and values will
+ * not be updated while nodes are paused.
+ */
+void BehaviorNode::pause() {
+	CUAssertLog(getState() == BehaviorNode::State::RUNNING,
+				"Cannot pause a node that is not currently running.");
+	setState(BehaviorNode::State::PAUSED);
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		if ((*it)->getState() == BehaviorNode::State::RUNNING) {
+			(*it)->pause();
+		}
+	}
+}
+
+/**
+ * Resumes a paused node and all paused nodes below it in the tree, allowing
+ * them to run again.
+ *
+ * Values such as priority or delay for a timer node will not have
+ * been updated while the node was paused.
+ */
+void BehaviorNode::resume() {
+	CUAssertLog(getState() == BehaviorNode::State::PAUSED,
+				"Cannot resume a node that is not currently paused.");
+	setState(BehaviorNode::State::RUNNING);
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		if ((*it)->getState() == BehaviorNode::State::PAUSED) {
+			(*it)->resume();
+		}
+	}
+}
+
+/**
+ * Begin running this node, moving from an uninitialized state to a running
+ * state as the correct action to perform as all priority values are updated
+ * and the correct node to run is found through choosing a leaf node.
+ */
+void BehaviorNode::start() {
+	updatePriority();
+	setState(BehaviorNode::State::RUNNING);
+	update(0.0f);
+}
+
+#pragma mark -
+#pragma mark Internal Helpers
 /**
  * Sets the priority of this node.
  *
  * @param priority The priority of this node.
  */
 void BehaviorNode::setPriority(float priority) {
-	CUAssertLog(priority >= 0.0f && priority <= 1.0f, "Priority is not between 0 and 1");
+	CUAssertLog(priority >= 0.0f && priority <= 1.0f,
+				"Priority must be between 0 and 1");
 	_priority = priority;
 }
 

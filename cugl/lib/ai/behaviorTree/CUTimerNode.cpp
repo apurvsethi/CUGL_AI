@@ -22,6 +22,7 @@
 
 #include <sstream>
 #include <cugl/ai/behaviorTree/CUTimerNode.h>
+#include <cugl/util/CUDebug.h>
 
 using namespace cugl;
 
@@ -58,12 +59,11 @@ void TimerNode::dispose() {
 bool TimerNode::init(const std::string& name,
 					 const std::shared_ptr<BehaviorNode>& child,
 					 bool timeDelay, float delay) {
-	DecoratorNode::init(name, child);
 	_timeDelay = timeDelay;
 	_delay = delay;
 	_delaying = false;
 	_currentDelay = 0.0f;
-	return true;
+	return DecoratorNode::init(name, child);
 }
 
 #pragma mark -
@@ -100,10 +100,24 @@ std::string TimerNode::toString(bool verbose) const {
  * @param state The state of this node.
  */
 void TimerNode::setState(BehaviorNode::State state) {
-	if (state == BehaviorNode::State::RUNNING && _timeDelay) {
+	CUAssertLog(state != BehaviorNode::State::RUNNING || getPriority() != 0.0f,
+				"Running node cannot have 0 priority.");
+	if (_state == state) { return; }
+	if (getState() != BehaviorNode::State::PAUSED
+		&& state == BehaviorNode::State::RUNNING && _timeDelay) {
 		_delaying = true;
 	}
 	_state = state;
+}
+
+/**
+ * Reset this node and all nodes below it to an uninitialized state. Also
+ * resets any class values to those set at the start of the tree.
+ */
+void TimerNode::reset() {
+	_delaying = false;
+	_currentDelay = 0.0f;
+	BehaviorNode::reset();
 }
 
 /**
@@ -140,10 +154,12 @@ BehaviorNode::State TimerNode::update(float dt) {
 		}
 	}
 
-	if (_delaying && _timeDelay) {
-		return getState();
+	if (getState() == BehaviorNode::State::RUNNING
+		&& !(_delaying && _timeDelay)) {
+		_children[0]->setState(BehaviorNode::State::RUNNING);
 	}
-	return DecoratorNode::update(dt);
+	setState(_children[0]->update(dt));
+	return getState();
 }
 
 /**

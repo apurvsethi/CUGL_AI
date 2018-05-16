@@ -42,9 +42,8 @@ bool CompositeNode::init(const std::string& name,
 						 const std::function<float()> priority,
 						 const std::vector<std::shared_ptr<BehaviorNode>>& children,
 						 bool preempt) {
-	BehaviorNode::init(name, priority, children);
 	_preempt = preempt;
-	return true;
+	return BehaviorNode::init(name, priority, children);
 }
 
 /**
@@ -184,27 +183,31 @@ void CompositeNode::updatePriority() {
  * @return the BehaviorNode::State of this composite node.
  */
 BehaviorNode::State CompositeNode::update(float dt) {
-	if (getState() != BehaviorNode::State::RUNNING) {
-		return getState();
-	}
-	CUAssertLog(getPriority() == 0, "Should never run child with 0 priority");
-	std::shared_ptr<BehaviorNode> activeChild;
 	if (_activeChildPos != -1 && _preempt) {
 		updatePriority();
 	}
+
+	if (getState() != BehaviorNode::State::RUNNING) {
+		for (auto it = _children.begin(); it != _children.end(); ++it) {
+			(*it)->update(dt);
+		}
+		return getState();
+	}
+
+	std::shared_ptr<BehaviorNode> activeChild;
 	if (_activeChildPos == -1 || _preempt) {
 		activeChild = getChosenChild();
 		if (_activeChildPos != -1 && _children[_activeChildPos] != activeChild) {
 			_children[_activeChildPos]->preempt();
 		}
-		if (_activeChildPos == -1 || _children[_activeChildPos] != activeChild) {
-			activeChild->setState(BehaviorNode::State::RUNNING);
-		}
 		_activeChildPos = activeChild->getChildOffset();
 	}
-	else {
-		activeChild = _children[_activeChildPos];
+	activeChild = _children[_activeChildPos];
+
+	activeChild->setState(BehaviorNode::State::RUNNING);
+	for (auto it = _children.begin(); it != _children.end(); ++it) {
+		(*it)->update(dt);
 	}
-	setState(activeChild->update(dt));
+	setState(activeChild->getState());
 	return getState();
 }

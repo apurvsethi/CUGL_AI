@@ -210,6 +210,12 @@ public:
 	void setState(BehaviorNode::State state) override;
 
 	/**
+	 * Reset this node and all nodes below it to an uninitialized state. Also
+	 * resets any class values to those set at the start of the tree.
+	 */
+	void reset() override;
+
+	/**
 	 * Updates the priority value for this node and all children beneath it,
 	 * running the priority function provided or default priority function
 	 * if available for the class.

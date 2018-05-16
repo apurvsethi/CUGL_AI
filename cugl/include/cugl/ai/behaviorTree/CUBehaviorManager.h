@@ -104,19 +104,34 @@ public:
 	}
 
 	/**
-	 * Returns whether BehaviorNode tree was successfully created and added.
+	 * Starts running the tree with the given name.
 	 *
-	 * Creates BehaviorNodes from template provided by BehaviorNodeDefs, and
-	 * adds it to the BehaviorManager. Returns false if a BehaviorNodeDef
-	 * provided does not allow creation of a matching BehaviorNode, or if the
-	 * name provided to the treeDef is equal to a name provided for another
-	 * tree in the manager. True otherwise.
+	 * All trees must be stored with unique names in the BehaviorManager,
+	 * and thus there cannot be multiple possible trees to start.
 	 *
-	 * @param treeDef	BehaviorNodeDef tree template for a BehaviorNode tree.
-	 *
-	 * @return whether BehaviorNode tree was successfully created and added.
+	 * @param name	An identifier to find the tree.
 	 */
-	bool addTree(const std::shared_ptr<BehaviorNodeDef>& treeDef);
+	void startTree(const std::string& name);
+
+	/**
+	 * Pauses the tree with the given name.
+	 *
+	 * All trees must be stored with unique names in the BehaviorManager,
+	 * and thus there cannot be multiple possible trees to start.
+	 *
+	 * @param name	An identifier to find the tree.
+	 */
+	void pauseTree(const std::string& name);
+
+	/**
+	 * Resumes running the paused tree with the given name.
+	 *
+	 * All trees must be stored with unique names in the BehaviorManager,
+	 * and thus there cannot be multiple possible trees to start.
+	 *
+	 * @param name	An identifier to find the tree.
+	 */
+	void resumeTree(const std::string& name);
 
 	/**
 	 * Remove the tree with the given name, if the tree is not currently
@@ -130,22 +145,27 @@ public:
 	void removeTree(const std::string& name);
 
 	/**
-	 * Starts running the tree with the given name.
-	 *
-	 * All trees must be stored with unique names in the BehaviorManager,
-	 * and thus there cannot be multiple possible trees to start.
-	 *
-	 * @param name	An identifier to find the tree.
-	 */
-	void startTree(const std::string& name);
-
-	/**
 	 * Runs an update function, meant to be used on each tick, for each
 	 * behavior tree that is currently running within the manager.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 */
 	void update(float dt);
+
+	/**
+	 * Returns whether BehaviorNode tree was successfully created and added.
+	 *
+	 * Creates BehaviorNodes from template provided by BehaviorNodeDefs, and
+	 * adds it to the BehaviorManager. Returns false if a BehaviorNodeDef
+	 * provided does not allow creation of a matching BehaviorNode, or if the
+	 * name provided to the treeDef is equal to a name provided for another
+	 * tree in the manager. True otherwise.
+	 *
+	 * @param treeDef	BehaviorNodeDef tree template for a BehaviorNode tree.
+	 *
+	 * @return whether BehaviorNode tree was successfully created and added.
+	 */
+	bool addTree(const std::shared_ptr<BehaviorNodeDef>& treeDef);
 
 private:
 	/**

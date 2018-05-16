@@ -64,8 +64,10 @@ public:
 		UNINITIALIZED = 0,
 		/** The action is running. */
 		RUNNING = 1,
+		/** The action is paused (but would be running otherwise). */
+		PAUSED = 2,
 		/** The action is finished. */
-		FINISHED = 2
+		FINISHED = 3
 	};
 
 protected:

@@ -20,6 +20,7 @@
 //
 
 #include <cugl/ai/behaviorTree/CUDecoratorNode.h>
+#include <cugl/util/CUDebug.h>
 
 using namespace cugl;
 
@@ -35,9 +36,7 @@ using namespace cugl;
  * @return true if initialization was successful.
  */
 bool DecoratorNode::init(const std::string& name, const std::shared_ptr<BehaviorNode>& child) {
-	std::vector<std::shared_ptr<BehaviorNode>> children = { child };
-	BehaviorNode::init(name, nullptr, children);
-	return true;
+	return BehaviorNode::init(name, nullptr, { child });
 }
 
 #pragma mark -
@@ -53,12 +52,9 @@ bool DecoratorNode::init(const std::string& name, const std::shared_ptr<Behavior
  * @return the BehaviorNode::State of the behavior node.
  */
 BehaviorNode::State DecoratorNode::update(float dt) {
-	if (getState() == BehaviorNode::State::UNINITIALIZED
-		|| getState() == BehaviorNode::State::FINISHED) {
-		return getState();
+	if (getState() == BehaviorNode::State::RUNNING) {
+		_children[0]->setState(BehaviorNode::State::RUNNING);
 	}
-
-	_children[0]->setState(BehaviorNode::State::RUNNING);
 	setState(_children[0]->update(dt));
 	return getState();
 }
