@@ -92,9 +92,9 @@ public:
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
-	 * Updates the priority value for this node and all nodes beneath it.
-	 *
-	 * The priority of the inverter node is 1 - the priority of its child.
+	 * Updates the priority value for this node and all children beneath it,
+	 * running the priority function provided or default priority function
+	 * if available for the class.
 	 */
 	void updatePriority() override {
 		_children[0]->updatePriority();

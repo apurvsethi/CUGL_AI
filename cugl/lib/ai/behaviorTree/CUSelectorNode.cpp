@@ -57,7 +57,7 @@ std::string SelectorNode::toString(bool verbose) const {
  * children have a priority of zero, the selector node will choose the first
  * child.
  *
- * @return the child choosen by this priority node.
+ * @return the child choosen by this selector node.
  */
 const std::shared_ptr<BehaviorNode>& SelectorNode::getChosenChild() const {
 	for (auto it = _children.begin(); it != _children.end(); ++it) {

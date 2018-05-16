@@ -121,10 +121,9 @@ public:
 	}
 
 	/**
-	 * Updates the priority value for this node and all nodes beneath it.
-	 *
-	 * The priority of this node is directly related to its child's priority.
-	 * in a method specified by the different types of decorator nodes.
+	 * Updates the priority value for this node and all children beneath it,
+	 * running the priority function provided or default priority function
+	 * if available for the class.
 	 */
 	virtual void updatePriority() override = 0;
 

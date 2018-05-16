@@ -5,8 +5,19 @@
 //  This module provides support for a decorator behavior node with a timed
 //  delay.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  This class uses our standard shared-pointer architecture.
+//
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
+//
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/16/2018
 //
 
 #ifndef __CU_TIMER_NODE_H__
@@ -17,13 +28,16 @@
 #include <cugl/ai/behaviorTree/CUDecoratorNode.h>
 
 namespace cugl {
-
 /**
- * This class provides a decorator node with a timer for a behavior tree.
+ * This class provides a decorator node for a behavior tree with a timed delay.
  *
- * A timer decorator node will delay the execution of its child for a given
- * amount of time, or ensure that its child cannot be run again for a given
- * amount of time. Until that time occurs, the priority of this node is 0.
+ * A timer decorator node can be specified to either delay the execution of its
+ * child for a given amount of time, or ensure that its child cannot be run
+ * again for a given amount of time after being preempted by its parent.
+ *
+ * The priority of a timer decorator node that is not delaying is the priority
+ * of its child. If this node is delaying after preemption, the priority of
+ * this node is 0.
  */
 class TimerNode : public DecoratorNode {
 #pragma mark Values
@@ -67,7 +81,8 @@ public:
 	/**
 	 * Disposes all of the resources used by this node.
 	 *
-	 * A disposed TimerNode can be safely reinitialized.
+	 * A disposed TimerNode can be safely reinitialized. This node's child will
+	 * be released, and will be deleted if no other object owns them.
 	 *
 	 * It is unsafe to call this on a TimerNode that is still currently
 	 * inside of a running behavior tree.
@@ -159,18 +174,18 @@ public:
 	 * Returns the type of delay (before or after). True if before, otherwise
 	 * false.
 	 *
-	 * @return the type of delay (before or after). True if after, otherwise
+	 * @return the type of delay (before or after). True if before, otherwise
 	 * false.
 	 */
 	bool getDelayType() const { return _timeDelay; }
 
 	/**
-	 * Returns the number of seconds before the child node begins running.
+	 * Returns the number of seconds before the child node can run.
 	 *
 	 * The delay will prevent the child from returning for a certain
 	 * period of time.
 	 *
-	 * @return the number of seconds before the child node begins running.
+	 * @return the number of seconds before the child node can run.
 	 */
 	float getDelay() const { return _delay; }
 
@@ -196,19 +211,16 @@ public:
 
 	/**
 	 * Updates the priority value for this node and all children beneath it,
-	 * running the piority function provided or default priority function
+	 * running the priority function provided or default priority function
 	 * if available for the class.
 	 */
 	void updatePriority() override;
 
 	/**
-	 * Returns the BehaviorNode::State of the node.
+	 * Updates this node and its child.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
 	 * behavior node (and nodes chosen to run below it in the tree).
-	 *
-	 * Update priority may be run as part of this function, based on whether a
-	 * composite node uses preemption.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
@@ -219,6 +231,9 @@ public:
 	/**
 	 * Stops this node from running, and also stops any running nodes under
 	 * this node in the tree if they exist.
+	 *
+	 * If this node is specified to delay after preemption. This method will
+	 * begin the delay.
 	 */
 	void preempt() override;
 };

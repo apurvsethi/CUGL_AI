@@ -140,10 +140,10 @@ public:
 	 * Returns a newly allocated RandomNode with the given name, children,
 	 * priority function, and random type.
 	 *
-	 * @param name		The name of the composite node.
-	 * @param priority	The priority function of the composite node.
-	 * @param children 	The children of the composite node.
-	 * @param preempt	Whether child nodes can be preempted.
+	 * @param name		The name of the random node.
+	 * @param priority	The priority function of the random node.
+	 * @param children 	The children of the random node.
+	 * @param preempt	Whether random nodes can be preempted.
 	 * @param uniformRandom	Whether children are chosen uniformly at random.
 	 *
 	 * @return a newly allocated RandomNode with the given name, children,
@@ -175,10 +175,10 @@ public:
 #pragma mark Behavior Tree
 	/**
 	 * Updates the priority value for this node and all children beneath it,
+	 * running the priority function provided or default priority function
+	 * if available for the class.
 	 *
-	 * This node will use the provided priority function if it has been given
-	 * on. Otherwise, this node will set its priority to the average priority
-	 * of its children.
+	 * This node will set its priority to the average priority of its children.
 	 */
 	void updatePriority() override;
 

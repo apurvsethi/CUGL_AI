@@ -90,10 +90,10 @@ std::string RandomNode::toString(bool verbose) const {
 #pragma mark Behavior Tree
 /**
  * Updates the priority value for this node and all children beneath it,
+ * running the priority function provided or default priority function
+ * if available for the class.
  *
- * This node will use the provided priority function if it has been given
- * on. Otherwise, this node will set its priority to the average priority
- * of its children.
+ * This node will set its priority to the average priority of its children.
  */
 void RandomNode::updatePriority() {
 	float priority_sum = 0.0f;

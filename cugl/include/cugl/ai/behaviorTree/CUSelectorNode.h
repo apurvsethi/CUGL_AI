@@ -108,7 +108,7 @@ protected:
 	 * children have a priority of zero, the selector node will choose the first
 	 * child.
 	 *
-	 * @return the child choosen by this priority node.
+	 * @return the child choosen by this selector node.
 	 */
 	const std::shared_ptr<BehaviorNode>& getChosenChild() const override;
 };
