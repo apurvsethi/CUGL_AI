@@ -1,9 +1,19 @@
 //
-//  CUCompositeNode.h
+//  CUCompositeNode.cpp
 //  Cornell University Game Library (CUGL)
 //
 //  This module provides support for a composite behavior node.
 //
+//  This class uses our standard shared-pointer architecture.
+//
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
 //  Author: Apurv Sethi and Andrew Matsumoto
 //  Version: 5/15/2018
 //
@@ -54,14 +64,17 @@ void CompositeNode::dispose() {
 #pragma mark -
 #pragma mark Behavior Tree
 /**
- * Returns the child at the given position.
+ * Returns a (weak) pointer to the child at the given position.
  *
  * While children are enumerated in the order by which they were added,
  * it is recommended to attempt to retrieve a child by name instead.
  *
+ * As a weak reference, this composite node does not pass ownership of its
+ * child.
+ *
  * @param pos	The child position.
  *
- * @return the child at the given position.
+ * @return a (weak) pointer to the child at the given position.
  */
 const BehaviorNode* CompositeNode::getChild(unsigned int pos) const {
 	CUAssertLog(pos < _children.size(), "Position index out of bounds");
@@ -69,14 +82,17 @@ const BehaviorNode* CompositeNode::getChild(unsigned int pos) const {
 }
 
 /**
- * Returns the (first) child with the given name.
+ * Returns a (weak) reference the (first) child with the given name.
  *
  * If there is more than one child of the given name, it returns the first
  * one that is found.
  *
+ * As a weak reference, this composite node does not pass ownership of its
+ * child. In addition, the value may be a nullptr.
+ *
  * @param name	An identifier to find the child node.
  *
- * @return the (first) child with the given name.
+ * @return a (weak) reference to the (first) child with the given name.
  */
 const BehaviorNode* CompositeNode::getChildByName(const std::string& name) const {
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
@@ -88,14 +104,17 @@ const BehaviorNode* CompositeNode::getChildByName(const std::string& name) const
 }
 
 /**
- * Returns the child with the given priority index.
+ * Returns a (weak) reference to the child with the given priority index.
  *
  * A child with a specific priority index i is the child with the ith
  * highest priority. Ties are broken arbitrarily.
  *
+ * As a weak reference, this composite node does not pass ownership of its
+ * child.
+ *
  * @param index	The child's priority index.
  *
- * @return the child with the given priority index.
+ * @return a (weak) reference the child with the given priority index.
  */
 const BehaviorNode* CompositeNode::getChildByPriorityIndex(unsigned int index) const {
 	CUAssertLog(index < _children.size(), "Priority index out of bounds");
@@ -105,9 +124,12 @@ const BehaviorNode* CompositeNode::getChildByPriorityIndex(unsigned int index) c
 }
 
 /**
- * Returns the list of the node's children.
+ * Returns the list of (weak) references to the node's children.
  *
- * @return the list of the node's children.
+ * As weak references, this composite node does not pass ownership of its
+ * children.
+ *
+ * @return the list of (weak) references the node's children.
  */
 std::vector<const BehaviorNode*> CompositeNode::getChildren() const {
 	std::vector<const BehaviorNode*> children;
@@ -118,8 +140,8 @@ std::vector<const BehaviorNode*> CompositeNode::getChildren() const {
 }
 
 /**
- * Stops this node from running while it is currently running, and preempts
- * running child.
+ * Stops this node from running, and also stops any running nodes under
+ * this node in the tree if they exist.
  */
 void CompositeNode::preempt() {
 	CUAssertLog(_activeChildPos != -1,
@@ -165,13 +187,13 @@ BehaviorNode::State CompositeNode::update(float dt) {
 	if (getState() != BehaviorNode::State::RUNNING) {
 		return getState();
 	}
+	CUAssertLog(getPriority() == 0, "Should never run child with 0 priority");
 	std::shared_ptr<BehaviorNode> activeChild;
 	if (_activeChildPos != -1 && _preempt) {
 		updatePriority();
 	}
 	if (_activeChildPos == -1 || _preempt) {
 		activeChild = getChosenChild();
-		CUAssertLog(getPriority() == 0, "Should never run child with 0 priority");
 		if (_activeChildPos != -1 && _children[_activeChildPos] != activeChild) {
 			_children[_activeChildPos]->preempt();
 		}
