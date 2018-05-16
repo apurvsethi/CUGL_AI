@@ -4,12 +4,19 @@
 //
 //  This module provides support for a decorator behavior node.
 //
-//  You should never instantiate an object of this class.  Instead, you should
-//  use one of the concrete subclasses of DecoratorNode. Because this is an
-//  abstract class, it has no allocators.  It only has an initializer.
+//  This class uses our standard shared-pointer architecture.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
+//
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/16/2018
 //
 
 #ifndef __CU_DECORATOR_NODE_H__
@@ -22,17 +29,20 @@
 namespace cugl {
 
 /**
- * This class provides a decorator behavior node for a behavior tree.
+ * This class provides a decorator node for a behavior tree.
  *
- * A decorator node within a behavior tree refers to the set of nodes that have
- * one child, and perform some function regarding the priority value of the
- * child node. There are rules specific to each type of decorator node defining
- * this.
+ * A decorator node of a behavior tree has exactly one child and perform some
+ * method altering the execution status or returning an altered version of its
+ * child's priority. The exact method of performing these modifications is
+ * defined within the different subclasses of this node. The status of the
+ * decorator node is related to the status of its child.
  *
- * The two concrete subclasses for a DecoratorNode are: InverterNode and
- * TimerNode. While similar in structure, each class has key differences
- * defining how it runs in relation to its child
- * node.
+ * Unlike other types of behavior tree nodes, decorator nodes do not allow a
+ * user defined priority function. This is because the decorator node returns
+ * either the priority or some modification of the priority of the child.
+ *
+ * This class should not be instantiated directly. Instead, you should use one
+ * of its subclasses ({@link InverterNode} and {@link TimerNode}).
  */
 class DecoratorNode : public BehaviorNode {
 
@@ -42,8 +52,8 @@ public:
 	/**
 	 * Creates an uninitialized decorator node.
 	 *
-	 * This constructor should never be called directly, as this is an abstract
-	 * class.
+	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
+	 * the heap, use one of the static constructors instead.
 	 */
 	DecoratorNode() : BehaviorNode() {};
 
@@ -79,23 +89,31 @@ public:
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
-	 * Returns the node's child.
+	 * Returns a (weak) reference to this node's child.
 	 *
-	 * @return the node's child.
+	 * As a weak reference, this decorator node does not pass ownership of its
+	 * child.
+	 *
+	 * @return a (weak) reference to this node's child.
 	 */
 	const BehaviorNode* getChild() const {
 		return _children[0].get();
 	}
 
 	/**
-	 * Returns the node's child, typecast to a shared T pointer.
+	 * Returns a (weak) reference to this node's child, typecast to a shared T
+	 * pointer.
 	 *
 	 * This method is provided to simplify the polymorphism of a behavior tree.
 	 * While the child is a subclass of type BehaviorNode, you may want to
 	 * access them by their specific subclass.  If the child is not an instance
 	 * of type T (or a subclass), this method returns nullptr.
 	 *
-	 * @return the child at the given position, typecast to a shared T pointer.
+	 * As a weak reference, this decorator node does not pass ownership of its
+	 * child.
+	 *
+	 * @return a (weak) reference to the child at the given position, typecast to
+	 * a shared T pointer.
 	 */
 	template <typename T>
 	inline const T* getChild() const {
@@ -103,20 +121,18 @@ public:
 	}
 
 	/**
-	 * Updates the priority value for this node and all children beneath it,
-	 * running the piority function provided or default priority function
-	 * if available for the class.
+	 * Updates the priority value for this node and its child.
+	 *
+	 * The priority of this node is directly related to its child's priority.
+	 * in a method specified by the different types of decorator nodes.
 	 */
 	virtual void updatePriority() override = 0;
 
 	/**
-	 * Returns the BehaviorNode::State of the node.
+	 * Updates this node and its child.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
 	 * behavior node (and nodes chosen to run below it in the tree).
-	 *
-	 * Update priority may be run as part of this function, based on whether a
-	 * composite node uses preemption.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *

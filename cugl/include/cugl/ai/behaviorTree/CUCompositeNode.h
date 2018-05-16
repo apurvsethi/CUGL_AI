@@ -14,6 +14,7 @@
 //
 //  3. All allocation takes place via static constructors which return a shared
 //     pointer.
+//
 //  Author: Apurv Sethi and Andrew Matsumoto
 //  Version: 5/15/2018
 //
@@ -44,7 +45,7 @@ namespace cugl {
  * its subclasses.
  *
  * This class should not be instantiated directly. Instead, you should use
- * one of the subclasses ({@link PriorityNode}, {@link SelectorNode},
+ * one of its subclasses ({@link PriorityNode}, {@link SelectorNode},
  * {@link RandomNode}).
  */
 class CompositeNode : public BehaviorNode {

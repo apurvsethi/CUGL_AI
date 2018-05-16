@@ -208,7 +208,9 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
  *
  * Behavior trees should be managed by a {@link BehaviorManager}, which creates
  * each BehaviorNode from a {@link BehaviorNodeDef} and runs and updates the
- * behavior trees.
+ * behavior trees. While in the {@link BehaviorManager}, a behavior tree cannot
+ * be modified by any outside methods and any references to the nodes of the
+ * behavior tree will be constant.
  */
 class BehaviorNode {
 #pragma mark Values

@@ -4,12 +4,19 @@
 //
 //  This module provides support for a decorator behavior node.
 //
-//  You should never instantiate an object of this class.  Instead, you should
-//  use one of the concrete subclasses of DecoratorNode. Because this is an
-//  abstract class, it has no allocators.  It only has an initializer.
+//  This class uses our standard shared-pointer architecture.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
+//
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/16/2018
 //
 
 #include <cugl/ai/behaviorTree/CUDecoratorNode.h>
@@ -36,13 +43,10 @@ bool DecoratorNode::init(const std::string& name, const std::shared_ptr<Behavior
 #pragma mark -
 #pragma mark Behavior Tree
 /**
- * Returns the BehaviorNode::State of the node.
+ * Updates this node and its child.
  *
  * Runs an update function, meant to be used on each tick, for the
  * behavior node (and nodes chosen to run below it in the tree).
- *
- * Update priority may be run as part of this function, based on whether a
- * composite node uses preemption.
  *
  * @param dt	The elapsed time since the last frame.
  *
