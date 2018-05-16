@@ -82,7 +82,7 @@ public:
 	static std::shared_ptr<PriorityNode> alloc(const std::string& name,
 											   const std::function<float()> priority,
 											   const std::vector<std::shared_ptr<BehaviorNode>>& children,
-											   bool preempt = false) {
+											   bool preempt) {
 		std::shared_ptr<PriorityNode> result = std::make_shared<PriorityNode>();
 		return (result->init(name, priority, children, preempt) ? result : nullptr);
 	}

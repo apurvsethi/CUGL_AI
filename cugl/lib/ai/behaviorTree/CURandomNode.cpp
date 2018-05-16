@@ -4,8 +4,19 @@
 //
 //  This module provides support for a random composite behavior node.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  This class uses our standard shared-pointer architecture.
+//
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
+//
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/16/2018
 //
 
 #include <sstream>
@@ -16,12 +27,13 @@ using namespace cugl;
 #pragma mark -
 #pragma mark Constructors
 /**
- * Disposes all of the resources used by this node, and all descendants
- * in the tree.
+ * Disposes all of the resources used by this node.
  *
- * A disposed RandomNode can be safely reinitialized.
+ * A disposed RandomNode can be safely reinitialized. Any children owned
+ * by this node will be released. They will be deleted if no other object
+ * owns them.
  *
- * It is unsafe to call this on a RandomNode that is still currently
+ * It is unsafe to call this on a random node that is still currently
  * inside of a running behavior tree.
  */
 void RandomNode::dispose() {
@@ -78,8 +90,10 @@ std::string RandomNode::toString(bool verbose) const {
 #pragma mark Behavior Tree
 /**
  * Updates the priority value for this node and all children beneath it,
- * running the piority function provided or default priority function
- * if available for the class.
+ *
+ * This node will use the provided priority function if it has been given
+ * on. Otherwise, this node will set its priority to the average priority
+ * of its children.
  */
 void RandomNode::updatePriority() {
 	float priority_sum = 0.0f;
@@ -101,9 +115,14 @@ void RandomNode::updatePriority() {
 #pragma mark -
 #pragma mark Internal Helpers
 /**
- * Returns the child with the smallest position which has a non-zero priority.
+ * Returns the child choosen by this random node.
  *
- * @return the first child with a non-zero priority.
+ * If the _uniformRandom flag has been set, then this node will choose
+ * among its children uniformly at random. Otherwise, this node will
+ * choose among its children with each child's probability of being
+ * selected weighted by that child's priority value.
+ *
+ * @return the child choosen by this composite node.
  */
 const std::shared_ptr<BehaviorNode>& RandomNode::getChosenChild() const {
 	if (!_uniformRandom) {

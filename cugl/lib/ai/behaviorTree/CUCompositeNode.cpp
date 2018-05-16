@@ -171,7 +171,7 @@ void CompositeNode::updatePriority() {
 }
 
 /**
- * Returns the BehaviorNode::State of the node.
+ * Updates this node and its children.
  *
  * Runs an update function, meant to be used on each tick, for the
  * behavior node (and nodes chosen to run below it in the tree).
@@ -181,7 +181,7 @@ void CompositeNode::updatePriority() {
  *
  * @param dt	The elapsed time since the last frame.
  *
- * @return the BehaviorNode::State of the behavior node.
+ * @return the BehaviorNode::State of this composite node.
  */
 BehaviorNode::State CompositeNode::update(float dt) {
 	if (getState() != BehaviorNode::State::RUNNING) {

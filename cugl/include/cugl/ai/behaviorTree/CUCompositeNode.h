@@ -262,13 +262,13 @@ public:
 
 	/**
 	 * Updates the priority value for this node and all children beneath it,
-	 * running the piority function provided or default priority function
+	 * running the priority function provided or default priority function
 	 * if available for the class.
 	 */
 	virtual void updatePriority() override;
 
 	/**
-	 * Returns the BehaviorNode::State of the node.
+	 * Updates this node and its children.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
 	 * behavior node (and nodes chosen to run below it in the tree).
@@ -276,9 +276,12 @@ public:
 	 * Update priority may be run as part of this function, based on whether a
 	 * composite node uses preemption.
 	 *
+	 * You should never call update on a composite node whose children all have
+	 * zero priority.
+	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
-	 * @return the BehaviorNode::State of the behavior node.
+	 * @return the BehaviorNode::State of this composite node.
 	 */
 	BehaviorNode::State update(float dt) override;
 

@@ -4,8 +4,19 @@
 //
 //  This module provides support for a random composite behavior node.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  This class uses our standard shared-pointer architecture.
+//
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
+//
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/16/2018
 //
 
 #ifndef __CU_RANDOM_NODE_H__
@@ -22,18 +33,39 @@ namespace cugl {
  *
  * A random node is a composite node which is designed to run a randomly
  * selected nodes out of its children, based on either uniform probability or
- * weighted probability. The random node finishes after its selected node has
+ * weighted probability. A random node using a weighted probability will base
+ * the weights of the probability of each node running on the priority of its
+ * children.
+ *
+ * The random node finishes after its selected node has
  * also finished.
+ */
+
+/**
+ * This class provides a random composite node for a behavior tree.
+ *
+ * A random node will randomly choose among its children based either on a
+ * uniform or a weighted probability. If the random node uses a weighted
+ * probability it will base its weightage of the probability of running each
+ * child on that child's priority value.
+ *
+ * If a random node is not given a priority function, it will set its priority
+ * as the average priorities of its children.
+ *
+ * A random node's state is directly based upon the child node currently
+ * running or the child node that has finished running. Only one child node
+ * will finish running as part of the RandomNode.
  */
 class RandomNode : public CompositeNode {
 #pragma mark Values
 protected:
 	/**
-	 * Whether or not the random node should choose the child for execution
-	 * based on a uniformly at random choice amongst its children, or should
-	 * choose the child randomly with weightage being provided for children
-	 * nodes through their priority values. If true, then the node chooses
-	 * uniformly at random, otherwise the node uses a weighted probability.
+	 * Whether this node should choose the child to execute based uniformly
+	 * at random.
+	 *
+	 * If true, then this node chooses its child uniformly at random. Otherwise,
+	 * this node uses a weighted probability among its children based on each
+	 * child's priority value.
 	 */
 	bool _uniformRandom;
 
@@ -56,12 +88,13 @@ public:
 	~RandomNode() { dispose(); }
 
 	/**
-	 * Disposes all of the resources used by this node, and all descendants
-	 * in the tree.
+	 * Disposes all of the resources used by this node.
 	 *
-	 * A disposed RandomNode can be safely reinitialized.
+	 * A disposed RandomNode can be safely reinitialized. Any children owned
+	 * by this node will be released. They will be deleted if no other object
+	 * owns them.
 	 *
-	 * It is unsafe to call this on a RandomNode that is still currently
+	 * It is unsafe to call this on a random node that is still currently
 	 * inside of a running behavior tree.
 	 */
 	void dispose() override;
@@ -142,18 +175,22 @@ public:
 #pragma mark Behavior Tree
 	/**
 	 * Updates the priority value for this node and all children beneath it,
-	 * running the piority function provided or default priority function
-	 * if available for the class.
+	 *
+	 * This node will use the provided priority function if it has been given
+	 * on. Otherwise, this node will set its priority to the average priority
+	 * of its children.
 	 */
 	void updatePriority() override;
 
 #pragma mark -
 #pragma mark Internal Helpers
 	/**
-	 * Returns the child choosen by this composite node.
+	 * Returns the child choosen by this random node.
 	 *
-	 * The algorithm for choosing the child of this node is implementation
-	 * specific to the subclasses of this node.
+	 * If the _uniformRandom flag has been set, then this node will choose
+	 * among its children uniformly at random. Otherwise, this node will
+	 * choose among its children with each child's probability of being
+	 * selected weighted by that child's priority value.
 	 *
 	 * @return the child choosen by this composite node.
 	 */
