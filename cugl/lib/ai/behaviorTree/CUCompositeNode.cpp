@@ -123,6 +123,19 @@ const BehaviorNode* CompositeNode::getChildByPriorityIndex(unsigned int index) c
 }
 
 /**
+ * Returns a (weak) reference to the currently active child.
+ *
+ * As a weak reference, this composite node does not pass ownership of its
+ * child.
+ *
+ * @return a (weak) reference to the currently active child.
+ */
+const BehaviorNode* CompositeNode::getActiveChild() const {
+	CUAssertLog(_activeChildPos != -1, "No children are currently running.");
+	return _children[_activeChildPos].get();
+}
+
+/**
  * Returns the list of (weak) references to the node's children.
  *
  * As weak references, this composite node does not pass ownership of its

@@ -228,7 +228,7 @@ public:
 
 	/**
 	 * Returns a (weak) reference to the child with the given priority index,
-	 * typecast to a shared T pointer.
+	 * typecast to a const T pointer.
 	 *
 	 * This method is provided to simplify the polymorphism of a behavior tree.
 	 * While all children are a subclass of type BehaviorNode, you may want to
@@ -244,11 +244,41 @@ public:
 	 * @param index	The child's priority index.
 	 *
 	 * @return a (weak) reference the child with the given priority index,
-	 * typecast to a shared T pointer.
+	 * typecast to a const T pointer.
 	 */
 	template <typename T>
 	const T* getChildByPriorityIndex(unsigned int index) const {
 		return std::dynamic_pointer_cast<const T*>(getChildByPriorityIndex(index));
+	}
+
+	/**
+	 * Returns a (weak) reference to the child currently running.
+	 *
+	 * As a weak reference, this composite node does not pass ownership of its
+	 * child.
+	 *
+	 * @return a (weak) reference to the currently active child.
+	 */
+	const BehaviorNode* getActiveChild() const;
+
+	/**
+	 * Returns a (weak) reference to the currently child running, typecast to a
+	 * const T pointer.
+	 *
+	 * This method is provided to simplify the polymorphism of a behavior tree.
+	 * While all children are a subclass of type BehaviorNode, you may want to
+	 * access them by their specific subclass.  If the child is not an instance
+	 * of type T (or a subclass), this method returns nullptr.
+	 *
+	 * As a weak reference, this composite node does not pass ownership of its
+	 * child.
+	 *
+	 * @return a (weak) reference to the currently active child, typecast as a
+	 * const T pointer.
+	 */
+	template <typename T>
+	const T* getActiveChild() const {
+		return std::dynamic_pointer_cast<const T*>(getActiveChild());
 	}
 
 	/**
