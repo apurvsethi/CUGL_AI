@@ -129,20 +129,17 @@ public:
 	}
 
 	/**
-	 * Returns the BehaviorNode::State of the node.
+	 * Updates this node and any nodes under it.
 	 *
-	 * Runs an update function, meant to be used on each tick, for the leaf
-	 * node. The state for this node is derived from the state of the action
-	 * function given. If the action function is still running, then the state
-	 * is running. Otherwise, the state corresponds with the output of the
-	 * action function. True implies success while false implies faliure.
+	 * Runs an update function, meant to be used on each tick, for the
+	 * behavior node (and nodes below it in the tree).
 	 *
 	 * Update priority may be run as part of this function, based on whether a
 	 * composite node uses preemption.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
-	 * @return the BehaviorNode::State of the behavior node.
+	 * @return the BehaviorNode::State of this composite node.
 	 */
 	BehaviorNode::State update(float dt) override;
 
