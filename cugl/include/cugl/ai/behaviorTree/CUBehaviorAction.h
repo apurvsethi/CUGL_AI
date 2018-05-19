@@ -16,6 +16,7 @@
 #define __CU_BEHAVIOR_ACTION_H__
 
 #include <functional>
+#include <memory>
 #include <string>
 
 namespace cugl {
