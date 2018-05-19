@@ -185,13 +185,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\source\HelloApp.h" />
     <ClInclude Include="..\..\source\SDApp.h" />
     <ClInclude Include="..\..\source\SDGameScene.h" />
     <ClInclude Include="..\..\source\SDInput.h" />
     <ClInclude Include="..\..\source\SDLoadingScene.h" />
     <ClInclude Include="..\..\source\SDShipModel.h" />
-    <ClInclude Include="DemoScene.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

@@ -114,18 +114,6 @@
     <Filter Include="Source Files\2d\actions">
       <UniqueIdentifier>{8d4aada7-d6d1-4977-aa59-51567dac506a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\ai">
-      <UniqueIdentifier>{e60d76b6-4669-40cc-afc6-200f7cc7f825}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ai\behaviorTree">
-      <UniqueIdentifier>{63f3a5b7-5018-465d-a638-6edbe953fa75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ai">
-      <UniqueIdentifier>{43e7a04e-9b8d-4ef8-9d86-46f34c0ced86}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ai\behaviorTree">
-      <UniqueIdentifier>{c08b519e-5751-46a6-a457-b89dda495e8a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\cugl\2d\cu_2d.h">
@@ -503,45 +491,6 @@
     <ClInclude Include="..\..\lib\base\platform\CUDisplay-impl.h">
       <Filter>Source Files\base\platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\cu_behavior_tree.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUBehaviorAction.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUBehaviorManager.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUBehaviorNode.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUBehaviorParser.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUCompositeNode.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUDecoratorNode.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUInverterNode.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CULeafNode.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUPriorityNode.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CURandomNode.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUSelectorNode.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cugl\ai\behaviorTree\CUTimerNode.h">
-      <Filter>Header Files\ai\behaviorTree</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\external\cJSON\cJSON.c">
@@ -846,39 +795,6 @@
     </ClCompile>
     <ClCompile Include="..\..\lib\2d\CUNinePatch.cpp">
       <Filter>Source Files\2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\ai\behaviorTree\CUBehaviorManager.cpp">
-      <Filter>Source Files\ai\behaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\ai\behaviorTree\CUBehaviorNode.cpp">
-      <Filter>Source Files\ai\behaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\ai\behaviorTree\CUBehaviorParser.cpp">
-      <Filter>Source Files\ai\behaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\ai\behaviorTree\CUCompositeNode.cpp">
-      <Filter>Source Files\ai\behaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\ai\behaviorTree\CUDecoratorNode.cpp">
-      <Filter>Source Files\ai\behaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\ai\behaviorTree\CUInverterNode.cpp">
-      <Filter>Source Files\ai\behaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\ai\behaviorTree\CULeafNode.cpp">
-      <Filter>Source Files\ai\behaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\ai\behaviorTree\CUPriorityNode.cpp">
-      <Filter>Source Files\ai\behaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\ai\behaviorTree\CURandomNode.cpp">
-      <Filter>Source Files\ai\behaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\ai\behaviorTree\CUSelectorNode.cpp">
-      <Filter>Source Files\ai\behaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\ai\behaviorTree\CUTimerNode.cpp">
-      <Filter>Source Files\ai\behaviorTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
