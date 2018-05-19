@@ -78,16 +78,16 @@ public:
 #pragma mark -
 #pragma mark Behavior Trees
 	/**
-	 * Returns the tree with the given name.
+	 * Returns a (weak) reference to the tree with the given name.
 	 *
 	 * All trees must be stored with unique names in the BehaviorManager,
 	 * and thus there cannot be multiple possible return values.
 	 *
 	 * @param name	An identifier to find the tree.
 	 *
-	 * @return the tree with the given name.
+	 * @return a (weak) reference to the tree with the given name.
 	 */
-	std::shared_ptr<const BehaviorNode> getTree(const std::string& name) const;
+	const BehaviorNode* getTree(const std::string& name) const;
 
 	/**
 	 * Returns the state of the tree with the given name.
