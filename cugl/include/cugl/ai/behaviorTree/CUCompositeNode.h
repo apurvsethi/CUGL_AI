@@ -168,7 +168,7 @@ public:
 	 */
 	template <typename T>
 	inline const T* getChild(unsigned int pos) const {
-		return std::dynamic_pointer_cast<const T*>(getChild(pos));
+		return dynamic_cast<const T*>(getChild(pos));
 	}
 
 	/**
@@ -208,7 +208,7 @@ public:
 	 */
 	template <typename T>
 	inline const T* getChildByName(const std::string& name) const {
-		return std::dynamic_pointer_cast<const T*>(getChildByName(name));
+		return dynamic_cast<const T*>(getChildByName(name));
 	}
 
 	/**
@@ -248,7 +248,7 @@ public:
 	 */
 	template <typename T>
 	const T* getChildByPriorityIndex(unsigned int index) const {
-		return std::dynamic_pointer_cast<const T*>(getChildByPriorityIndex(index));
+		return dynamic_cast<const T*>(getChildByPriorityIndex(index));
 	}
 
 	/**
@@ -278,7 +278,7 @@ public:
 	 */
 	template <typename T>
 	const T* getActiveChild() const {
-		return std::dynamic_pointer_cast<const T*>(getActiveChild());
+		return dynamic_cast<const T*>(getActiveChild());
 	}
 
 	/**
