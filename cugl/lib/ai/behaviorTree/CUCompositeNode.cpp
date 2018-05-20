@@ -159,6 +159,7 @@ void CompositeNode::preempt() {
 	CUAssertLog(_activeChildPos != -1,
 				"Node can only be preempted when running.");
 	_children[_activeChildPos]->preempt();
+	_activeChildPos = -1;
 	setState(BehaviorNode::State::UNINITIALIZED);
 }
 
