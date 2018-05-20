@@ -112,12 +112,13 @@ bool BehaviorNode::init(const std::string& name,
 void BehaviorNode::dispose() {
 	_name = "";
 	_state = BehaviorNode::State::UNINITIALIZED;
-	_priority = 0;
+	_priority = 0.0f;
 	_priorityFunc = nullptr;
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
 		(*it)->_parent = nullptr;
 		(*it)->_childOffset = -1;
 	}
+	_children.clear();
 	removeFromParent();
 	_parent = nullptr;
 	_childOffset = -2;

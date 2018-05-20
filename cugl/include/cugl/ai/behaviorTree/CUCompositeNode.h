@@ -122,6 +122,18 @@ public:
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
+	 * Returns whether this node allows preemption among its children.
+	 *
+	 * If preemption is allowed, this node may choose a new child not to run
+	 * during an update, possibly interrupting an old child node if a different
+	 * new child is chosen. Otherwise, the composite node cannot interrupt its
+	 * running child to select another child to run.
+	 *
+	 * @return Whether this node allows preemption among its children.
+	 */
+	bool isPreemptionAllowed() const { return _preempt; }
+
+	/**
 	 * Returns the number of children of this composite node.
 	 *
 	 * @return The number of children of this composite node.
