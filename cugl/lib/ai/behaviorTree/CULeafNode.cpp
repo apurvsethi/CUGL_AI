@@ -28,10 +28,8 @@ using namespace cugl;
  */
 bool LeafNode::init(const std::string& name, const std::function<float()>& priority,
 					const std::shared_ptr<BehaviorAction>& action) {
-	_name = name;
-	_priorityFunc = priority;
 	_action = action;
-	return true;
+	return BehaviorNode::init(name, priority);;
 }
 
 

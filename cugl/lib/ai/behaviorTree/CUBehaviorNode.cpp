@@ -9,8 +9,8 @@
 //  use one of the concrete subclasses of BehaviorNode. Because this is an
 //  abstract class, it has no allocators.  It only has an initializer.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/21/2018
 //
 
 #include <cugl/ai/behaviorTree/CUBehaviorNode.h>
@@ -48,6 +48,21 @@ std::shared_ptr<BehaviorNodeDef> BehaviorNodeDef::getNodeByName(const std::strin
 #pragma mark -
 #pragma mark Constructors
 /**
+ * Initializes a behavior node with the given name and priority function.
+ *
+ * @param name      The name of the behavior node
+ * @param priority  The priority function of the behavior node
+ *
+ * @return true if initialization was successful.
+ */
+bool BehaviorNode::init(const std::string& name, const std::function<float()> priority) {
+	_name = name;
+	_priorityFunc = priority;
+	_childOffset = -1;
+	return true;
+}
+
+/**
  * Initializes a behavior node with the given name, children, and priority
  * function.
  *
@@ -60,14 +75,11 @@ std::shared_ptr<BehaviorNodeDef> BehaviorNodeDef::getNodeByName(const std::strin
 bool BehaviorNode::init(const std::string& name,
 						const std::function<float()> priority,
 						const std::vector<std::shared_ptr<BehaviorNode>>& children) {
-	_name = name;
-	_priorityFunc = priority;
-	_childOffset = -1;
 	for (int ii = 0; ii < _children.size(); ii++) {
 		_children[ii]->setParent(this);
 		_children[ii]->_childOffset = ii;
 	}
-	return true;
+	return init(name, priority);
 }
 
 /**

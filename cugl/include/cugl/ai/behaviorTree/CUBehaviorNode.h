@@ -270,12 +270,23 @@ public:
 	 * the heap, use one of the static constructors instead.
 	 */
 	BehaviorNode() : _parent(nullptr), _priorityFunc(nullptr),
-	_state(BehaviorNode::State::UNINITIALIZED), _childOffset(-2) {}
+	_priority(0), _state(BehaviorNode::State::UNINITIALIZED),
+	_childOffset(-2) {}
 
 	/**
 	 * Deletes this node, disposing all resources.
 	 */
 	~BehaviorNode() { dispose(); }
+
+	/**
+	 * Initializes a behavior node with the given name and priority function.
+	 *
+	 * @param name      The name of the behavior node
+	 * @param priority  The priority function of the behavior node
+	 * 
+	 * @return true if initialization was successful.
+	 */
+	bool init(const std::string& name, const std::function<float()> priority);
 
 	/**
 	 * Initializes a behavior node with the given name, children, and priority
@@ -402,7 +413,7 @@ public:
 	 * This method has no effect on values stored within nodes, and values will
 	 * not be updated while nodes are paused.
 	 */
-	void pause();
+	virtual void pause();
 
 	/**
 	 * Resumes a paused node and all paused nodes below it in the tree, allowing
