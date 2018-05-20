@@ -61,12 +61,3 @@ BehaviorNode::State DecoratorNode::update(float dt) {
 	setState(_children[0]->update(dt));
 	return getState();
 }
-
-/**
- * Stops this node from running, and also stops any running nodes under
- * this node in the tree if they exist.
- */
-void DecoratorNode::preempt() {
-	_children[0]->preempt();
-	setState(BehaviorNode::State::UNINITIALIZED);
-}

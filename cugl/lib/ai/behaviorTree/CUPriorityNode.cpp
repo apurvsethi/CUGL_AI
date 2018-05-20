@@ -61,6 +61,6 @@ std::string PriorityNode::toString(bool verbose) const {
  * @return the child choosen by this priority node.
  */
 const std::shared_ptr<BehaviorNode>& PriorityNode::getChosenChild() const {
-	return *std::max_element(_children.begin(), _children.end(),
+	return *std::min_element(_children.begin(), _children.end(),
 							 BehaviorNode::compareNodeSibs);
 }

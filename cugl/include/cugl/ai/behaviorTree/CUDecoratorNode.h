@@ -141,12 +141,6 @@ public:
 	 * @return the state of this node after updating.
 	 */
 	virtual BehaviorNode::State update(float dt) override;
-
-	/**
-	 * Stops this node from running, and also stops any running nodes under
-	 * this node in the tree if they exist.
-	 */
-	virtual void preempt() override;
 };
 
 

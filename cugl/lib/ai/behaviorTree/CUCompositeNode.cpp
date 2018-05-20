@@ -152,17 +152,6 @@ std::vector<const BehaviorNode*> CompositeNode::getChildren() const {
 }
 
 /**
- * Stops this node from running, and also stops any running nodes under
- * this node in the tree if they exist.
- */
-void CompositeNode::preempt() {
-	CUAssertLog(_activeChildPos != -1,
-				"Node can only be preempted when running.");
-	_children[_activeChildPos]->preempt();
-	setState(BehaviorNode::State::UNINITIALIZED);
-}
-
-/**
  * Updates the priority value for this node and all children beneath it,
  * running the piority function provided or default priority function
  * if available for the class.
