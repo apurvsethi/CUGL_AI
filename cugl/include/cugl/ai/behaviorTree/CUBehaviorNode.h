@@ -162,7 +162,7 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	 *
 	 * This value is only used when this node is a {@link LeafNode}.
 	 */
-	std::shared_ptr<BehaviorActionDef> _action;
+	std::shared_ptr<BehaviorAction> _action;
 
 	/**
 	 * Creates an uninitialized BehaviorNodeDef.

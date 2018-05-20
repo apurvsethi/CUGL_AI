@@ -81,7 +81,7 @@ std::string LeafNode::toString(bool verbose) const {
  *
  * @param dt	The elapsed time since the last frame.
  *
- * @return the BehaviorNode::State of this composite node.
+ * @return the state of this node after updating.
  */
 BehaviorNode::State LeafNode::update(float dt) {
 	if (getState() != BehaviorNode::State::RUNNING) {
