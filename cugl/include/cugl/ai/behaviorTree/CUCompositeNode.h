@@ -61,9 +61,6 @@ protected:
 	 */
 	bool _preempt;
 
-	/** The index of the child running (-1 if no child is currently running). */
-	int _activeChildPos;
-
 #pragma mark -
 #pragma mark Constructors
 public:
@@ -73,7 +70,7 @@ public:
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	CompositeNode() : BehaviorNode(), _activeChildPos(-1) {};
+	CompositeNode() : BehaviorNode(), _preempt(false) {};
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -312,12 +309,6 @@ public:
 	 * @return the state of this node after updating.
 	 */
 	BehaviorNode::State update(float dt) override;
-
-	/**
-	 * Stops this node from running, and also stops any running nodes under
-	 * this node in the tree if they exist.
-	 */
-	void preempt() override;
 
 #pragma mark -
 #pragma mark Internal Helpers

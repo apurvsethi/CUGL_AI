@@ -94,7 +94,7 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	std::string _name;
 
 	/** The type of behavior tree node this definition describes. */
-	BehaviorNodeDef::Type _type;
+	Type _type;
 
 	/**
 	 * The priority function for this behavior tree node.
@@ -170,8 +170,8 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	 * To create a definition for a behavior tree node, you should
 	 * set the fields for this struct.
 	 */
-	BehaviorNodeDef() : _type(BehaviorNodeDef::Type::LEAF_NODE),
-	_priorityFunc(nullptr), _action(nullptr) {}
+	BehaviorNodeDef() : _type(Type::LEAF_NODE), _priorityFunc(nullptr),
+	_action(nullptr) {}
 
 	/**
 	 * Returns the (first) node with the given name found using a recursive
@@ -256,6 +256,9 @@ protected:
 
 	/** The array of children for this composite node. */
 	std::vector<std::shared_ptr<BehaviorNode>> _children;
+
+	/** The index of the child running (-1 if no child is currently running). */
+	int _activeChildPos;
 
 	/** The (current) child offset of this node (-1 if root) */
 	int _childOffset;
@@ -458,7 +461,7 @@ public:
 	 * Stops this node from running, and also stops any running nodes under
 	 * this node in the tree if they exist.
 	 */
-	virtual void preempt() = 0;
+	virtual void preempt();
 
 #pragma mark -
 #pragma mark Internal Helpers

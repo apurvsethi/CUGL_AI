@@ -59,7 +59,8 @@ _parent(nullptr),
 _priorityFunc(nullptr),
 _priority(0),
 _state(State::UNINITIALIZED),
-_childOffset(-2) {}
+_childOffset(-2),
+_activeChildPos(-1) {}
 
 /**
  * Initializes a behavior tree node with the given name and priority function.
@@ -120,6 +121,7 @@ void BehaviorNode::dispose() {
 	removeFromParent();
 	_parent = nullptr;
 	_childOffset = -2;
+	_activeChildPos = -1;
 }
 
 #pragma mark -
@@ -160,11 +162,7 @@ void BehaviorNode::pause() {
 	CUAssertLog(getState() == State::RUNNING,
 				"Cannot pause a node that is not currently running.");
 	setState(State::PAUSED);
-	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		if ((*it)->getState() == State::RUNNING) {
-			(*it)->pause();
-		}
-	}
+	_children[_activeChildPos]->pause();
 }
 
 /**
@@ -194,6 +192,16 @@ void BehaviorNode::start() {
 	updatePriority();
 	setState(State::RUNNING);
 	update(0.0f);
+}
+
+/**
+ * Stops this node from running, and also stops any running nodes under
+ * this node in the tree if they exist.
+ */
+void BehaviorNode::preempt() {
+	_children[_activeChildPos]->preempt();
+	_activeChildPos = -1;
+	setState(BehaviorNode::State::UNINITIALIZED);
 }
 
 #pragma mark -
