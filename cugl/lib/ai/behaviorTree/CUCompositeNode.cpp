@@ -193,7 +193,7 @@ void CompositeNode::updatePriority() {
  *
  * @param dt	The elapsed time since the last frame.
  *
- * @return the BehaviorNode::State of this composite node.
+ * @return @return the state of this node after updating.
  */
 BehaviorNode::State CompositeNode::update(float dt) {
 	if (_activeChildPos != -1 && _preempt) {

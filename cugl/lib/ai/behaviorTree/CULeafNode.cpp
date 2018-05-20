@@ -71,20 +71,17 @@ std::string LeafNode::toString(bool verbose) const {
 #pragma mark -
 #pragma mark Behavior Tree
 /**
- * Returns the BehaviorNode::State of the leaf node.
+ * Updates this node and any nodes under it.
  *
- * Runs an update function, meant to be used on each tick, for the leaf
- * node. The state for this node is derived from the state of the action
- * function given. If the action function is still running, then the state
- * is running. Otherwise, the state corresponds with the output of the
- * action function. True implies success while false implies faliure.
+ * Runs an update function, meant to be used on each tick, for the
+ * behavior node (and nodes below it in the tree).
  *
- * The priority value of the node is updated within this function, based
- * on the priority function provided by the user.
+ * Update priority may be run as part of this function, based on whether a
+ * composite node uses preemption.
  *
  * @param dt	The elapsed time since the last frame.
  *
- * @return the BehaviorNode::State of the last node.
+ * @return the BehaviorNode::State of this composite node.
  */
 BehaviorNode::State LeafNode::update(float dt) {
 	if (getState() != BehaviorNode::State::RUNNING) {

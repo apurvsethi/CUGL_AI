@@ -48,7 +48,21 @@ std::shared_ptr<BehaviorNodeDef> BehaviorNodeDef::getNodeByName(const std::strin
 #pragma mark -
 #pragma mark Constructors
 /**
- * Initializes a behavior node with the given name and priority function.
+ * Creates an uninitialized behavior tree node.
+ *
+ * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
+ * the heap, use one of the static constructors instead.
+ */
+BehaviorNode::BehaviorNode() : 
+_name(""),
+_parent(nullptr),
+_priorityFunc(nullptr),
+_priority(0),
+_state(State::UNINITIALIZED),
+_childOffset(-2) {}
+
+/**
+ * Initializes a behavior tree node with the given name and priority function.
  *
  * @param name      The name of the behavior node
  * @param priority  The priority function of the behavior node
@@ -63,8 +77,8 @@ bool BehaviorNode::init(const std::string& name, const std::function<float()> pr
 }
 
 /**
- * Initializes a behavior node with the given name, children, and priority
- * function.
+ * Initializes a behavior tree node with the given name, children, and
+ * priority function.
  *
  * @param name		The name of the behavior node
  * @param priority	The priority function of the behavior node
@@ -95,7 +109,7 @@ bool BehaviorNode::init(const std::string& name,
  */
 void BehaviorNode::dispose() {
 	_name = "";
-	_state = BehaviorNode::State::UNINITIALIZED;
+	_state = State::UNINITIALIZED;
 	_priority = 0;
 	_priorityFunc = nullptr;
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
@@ -117,8 +131,8 @@ void BehaviorNode::dispose() {
  *
  * @param state The state of this node.
  */
-void BehaviorNode::setState(BehaviorNode::State state) {
-	CUAssertLog(state != BehaviorNode::State::RUNNING || getPriority() != 0.0f,
+void BehaviorNode::setState(State state) {
+	CUAssertLog(state != State::RUNNING || getPriority() != 0.0f,
 				"Running node cannot have 0 priority.");
 	_state = state;
 }
@@ -128,7 +142,7 @@ void BehaviorNode::setState(BehaviorNode::State state) {
  * resets any class values to those set at the start of the tree.
  */
 void BehaviorNode::reset() {
-	setState(BehaviorNode::State::UNINITIALIZED);
+	setState(State::UNINITIALIZED);
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
 		(*it)->reset();
 	}
@@ -142,11 +156,11 @@ void BehaviorNode::reset() {
  * not be updated while nodes are paused.
  */
 void BehaviorNode::pause() {
-	CUAssertLog(getState() == BehaviorNode::State::RUNNING,
+	CUAssertLog(getState() == State::RUNNING,
 				"Cannot pause a node that is not currently running.");
-	setState(BehaviorNode::State::PAUSED);
+	setState(State::PAUSED);
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		if ((*it)->getState() == BehaviorNode::State::RUNNING) {
+		if ((*it)->getState() == State::RUNNING) {
 			(*it)->pause();
 		}
 	}
@@ -160,11 +174,11 @@ void BehaviorNode::pause() {
  * been updated while the node was paused.
  */
 void BehaviorNode::resume() {
-	CUAssertLog(getState() == BehaviorNode::State::PAUSED,
+	CUAssertLog(getState() == State::PAUSED,
 				"Cannot resume a node that is not currently paused.");
-	setState(BehaviorNode::State::RUNNING);
+	setState(State::RUNNING);
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		if ((*it)->getState() == BehaviorNode::State::PAUSED) {
+		if ((*it)->getState() == State::PAUSED) {
 			(*it)->resume();
 		}
 	}
@@ -177,7 +191,7 @@ void BehaviorNode::resume() {
  */
 void BehaviorNode::start() {
 	updatePriority();
-	setState(BehaviorNode::State::RUNNING);
+	setState(State::RUNNING);
 	update(0.0f);
 }
 
@@ -222,7 +236,8 @@ void BehaviorNode::removeChild(unsigned int pos) {
  *
  * @return true if sibling a is has a larger priority than sibling b.
  */
-bool BehaviorNode::compareNodeSibs(const std::shared_ptr<BehaviorNode>& a, const std::shared_ptr<BehaviorNode>& b) {
+bool BehaviorNode::compareNodeSibs(const std::shared_ptr<BehaviorNode>& a,
+								   const std::shared_ptr<BehaviorNode>& b) {
 	return a->_priority > b->_priority
 		|| (a->_priority == b->_priority && a->_childOffset < b->_childOffset);
 }

@@ -4,7 +4,7 @@
 //
 //  This module provides support for a behavior node as part of a behavior tree.
 //  The behavior tree node chooses an action by setting a priority for each node
-//  and traversing down the tree to select an action
+//  and traversing down the tree to select an action.
 //
 //  As this is an abstract class, it has no static constructors.  However, we
 //  still separate initialization from the constructor as with all classes in
@@ -38,9 +38,9 @@ namespace cugl {
 
 #pragma mark Behavior Node Defintion
 /**
- * This stuct is a reusable defintion the necessary information to construct a
- * {@link BehaviorNode}. This definition is used by the {@link BehaviorManager}
- * to create a behavior tree node.
+ * This stuct is a reusable definition containing the necessary information to
+ * construct a {@link BehaviorNode}. This definition is used by the
+ * {@link BehaviorManager} to create a behavior tree node.
  */
 struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	/**
@@ -162,7 +162,7 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	 *
 	 * This value is only used when this node is a {@link LeafNode}.
 	 */
-	std::shared_ptr<BehaviorAction> _action;
+	std::shared_ptr<BehaviorActionDef> _action;
 
 	/**
 	 * Creates an uninitialized BehaviorNodeDef.
@@ -264,14 +264,12 @@ protected:
 #pragma mark Constructors
 public:
 	/**
-	 * Creates an uninitialized node.
+	 * Creates an uninitialized behavior tree node.
 	 *
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	BehaviorNode() : _parent(nullptr), _priorityFunc(nullptr),
-	_priority(0), _state(BehaviorNode::State::UNINITIALIZED),
-	_childOffset(-2) {}
+	BehaviorNode();
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -279,7 +277,7 @@ public:
 	~BehaviorNode() { dispose(); }
 
 	/**
-	 * Initializes a behavior node with the given name and priority function.
+	 * Initializes a behavior tree node with the given name and priority function.
 	 *
 	 * @param name      The name of the behavior node
 	 * @param priority  The priority function of the behavior node
@@ -289,8 +287,8 @@ public:
 	bool init(const std::string& name, const std::function<float()> priority);
 
 	/**
-	 * Initializes a behavior node with the given name, children, and priority
-	 * function.
+	 * Initializes a behavior tree node with the given name, children, and
+	 * priority function.
 	 *
 	 * @param name		The name of the behavior node
 	 * @param priority	The priority function of the behavior node
@@ -354,12 +352,12 @@ public:
 	float getPriority() const { return _priority; }
 
 	/**
-	 * Returns a BehaviorNode::State that represents this node's state.
+	 * Returns the state of this node.
 	 *
 	 * This state is used to identify the state of this node. If this node
 	 * has no parent, then this is the state of the behavior tree.
 	 *
-	 * @return a BehaviorNode::State that represents this node's state.
+	 * @return the state of this node.
 	 */
 	BehaviorNode::State getState() const { return _state; }
 
@@ -424,12 +422,12 @@ public:
 	 */
 	void resume();
 
-	 /**
+	/**
 	 * Begin running this node, moving from an uninitialized state to a running
 	 * state as the correct action to perform as all priority values are updated
 	 * and the correct node to run is found through choosing a leaf node.
 	 */
-	void start();
+	virtual void start();
 
 	/**
 	 * Updates the priority value for this node and all children beneath it,
@@ -452,7 +450,7 @@ public:
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
-	 * @return the BehaviorNode::State of this composite node.
+	 * @return the state of this node after updating.
 	 */
 	virtual BehaviorNode::State update(float dt) = 0;
 

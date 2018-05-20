@@ -138,7 +138,7 @@ public:
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
-	 * @return the BehaviorNode::State of this composite node.
+	 * @return the state of this node after updating.
 	 */
 	virtual BehaviorNode::State update(float dt) override;
 

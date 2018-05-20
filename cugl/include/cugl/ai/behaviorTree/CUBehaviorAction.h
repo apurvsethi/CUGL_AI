@@ -22,8 +22,8 @@
 namespace cugl {
 
 /**
- * A def through which an action is constructed; a template to use in order to
- * create an action.
+ * This struct is a reusable definition containing the necessary info to
+ * construct a {@link BehaviorAction}.
  */
 struct BehaviorActionDef {
 	/**
@@ -41,7 +41,8 @@ struct BehaviorActionDef {
 
 	/**
 	 * The terminate function to interrupt an action that may have been running
-	 * over a period of time.
+	 * over a period of time. This method should ensure that the actor returns
+	 * to a stable state when the action is interrupted.
 	 */
 	std::function<void()> _terminate;
 

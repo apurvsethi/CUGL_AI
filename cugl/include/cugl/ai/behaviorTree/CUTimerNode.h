@@ -223,14 +223,17 @@ public:
 	void updatePriority() override;
 
 	/**
-	 * Updates this node and its child.
+	 * Updates this node and any nodes under it.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
-	 * behavior node (and nodes chosen to run below it in the tree).
+	 * behavior node (and nodes below it in the tree).
+	 *
+	 * Update priority may be run as part of this function, based on whether a
+	 * composite node uses preemption.
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
-	 * @return the BehaviorNode::State of the behavior node.
+	 * @return the state of this node after updating.
 	 */
 	BehaviorNode::State update(float dt) override;
 
