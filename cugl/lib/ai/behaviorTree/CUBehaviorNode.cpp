@@ -89,6 +89,7 @@ bool BehaviorNode::init(const std::string& name, const std::function<float()> pr
 bool BehaviorNode::init(const std::string& name,
 						const std::function<float()> priority,
 						const std::vector<std::shared_ptr<BehaviorNode>>& children) {
+	_children = children;
 	for (int ii = 0; ii < _children.size(); ii++) {
 		_children[ii]->setParent(this);
 		_children[ii]->_childOffset = ii;
