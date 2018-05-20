@@ -147,6 +147,7 @@ void BehaviorNode::setState(State state) {
  */
 void BehaviorNode::reset() {
 	setState(BehaviorNode::State::UNINITIALIZED);
+	setPriority(0.0f);
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
 		(*it)->reset();
 	}

@@ -133,6 +133,7 @@ public:
 	 * resets any class values to those set at the start of the tree.
 	 */
 	void reset() override {
+		setPriority(0.0f);
 		_action->terminate();
 		setState(BehaviorNode::State::UNINITIALIZED);
 	}
