@@ -129,6 +129,33 @@ public:
 	}
 
 	/**
+	 * Reset this node and all nodes below it to an uninitialized state. Also
+	 * resets any class values to those set at the start of the tree.
+	 */
+	void reset() override {
+		_action->terminate();
+		setState(BehaviorNode::State::UNINITIALIZED);
+	}
+
+	/**
+	 * Pause this running node and all running nodes below it in the tree,
+	 * allowing them to be resumed later.
+	 *
+	 * This method has no effect on values stored within nodes, and values will
+	 * not be updated while nodes are paused.
+	 */
+	void pause() override;
+
+	/**
+	 * Resumes a paused node and all paused nodes below it in the tree, allowing
+	 * them to run again.
+	 *
+	 * Values such as priority or delay for a timer node will not have
+	 * been updated while the node was paused.
+	 */
+	void resume() override;
+
+	/**
 	 * Updates this node and any nodes under it.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the

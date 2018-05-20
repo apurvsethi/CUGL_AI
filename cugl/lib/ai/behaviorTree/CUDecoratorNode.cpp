@@ -57,6 +57,7 @@ bool DecoratorNode::init(const std::string& name, const std::shared_ptr<Behavior
 BehaviorNode::State DecoratorNode::update(float dt) {
 	if (getState() == BehaviorNode::State::RUNNING) {
 		_children[0]->setState(BehaviorNode::State::RUNNING);
+		_activeChildPos = 0;
 	}
 	setState(_children[0]->update(dt));
 	return getState();

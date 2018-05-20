@@ -191,7 +191,6 @@ public:
 	void start() {
 		setState(BehaviorAction::State::RUNNING);
 		_start();
-
 	}
 
 	/**
@@ -218,8 +217,32 @@ public:
 	 * to a stable state while in the middle of running an action.
 	 */
 	void terminate() {
-		_terminate();
+		if (getState() == BehaviorAction::State::RUNNING) {
+			_terminate();
+		}
 		setState(BehaviorAction::State::UNINITIALIZED);
+	}
+
+	/**
+	 * Pauses the running action. Actions will not be updated while paused.
+	 *
+	 * If this action is not currently running, then nothing happens.
+	 */
+	void pause() {
+		if (getState() == BehaviorAction::State::RUNNING) {
+			setState(BehaviorAction::State::PAUSED);
+		}
+	}
+	
+	/**
+	 * Resumes the action, if the action is currently paused.
+	 *
+	 * If this action is not paused, then nothing happens.
+	 */
+	void resume() {
+		if (getState() == BehaviorAction::State::PAUSED) {
+			setState(BehaviorAction::State::RUNNING);
+		}
 	}
 
 protected:

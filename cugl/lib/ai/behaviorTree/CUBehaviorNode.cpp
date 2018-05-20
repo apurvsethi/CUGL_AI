@@ -178,10 +178,8 @@ void BehaviorNode::resume() {
 	CUAssertLog(getState() == BehaviorNode::State::PAUSED,
 				"Cannot resume a node that is not currently paused.");
 	setState(BehaviorNode::State::RUNNING);
-	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		if ((*it)->getState() == BehaviorNode::State::PAUSED) {
-			(*it)->resume();
-		}
+	if (_activeChildPos != -1) {
+		_children[_activeChildPos]->resume();
 	}
 }
 

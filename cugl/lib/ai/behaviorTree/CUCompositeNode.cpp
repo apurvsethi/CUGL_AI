@@ -163,7 +163,7 @@ void CompositeNode::updatePriority() {
 	if (_priorityFunc) {
 		setPriority(_priorityFunc());
 	}
-	else if (_activeChildPos != -1) {
+	else if (!_preempt && _activeChildPos != -1) {
 		setPriority(_children[_activeChildPos]->getPriority());
 	}
 	else {

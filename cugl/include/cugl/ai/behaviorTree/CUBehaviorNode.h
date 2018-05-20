@@ -29,7 +29,6 @@
 #define __CU_BEHAVIOR_NODE_H__
 
 #include <functional>
-#include <memory>
 #include <string>
 #include <vector>
 #include <cugl/ai/behaviorTree/CUBehaviorAction.h>
@@ -423,7 +422,7 @@ public:
 	 * Values such as priority or delay for a timer node will not have
 	 * been updated while the node was paused.
 	 */
-	void resume();
+	virtual void resume();
 
 	/**
 	 * Begin running this node, moving from an uninitialized state to a running

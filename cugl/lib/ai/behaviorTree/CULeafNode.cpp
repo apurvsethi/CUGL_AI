@@ -71,6 +71,34 @@ std::string LeafNode::toString(bool verbose) const {
 #pragma mark -
 #pragma mark Behavior Tree
 /**
+ * Pause this running node and all running nodes below it in the tree,
+ * allowing them to be resumed later.
+ *
+ * This method has no effect on values stored within nodes, and values will
+ * not be updated while nodes are paused.
+ */
+void LeafNode::pause() {
+	CUAssertLog(getState() == BehaviorNode::State::RUNNING,
+		"Cannot pause a node that is not currently running.");
+	_action->pause();
+	setState(BehaviorNode::State::PAUSED);
+}
+
+/**
+ * Resumes a paused node and all paused nodes below it in the tree, allowing
+ * them to run again.
+ *
+ * Values such as priority or delay for a timer node will not have
+ * been updated while the node was paused.
+ */
+void LeafNode::resume() {
+	CUAssertLog(getState() == BehaviorNode::State::PAUSED,
+		"Cannot resume a node that is not currently paused.");
+	setState(BehaviorNode::State::RUNNING);
+	_action->resume();
+}
+
+/**
  * Updates this node and any nodes under it.
  *
  * Runs an update function, meant to be used on each tick, for the
