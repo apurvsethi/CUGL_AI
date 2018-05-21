@@ -123,6 +123,23 @@ void BehaviorManager::removeTree(const std::string& name) {
 }
 
 /**
+ * Restarts the tree with the given name, if the tree is finished.
+ *
+ * All trees must be stored with unique names in the BehaviorManager,
+ * and thus there cannot be multiple possible return values.
+ *
+ * @param name	An identifier to find the tree.
+ */
+void BehaviorManager::restartTree(const std::string& name) {
+	CUAssertLog(_trees.find(name) != _trees.end(),
+				"Tree with given name does not exist in BehaviorManager.");
+	if (_trees.at(name)->getState() == BehaviorNode::State::FINISHED) {
+		_trees.at(name)->reset();
+		_trees.at(name)->start();
+	}
+}
+
+/**
  * Runs an update function, meant to be used on each tick, for each
  * behavior tree that is currently running within the manager.
  *

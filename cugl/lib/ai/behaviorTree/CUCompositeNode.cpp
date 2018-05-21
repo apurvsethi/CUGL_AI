@@ -18,10 +18,10 @@
 //  Version: 5/15/2018
 //
 
-#include <cugl/ai/behaviorTree/CUCompositeNode.h>
-#include <cugl/util/CUDebug.h>
 #include <algorithm>
 #include <vector>
+#include <cugl/ai/behaviorTree/CUCompositeNode.h>
+#include <cugl/util/CUDebug.h>
 
 using namespace cugl;
 

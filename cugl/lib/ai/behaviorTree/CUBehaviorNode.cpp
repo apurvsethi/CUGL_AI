@@ -37,7 +37,7 @@ std::shared_ptr<BehaviorNodeDef> BehaviorNodeDef::getNodeByName(const std::strin
 		return shared_from_this();
 	}
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
-		std::shared_ptr<BehaviorNodeDef> result = getNodeByName(name);
+		std::shared_ptr<BehaviorNodeDef> result = (*it)->getNodeByName(name);
 		if (result) {
 			return result;
 		}
@@ -148,6 +148,7 @@ void BehaviorNode::setState(State state) {
 void BehaviorNode::reset() {
 	setState(BehaviorNode::State::INACTIVE);
 	setPriority(0.0f);
+	_activeChildPos = -1;
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
 		(*it)->reset();
 	}

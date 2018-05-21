@@ -117,7 +117,7 @@ public:
 	 */
 	template <typename T>
 	inline const T* getChild() const {
-		return std::dynamic_cast<T>(getChild());
+		return dynamic_cast<const T*>(getChild());
 	}
 
 	/**

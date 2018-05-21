@@ -145,6 +145,16 @@ public:
 	void removeTree(const std::string& name);
 
 	/**
+	 * Restarts the tree with the given name, if the tree is finished.
+	 *
+	 * All trees must be stored with unique names in the BehaviorManager,
+	 * and thus there cannot be multiple possible return values.
+	 *
+	 * @param name	An identifier to find the tree.
+	 */
+	void restartTree(const std::string& name);
+
+	/**
 	 * Runs an update function, meant to be used on each tick, for each
 	 * behavior tree that is currently running within the manager.
 	 *

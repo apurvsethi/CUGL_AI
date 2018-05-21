@@ -160,8 +160,8 @@ BehaviorNode::State TimerNode::update(float dt) {
 	if (getState() == BehaviorNode::State::RUNNING
 		&& !(_delaying && _timeDelay)) {
 		_children[0]->setState(BehaviorNode::State::RUNNING);
+		setState(_children[0]->update(dt));
 	}
-	setState(_children[0]->update(dt));
 	return getState();
 }
 

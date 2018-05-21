@@ -37,7 +37,7 @@ std::unordered_map<std::string, BehaviorNodeDef::Type> typeMap = {
  */
 std::shared_ptr<BehaviorNodeDef> BehaviorParser::parseFile(const char* file) {
 	std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);
-	return parseJson(reader->readJson());
+	return parseJson(reader->readJson()->get(0));
 }
 
 /**
@@ -53,7 +53,7 @@ std::shared_ptr<BehaviorNodeDef> BehaviorParser::parseFile(const char* file) {
  */
 std::shared_ptr<BehaviorNodeDef> BehaviorParser::parseJson(const std::shared_ptr<JsonValue>& json) {
 	std::shared_ptr<BehaviorNodeDef> node = std::make_shared<BehaviorNodeDef>();
-	node->_name = json->getString("name");
+	node->_name = json->key();
 	std::string type = json->getString("type");
 	CUAssertLog(!type.empty(), "The type of a BehaviorNodeDef must be defined");
 	node->_type = typeMap.at(type);
