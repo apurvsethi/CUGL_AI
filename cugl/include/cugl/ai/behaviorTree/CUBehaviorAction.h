@@ -8,8 +8,8 @@
 //  should create an action in a factory format, using the BehaviorTreeManager
 //  class.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/21/2018
 //
 
 #ifndef __CU_BEHAVIOR_ACTION_H__
@@ -18,6 +18,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <cugl/util/CUDebug.h>
 
 namespace cugl {
 
@@ -106,13 +107,10 @@ public:
 	/**
 	 * Creates an uninitialized action.
 	 *
-	 * This constructor should never be called directly.
+	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
+	 * the heap, use one of the static constructors instead.
 	 */
-	BehaviorAction() : 
-	_state(BehaviorAction::State::INACTIVE),
-	_start(nullptr),
-	_update(nullptr),
-	_terminate(nullptr) {};
+	BehaviorAction();
 
 	/**
 	 * Deletes this action, disposing all resources.
@@ -125,12 +123,7 @@ public:
 	 * It is unsafe to call this on an Action that is still currently
 	 * inside of a running behavior tree.
 	 */
-	void dispose() {
-		_state = BehaviorAction::State::INACTIVE,
-		_start = nullptr;
-		_update = nullptr;
-		_terminate = nullptr;
-	}
+	void dispose();
 
 	/**
 	 * Initializes an action, using the definition as a template.
@@ -140,14 +133,7 @@ public:
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool init(const std::shared_ptr<BehaviorActionDef>& actionDef) {
-		_name = actionDef->_name;
-		setState(BehaviorAction::State::INACTIVE);
-		_start = actionDef->_start;
-		_update = actionDef->_update;
-		_terminate = actionDef->_terminate;
-		return true;
-	}
+	bool init(const std::shared_ptr<BehaviorActionDef>& actionDef);
 
 #pragma mark -
 #pragma mark Static Constructors
@@ -187,15 +173,12 @@ public:
 	BehaviorAction::State getState() const { return _state; }
 
 	/**
-	 * Initializes the action to make it begin running.
+	 * Initializes the action to begin running.
 	 */
-	void start() {
-		setState(BehaviorAction::State::RUNNING);
-		_start();
-	}
+	void start();
 
 	/**
-	 * Returns the BehaviorAction::State of the action.
+	 * Updates the action.
 	 *
 	 * Runs an update function, meant to be used on each tick, for the
 	 * action, to further process this action. This should only be used
@@ -203,22 +186,16 @@ public:
 	 *
 	 * @param dt	The elapsed time since the last frame.
 	 *
-	 * @return the BehaviorAction::State of the action.
+	 * @return the state of the action after updating.
 	 */
-	BehaviorAction::State update(float dt) {
-		if (getState() == BehaviorAction::State::RUNNING) {
-			setState(_update(dt) ? BehaviorAction::State::FINISHED
-					 : BehaviorAction::State::RUNNING);
-		}
-		return getState();
-	}
+	BehaviorAction::State update(float dt);
 
 	/**
-	 * Terminates the action, perhaps while it is running. A way to get back
+	 * Terminates an action, possibly while running. A way to get back
 	 * to a stable state while in the middle of running an action.
 	 */
 	void terminate() {
-		if (getState() == BehaviorAction::State::RUNNING) {
+		if (_terminate) {
 			_terminate();
 		}
 		setState(BehaviorAction::State::INACTIVE);
@@ -226,24 +203,20 @@ public:
 
 	/**
 	 * Pauses the running action. Actions will not be updated while paused.
-	 *
-	 * If this action is not currently running, then nothing happens.
 	 */
 	void pause() {
-		if (getState() == BehaviorAction::State::RUNNING) {
-			setState(BehaviorAction::State::PAUSED);
-		}
+		CUAssertLog(getState() == BehaviorAction::State::RUNNING,
+			"Cannot pause an action that is not currently running.");
+		setState(BehaviorAction::State::PAUSED);
 	}
 	
 	/**
-	 * Resumes the action, if the action is currently paused.
-	 *
-	 * If this action is not paused, then nothing happens.
+	 * Resumes a currently paused action.
 	 */
 	void resume() {
-		if (getState() == BehaviorAction::State::PAUSED) {
-			setState(BehaviorAction::State::RUNNING);
-		}
+		CUAssertLog(getState() == BehaviorAction::State::PAUSED,
+			"Cannot resume a action that is not currently paused.");
+		setState(BehaviorAction::State::RUNNING);
 	}
 
 #pragma mark -

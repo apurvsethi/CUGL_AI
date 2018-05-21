@@ -101,7 +101,7 @@ public:
 	}
 
 	/**
-	 * Returns a (weak) reference to this node's child, typecast to a shared T
+	 * Returns a (weak) reference to this node's child, typecast to a const T
 	 * pointer.
 	 *
 	 * This method is provided to simplify the polymorphism of a behavior tree.
@@ -113,7 +113,7 @@ public:
 	 * child.
 	 *
 	 * @return a (weak) reference to the child at the given position, typecast to
-	 * a shared T pointer.
+	 * a const T pointer.
 	 */
 	template <typename T>
 	inline const T* getChild() const {
