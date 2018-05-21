@@ -3,6 +3,9 @@
 		"type": "selector",
 		"preempt": false,
 		"children": {
+			"ToCheckpoint": {
+				"type": "leaf"
+			},
 			"DroppingResources": {
 				"type": "timer",
 				"timeDelay": true,
