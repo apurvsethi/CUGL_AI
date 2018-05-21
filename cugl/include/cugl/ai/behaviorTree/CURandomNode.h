@@ -174,6 +174,19 @@ public:
 #pragma mark -
 #pragma mark Behavior Tree
 	/**
+	 * Returns whether this node chooses a child to execute uniformly at
+	 * random.
+	 *
+	 * If true, then this node chooses its child uniformly at random. Otherwise,
+	 * this node uses a weighted probability among its children based on each
+	 * child's priority value. 
+	 *
+	 * @return true if this node chooses a child to execute uniformly at
+	 * random.
+	 */
+	bool isUniformRandom() const { return _uniformRandom; }
+
+	/**
 	 * Updates the priority value for this node and all children beneath it,
 	 * running the priority function provided or default priority function
 	 * if available for the class.
