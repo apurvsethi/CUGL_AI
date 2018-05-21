@@ -63,7 +63,6 @@ std::string LeafNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::LeafNode(name:" : "(name:") << _name;
 	ss << ", priority:" << _priority;
-	ss << ", state:" << _stateToString[getState()];
 	ss << ", action:" << (_action ? _action->getName() : "None");
 	ss << ")";
 	return ss.str();
