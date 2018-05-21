@@ -22,7 +22,7 @@
 //     pointer.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/15/2018
+//  Version: 5/21/2018
 //
 
 #ifndef __CU_BEHAVIOR_NODE_H__
@@ -403,6 +403,9 @@ public:
 	/**
 	 * Reset this node and all nodes below it to an uninitialized state. Also
 	 * resets any class values to those set at the start of the tree.
+	 *
+	 * This function allows the node to be started again, as if it had not
+	 * been run before.
 	 */
 	virtual void reset();
 

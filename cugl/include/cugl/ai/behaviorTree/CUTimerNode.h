@@ -17,7 +17,7 @@
 //     pointer.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/16/2018
+//  Version: 5/21/2018
 //
 
 #ifndef __CU_TIMER_NODE_H__

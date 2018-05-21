@@ -8,8 +8,8 @@
 //  You should never instantiate an object of this class, as it is only used
 //  for static methods. It has no allocators, initializer, or constructor.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/21/2018
 //
 
 #ifndef __CU_BEHAVIOR_PARSER_H__

@@ -14,7 +14,7 @@
 //     pointer.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/15/2018
+//  Version: 5/21/2018
 //
 
 #ifndef __CU_SELECTOR_NODE_H__
