@@ -71,6 +71,16 @@ std::string LeafNode::toString(bool verbose) const {
 #pragma mark -
 #pragma mark Behavior Tree
 /**
+* Reset this node and all nodes below it to an uninitialized state. Also
+* resets any class values to those set at the start of the tree.
+*/
+void LeafNode::reset() {
+	setPriority(0.0f);
+	_action->terminate();
+	setState(BehaviorNode::State::INACTIVE);
+}
+
+/**
  * Pause this running node and all running nodes below it in the tree,
  * allowing them to be resumed later.
  *

@@ -132,12 +132,7 @@ public:
 	 * Reset this node and all nodes below it to an uninitialized state. Also
 	 * resets any class values to those set at the start of the tree.
 	 */
-	void reset() override {
-		setPriority(0.0f);
-		_action->terminate();
-		setState(BehaviorNode::State::INACTIVE);
-	}
-
+	void reset() override;
 	/**
 	 * Pause this running node and all running nodes below it in the tree,
 	 * allowing them to be resumed later.
