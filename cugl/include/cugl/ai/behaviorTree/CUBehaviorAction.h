@@ -194,12 +194,7 @@ public:
 	 * Terminates an action, possibly while running. A way to get back
 	 * to a stable state while in the middle of running an action.
 	 */
-	void terminate() {
-		if (_terminate) {
-			_terminate();
-		}
-		setState(BehaviorAction::State::INACTIVE);
-	}
+	void terminate();
 
 	/**
 	 * Pauses the running action. Actions will not be updated while paused.
