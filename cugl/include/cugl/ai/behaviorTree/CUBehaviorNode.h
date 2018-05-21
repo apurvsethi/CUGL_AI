@@ -161,7 +161,7 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	 *
 	 * This value is only used when this node is a {@link LeafNode}.
 	 */
-	std::shared_ptr<BehaviorAction> _action;
+	std::shared_ptr<BehaviorActionDef> _action;
 
 	/**
 	 * Creates an uninitialized BehaviorNodeDef.
@@ -217,7 +217,7 @@ public:
 	/** The current state of the node. */
 	enum class State : unsigned int {
 		/** The node is neither running nor has already finished with an action. */
-		UNINITIALIZED = 0,
+		INACTIVE = 0,
 		/** The node is active and currently running. */
 		RUNNING = 1,
 		/** The node is active but currently paused. */

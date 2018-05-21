@@ -116,7 +116,7 @@ BehaviorNode::State LeafNode::update(float dt) {
 		return getState();
 	}
 
-	if (_action->getState() == BehaviorAction::State::UNINITIALIZED) {
+	if (_action->getState() == BehaviorAction::State::INACTIVE) {
 		_action->start();
 	}
 	switch(_action->update(dt)) {

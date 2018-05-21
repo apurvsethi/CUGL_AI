@@ -135,7 +135,7 @@ public:
 	void reset() override {
 		setPriority(0.0f);
 		_action->terminate();
-		setState(BehaviorNode::State::UNINITIALIZED);
+		setState(BehaviorNode::State::INACTIVE);
 	}
 
 	/**
@@ -177,7 +177,7 @@ public:
 	 */
 	void preempt() override {
 		_action->terminate();
-		setState(BehaviorNode::State::UNINITIALIZED);
+		setState(BehaviorNode::State::INACTIVE);
 	}
 };
 

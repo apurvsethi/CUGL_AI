@@ -26,6 +26,9 @@ namespace cugl {
  * construct a {@link BehaviorAction}.
  */
 struct BehaviorActionDef {
+	/** The descriptive, identifying name of the action. */
+	std::string _name;
+
 	/**
 	 * The initialization function to begin running an action, setting up the
 	 * action to allow functional updates.
@@ -46,8 +49,7 @@ struct BehaviorActionDef {
 	 */
 	std::function<void()> _terminate;
 
-	BehaviorActionDef() : _start(nullptr), _update(nullptr),
-	_terminate(nullptr) {}
+	BehaviorActionDef() : _start(nullptr), _update(nullptr), _terminate(nullptr) {}
 };
 
 /**
@@ -62,8 +64,8 @@ class BehaviorAction {
 public:
 	/** The current state of the action. */
 	enum class State : unsigned int {
-		/** The action has not yet been run. */
-		UNINITIALIZED = 0,
+		/** The action is not currently running or has finished running. */
+		INACTIVE = 0,
 		/** The action is running. */
 		RUNNING = 1,
 		/** The action is paused (but would be running otherwise). */
@@ -106,8 +108,11 @@ public:
 	 *
 	 * This constructor should never be called directly.
 	 */
-	BehaviorAction() : _state(BehaviorAction::State::UNINITIALIZED),
-	_start(nullptr), _update(nullptr), _terminate(nullptr) {};
+	BehaviorAction() : 
+	_state(BehaviorAction::State::INACTIVE),
+	_start(nullptr),
+	_update(nullptr),
+	_terminate(nullptr) {};
 
 	/**
 	 * Deletes this action, disposing all resources.
@@ -121,24 +126,23 @@ public:
 	 * inside of a running behavior tree.
 	 */
 	void dispose() {
+		_state = BehaviorAction::State::INACTIVE,
 		_start = nullptr;
 		_update = nullptr;
 		_terminate = nullptr;
 	}
 
 	/**
-	 * Initializes an action with the given name, using the def as a
-	 * template.
+	 * Initializes an action, using the definition as a template.
 	 *
-	 * @param name		The name of the action.
-	 * @param actionDef	Def through which this Action is constructed.
+	 * @param actionDef	The definition through which this action is
+	 * constructed.
 	 *
 	 * @return true if initialization was successful.
 	 */
-	bool init(const std::string& name,
-			  const std::shared_ptr<BehaviorActionDef>& actionDef) {
-		_name = name;
-		setState(BehaviorAction::State::UNINITIALIZED);
+	bool init(const std::shared_ptr<BehaviorActionDef>& actionDef) {
+		_name = actionDef->_name;
+		setState(BehaviorAction::State::INACTIVE);
 		_start = actionDef->_start;
 		_update = actionDef->_update;
 		_terminate = actionDef->_terminate;
@@ -148,19 +152,16 @@ public:
 #pragma mark -
 #pragma mark Static Constructors
 	/**
-	 * Returns a newly allocated BehaviorAction with the given name, using
-	 * the def as a template.
+	 * Returns a newly allocated BehaviorAction, using the definition as a
+	 * template.
 	 *
-	 * @param name 		The name of the action.
 	 * @param actionDef Def through which this Action is constructed.
 	 *
-	 * @return a newly allocated BehaviorAction with the given name, functions
-	 * from actionDef.
+	 * @return a newly allocated BehaviorAction specified by the definition.
 	 */
-	static std::shared_ptr<BehaviorAction> alloc(const std::string& name,
-												 const std::shared_ptr<BehaviorActionDef>& actionDef) {
+	static std::shared_ptr<BehaviorAction> alloc(const std::shared_ptr<BehaviorActionDef>& actionDef) {
 		std::shared_ptr<BehaviorAction> result = std::make_shared<BehaviorAction>();
-		return (result->init(name, actionDef) ? result : nullptr);
+		return (result->init(actionDef) ? result : nullptr);
 	}
 
 #pragma mark -
@@ -220,7 +221,7 @@ public:
 		if (getState() == BehaviorAction::State::RUNNING) {
 			_terminate();
 		}
-		setState(BehaviorAction::State::UNINITIALIZED);
+		setState(BehaviorAction::State::INACTIVE);
 	}
 
 	/**
@@ -245,6 +246,8 @@ public:
 		}
 	}
 
+#pragma mark -
+#pragma mark Internal Helpers
 protected:
 	/**
 	 * Sets the state of this action.

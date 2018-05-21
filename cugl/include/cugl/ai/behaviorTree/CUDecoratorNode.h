@@ -55,7 +55,7 @@ public:
 	 * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
 	 * the heap, use one of the static constructors instead.
 	 */
-	DecoratorNode() : BehaviorNode() {};
+	DecoratorNode() {};
 
 	/**
 	 * Deletes this node, disposing all resources.
@@ -117,7 +117,7 @@ public:
 	 */
 	template <typename T>
 	inline const T* getChild() const {
-		return std::dynamic_pointer_cast<T>(getChild());
+		return std::dynamic_cast<T>(getChild());
 	}
 
 	/**

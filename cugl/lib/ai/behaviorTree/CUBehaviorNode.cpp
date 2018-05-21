@@ -58,7 +58,7 @@ _name(""),
 _parent(nullptr),
 _priorityFunc(nullptr),
 _priority(0),
-_state(BehaviorNode::State::UNINITIALIZED),
+_state(BehaviorNode::State::INACTIVE),
 _childOffset(-2),
 _activeChildPos(-1) {}
 
@@ -111,7 +111,7 @@ bool BehaviorNode::init(const std::string& name,
  */
 void BehaviorNode::dispose() {
 	_name = "";
-	_state = BehaviorNode::State::UNINITIALIZED;
+	_state = BehaviorNode::State::INACTIVE;
 	_priority = 0.0f;
 	_priorityFunc = nullptr;
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
@@ -146,7 +146,7 @@ void BehaviorNode::setState(State state) {
  * resets any class values to those set at the start of the tree.
  */
 void BehaviorNode::reset() {
-	setState(BehaviorNode::State::UNINITIALIZED);
+	setState(BehaviorNode::State::INACTIVE);
 	setPriority(0.0f);
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
 		(*it)->reset();
@@ -205,7 +205,7 @@ void BehaviorNode::preempt() {
 		_children[_activeChildPos]->preempt();
 		_activeChildPos = -1;
 	}
-	setState(BehaviorNode::State::UNINITIALIZED);
+	setState(BehaviorNode::State::INACTIVE);
 }
 
 #pragma mark -

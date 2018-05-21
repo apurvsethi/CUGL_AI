@@ -211,7 +211,7 @@ std::shared_ptr<BehaviorNode> BehaviorManager::createTree(const std::shared_ptr<
 		CUAssertLog(treeDef->_children.size() == 0,
 					"Incorrect number of children for leaf node");
 		return LeafNode::alloc(treeDef->_name, treeDef->_priorityFunc,
-							   treeDef->_action);
+							   BehaviorAction::alloc(treeDef->_action));
 	}
 }
 
