@@ -13,8 +13,6 @@
 		68823BE520AE31DB00AFC0FD /* SDApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BDA20AE31DB00AFC0FD /* SDApp.cpp */; };
 		68823BE620AE31DB00AFC0FD /* SDGameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BDC20AE31DB00AFC0FD /* SDGameScene.cpp */; };
 		68823BE720AE31DB00AFC0FD /* SDGameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BDC20AE31DB00AFC0FD /* SDGameScene.cpp */; };
-		68823BE820AE31DB00AFC0FD /* SDInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BDD20AE31DB00AFC0FD /* SDInput.cpp */; };
-		68823BE920AE31DB00AFC0FD /* SDInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BDD20AE31DB00AFC0FD /* SDInput.cpp */; };
 		68823BF020B2347D00AFC0FD /* SDResourceContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BEE20B2347D00AFC0FD /* SDResourceContainer.cpp */; };
 		68823BF120B2347D00AFC0FD /* SDResourceContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BEE20B2347D00AFC0FD /* SDResourceContainer.cpp */; };
 		EB0FF5092016E4A700517030 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5082016E4A700517030 /* CoreFoundation.framework */; };
@@ -108,12 +106,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		68823BD820AE31DA00AFC0FD /* SDInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDInput.h; sourceTree = "<group>"; };
 		68823BD920AE31DB00AFC0FD /* SDLoadingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SDLoadingScene.cpp; sourceTree = "<group>"; };
 		68823BDA20AE31DB00AFC0FD /* SDApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SDApp.cpp; sourceTree = "<group>"; };
 		68823BDB20AE31DB00AFC0FD /* SDApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDApp.h; sourceTree = "<group>"; };
 		68823BDC20AE31DB00AFC0FD /* SDGameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SDGameScene.cpp; sourceTree = "<group>"; };
-		68823BDD20AE31DB00AFC0FD /* SDInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SDInput.cpp; sourceTree = "<group>"; };
 		68823BE020AE31DB00AFC0FD /* SDLoadingScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLoadingScene.h; sourceTree = "<group>"; };
 		68823BE120AE31DB00AFC0FD /* SDGameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDGameScene.h; sourceTree = "<group>"; };
 		68823BEE20B2347D00AFC0FD /* SDResourceContainer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SDResourceContainer.cpp; sourceTree = "<group>"; };
@@ -346,8 +342,6 @@
 				68823BDB20AE31DB00AFC0FD /* SDApp.h */,
 				68823BDC20AE31DB00AFC0FD /* SDGameScene.cpp */,
 				68823BE120AE31DB00AFC0FD /* SDGameScene.h */,
-				68823BDD20AE31DB00AFC0FD /* SDInput.cpp */,
-				68823BD820AE31DA00AFC0FD /* SDInput.h */,
 				68823BD920AE31DB00AFC0FD /* SDLoadingScene.cpp */,
 				68823BE020AE31DB00AFC0FD /* SDLoadingScene.h */,
 				68823BEE20B2347D00AFC0FD /* SDResourceContainer.cpp */,
@@ -540,7 +534,6 @@
 			files = (
 				68823BE520AE31DB00AFC0FD /* SDApp.cpp in Sources */,
 				68823BE320AE31DB00AFC0FD /* SDLoadingScene.cpp in Sources */,
-				68823BE920AE31DB00AFC0FD /* SDInput.cpp in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
 				68823BE720AE31DB00AFC0FD /* SDGameScene.cpp in Sources */,
 				68823BF120B2347D00AFC0FD /* SDResourceContainer.cpp in Sources */,
@@ -553,7 +546,6 @@
 			files = (
 				68823BE420AE31DB00AFC0FD /* SDApp.cpp in Sources */,
 				68823BE220AE31DB00AFC0FD /* SDLoadingScene.cpp in Sources */,
-				68823BE820AE31DB00AFC0FD /* SDInput.cpp in Sources */,
 				EB2BE9B61D74952A002FE78B /* main.cpp in Sources */,
 				68823BE620AE31DB00AFC0FD /* SDGameScene.cpp in Sources */,
 				68823BF020B2347D00AFC0FD /* SDResourceContainer.cpp in Sources */,

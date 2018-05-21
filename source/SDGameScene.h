@@ -20,7 +20,6 @@
 #include <cugl/cugl.h>
 #include <vector>
 #include "SDResourceContainer.h"
-#include "SDInput.h"
 
 
 /**
@@ -36,16 +35,14 @@ protected:
 	std::shared_ptr<cugl::AssetManager> _assets;
 	/** The behavior tree manager for this game mode. */
 	std::shared_ptr<cugl::BehaviorManager> _behaviorManager;
-
-    // CONTROLLERS
-    /** Controller for abstracting out input across multiple platforms */
-    ShipInput _input;
     
     // VIEW
     /** Filmstrip representing the animated ship */
     std::shared_ptr<cugl::Node> _shipNode;
     /** Node to hold all of our graphics. Necesary for resolution indepedence. */
     std::shared_ptr<cugl::Node> _allSpace;
+	/** Node represnting the checkpoint the ship goes to at the end. */
+	std::shared_ptr<cugl::Node> _checkpoint;
 
     // MODEL
     // A page-out could dispose of the view as long as it just has this.
@@ -58,7 +55,6 @@ protected:
 	/** The model of resource planet b */
 	std::shared_ptr<ResourceContainer>  _planetB;
 
-    
 public:
 #pragma mark -
 #pragma mark Constructors

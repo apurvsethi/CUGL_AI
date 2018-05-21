@@ -59,6 +59,15 @@
                                 "anchor":   [0.5,0.5]
                             },
 							"children": {
+								"checkpoint": {
+									"type": "Image",
+									"data": {
+										"texture":  "planet1",
+										"anchor":   [0.5,0.5],
+										"position": [1000,1500],
+										"scale": 	0.25
+									}
+								},
 								"planetA": {
 									"type": "Image",
 									"data": {

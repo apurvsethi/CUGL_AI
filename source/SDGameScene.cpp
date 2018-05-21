@@ -58,7 +58,6 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     // Start up the input handler
     _assets = assets;
 	_behaviorManager = BehaviorManager::alloc();
-    _input.init();
     
     // Acquire the scene built by the asset loader and resize it the scene
     auto scene = _assets->get<Node>("game");
@@ -68,6 +67,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     // Get the scene components.
     _allSpace   = _assets->get<Node>("game_field");
 	_shipNode   = _assets->get<Node>("game_field_player");
+	_checkpoint = _assets->get<Node>("game_field_near_checkpoint");
 
     // Create the ship and planets
 	auto resources  = std::dynamic_pointer_cast<Label>(_assets->get<Node>("game_field_player_resources"));
@@ -113,7 +113,6 @@ void GameScene::dispose() {
 		std::dynamic_pointer_cast<Button>(_assets->get<Node>("game_field_near_planetB"))->deactivate();
 		std::dynamic_pointer_cast<Button>(_assets->get<Node>("game_field_near_planetC"))->deactivate();
         removeAllChildren();
-        _input.dispose();
         _allSpace = nullptr;
         _shipNode = nullptr;
         _shipModel = nullptr;
@@ -127,11 +126,20 @@ void GameScene::dispose() {
 
 std::shared_ptr<BehaviorNodeDef> GameScene::setupBehaviorTree() {
 	std::shared_ptr<BehaviorNodeDef> behaviorNodeDef = BehaviorParser::parseFile("json/behaviorTree.json");
-	std::shared_ptr<BehaviorNodeDef> leafNode = behaviorNodeDef->getNodeByName("DropResources");
+	std::shared_ptr<BehaviorNodeDef> leafNode = behaviorNodeDef->getNodeByName("ToCheckpoint");
+	leafNode->_priorityFunc = [=] () -> float {
+		return _shipModel->getNumResources() == 0 && _planetA->getNumResources() == 0 && _planetB->getNumResources() == 0;
+	};
+	std::shared_ptr<BehaviorActionDef> action = std::make_shared<BehaviorActionDef>();
+	action->_name = "ToCheckpoint";
+	action->_update = move(_checkpoint->getPosition());
+	leafNode->_action = action;
+
+	leafNode = behaviorNodeDef->getNodeByName("DropResources");
 	leafNode->_priorityFunc = [=] () -> float {
 		return _shipModel->getPosition().distance(_homePlanet->getPosition()) < 60.0f && _shipModel->getNumResources() > 0;
 	};
-	std::shared_ptr<BehaviorActionDef> action = std::make_shared<BehaviorActionDef>();
+	action = std::make_shared<BehaviorActionDef>();
 	action->_name = "DropResources";
 	action->_update = exchangeResources(_shipModel, _homePlanet);
 	leafNode->_action = action;
@@ -238,7 +246,6 @@ void GameScene::reset() {
 	_homePlanet->reset();
 	_planetA->reset();
 	_planetB->reset();
-    _input.clear();
 }
 
 /**
@@ -249,11 +256,6 @@ void GameScene::reset() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void GameScene::update(float timestep) {
-    _input.update(timestep);
-    
-    // Reset the game if necessary
-    if (_input.didReset()) { reset(); }
-
 	if (_behaviorManager->getTreeState("ShipBehavior") == BehaviorNode::State::FINISHED) {
 		_behaviorManager->restartTree("ShipBehavior");
 	}
