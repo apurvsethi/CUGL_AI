@@ -79,6 +79,18 @@ void BehaviorAction::start() {
 }
 
 /**
+ * Terminates an action, possibly while running. A way to get back
+ * to a stable state while in the middle of running an action.
+ */
+void BehaviorAction::terminate() {
+	if (_terminate && (getState() == BehaviorAction::State::RUNNING 
+					   || getState() == BehaviorAction::State::PAUSED)) {
+		_terminate();
+	}
+	setState(BehaviorAction::State::INACTIVE);
+}
+
+/**
  * Updates the action.
  *
  * Runs an update function, meant to be used on each tick, for the

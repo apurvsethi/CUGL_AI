@@ -36,6 +36,7 @@ using namespace cugl;
  * @return true if initialization was successful.
  */
 bool DecoratorNode::init(const std::string& name, const std::shared_ptr<BehaviorNode>& child) {
+	CUAssertLog(child, "Must pass in a child to the decorator node.");
 	return BehaviorNode::init(name, nullptr, { child });
 }
 

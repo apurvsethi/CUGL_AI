@@ -76,9 +76,10 @@ bool RandomNode::init(const std::string& name,
 std::string RandomNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::RandomNode(name:" : "(name:");
-	ss << "priority" << _priority;
-	ss << "random type:" << (_uniformRandom ? "uniform" : "weighted");
-	ss << "children:[";
+	ss << ", priority:" << _priority;
+	ss << ", state:" << _stateToString[getState()];
+	ss << ", random type:" << (_uniformRandom ? "uniform" : "weighted");
+	ss << ", children:[";
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
 		ss << (*it)->getName();
 	}

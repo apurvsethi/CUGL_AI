@@ -81,10 +81,11 @@ bool TimerNode::init(const std::string& name,
 std::string TimerNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::TimerNode(name:" : "(name:") << _name;
-	ss << "priority:" << _priority;
-	ss << "child:" << (_children[0] ? _children[0]->getName() : "None");
-	ss << "delay type:" << (_timeDelay ? "Before" : "After");
-	ss << "delay time:" << _delay;
+	ss << ", priority:" << _priority;
+	ss << ", state:" << _stateToString[getState()];
+	ss << ", child:" << (_children[0] ? _children[0]->getName() : "None");
+	ss << ", delay type:" << (_timeDelay ? "Before" : "After");
+	ss << ", delay time:" << _delay;
 	ss << ")";
 	return ss.str();
 }

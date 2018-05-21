@@ -14,6 +14,7 @@
 
 using namespace cugl;
 
+/** A mapping of the string values to the behavior node types. */
 std::unordered_map<std::string, BehaviorNodeDef::Type> typeMap = {
 	{"priority", BehaviorNodeDef::Type::PRIORITY_NODE},
 	{"selector", BehaviorNodeDef::Type::SELECTOR_NODE},

@@ -31,9 +31,11 @@
 #include <functional>
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <cugl/ai/behaviorTree/CUBehaviorAction.h>
 
 namespace cugl {
+
 
 #pragma mark Behavior Node Defintion
 /**
@@ -227,6 +229,9 @@ public:
 	};
 
 protected:
+	/** A mapping of the behavior node states to their string representation. */
+	static std::unordered_map<BehaviorNode::State, std::string> _stateToString;
+
 	/** The descriptive, identifying name of the node. */
 	std::string _name;
 

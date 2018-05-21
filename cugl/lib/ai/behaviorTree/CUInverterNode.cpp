@@ -39,8 +39,9 @@ using namespace cugl;
 std::string InverterNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::InverterNode(name:" : "(name:") << _name;
-	ss << ",priority:" << _priority;
-	ss << ",child:" << (_children[0] ? _children[0]->getName() : "None");
+	ss << ", priority:" << _priority;
+	ss << ", state:" << _stateToString[getState()];
+	ss << ", child:" << (_children[0] ? _children[0]->getName() : "None");
 	ss << ")";
 	return ss.str();
 }
