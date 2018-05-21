@@ -45,6 +45,7 @@
 		6860536E2097E61000F76BEA /* CUBehaviorParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 6860536C2097E61000F76BEA /* CUBehaviorParser.h */; };
 		686053702097E81400F76BEA /* CUBehaviorParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6860536F2097E81400F76BEA /* CUBehaviorParser.cpp */; };
 		686053712097E81400F76BEA /* CUBehaviorParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6860536F2097E81400F76BEA /* CUBehaviorParser.cpp */; };
+		68823BF620B27D7800AFC0FD /* CUBehaviorAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BF320B27D7800AFC0FD /* CUBehaviorAction.cpp */; };
 		68DC9E2F20811035009F1725 /* CURandomNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 68DC9E2E20811035009F1725 /* CURandomNode.h */; };
 		68DC9E3020811035009F1725 /* CURandomNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 68DC9E2E20811035009F1725 /* CURandomNode.h */; };
 		68DC9E3420811046009F1725 /* CUTimerNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 68DC9E3320811046009F1725 /* CUTimerNode.h */; };
@@ -719,6 +720,7 @@
 		6860536920978CCB00F76BEA /* CULeafNode.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CULeafNode.cpp; sourceTree = "<group>"; };
 		6860536C2097E61000F76BEA /* CUBehaviorParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CUBehaviorParser.h; sourceTree = "<group>"; };
 		6860536F2097E81400F76BEA /* CUBehaviorParser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CUBehaviorParser.cpp; sourceTree = "<group>"; };
+		68823BF320B27D7800AFC0FD /* CUBehaviorAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CUBehaviorAction.cpp; sourceTree = "<group>"; };
 		68DC9E2E20811035009F1725 /* CURandomNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CURandomNode.h; sourceTree = "<group>"; };
 		68DC9E3320811046009F1725 /* CUTimerNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CUTimerNode.h; sourceTree = "<group>"; };
 		68F4E76A207FAF2A00E43431 /* CUBehaviorAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CUBehaviorAction.h; sourceTree = "<group>"; };
@@ -1141,6 +1143,7 @@
 		68092F5B206ADF5F005EFDA5 /* behaviorTree */ = {
 			isa = PBXGroup;
 			children = (
+				68823BF320B27D7800AFC0FD /* CUBehaviorAction.cpp */,
 				6860534C20969CD000F76BEA /* CUBehaviorManager.cpp */,
 				686053512097337500F76BEA /* CUBehaviorNode.cpp */,
 				686053542097338500F76BEA /* CUCompositeNode.cpp */,
@@ -2508,6 +2511,7 @@
 				EB0FF4F42016E35300517030 /* CUNinePatch.cpp in Sources */,
 				EB9A8A3F1DE245D9007B4123 /* CUCapsuleObstacle.cpp in Sources */,
 				EBE91E2A1DCFF18D00F80D62 /* CUBoxObstacle.cpp in Sources */,
+				68823BF620B27D7800AFC0FD /* CUBehaviorAction.cpp in Sources */,
 				686053582097339100F76BEA /* CUDecoratorNode.cpp in Sources */,
 				EBE28EC71DFE399100C059A7 /* CUMusicQueue.cpp in Sources */,
 				EBE91E2B1DCFF18D00F80D62 /* CUObstacleSelector.cpp in Sources */,

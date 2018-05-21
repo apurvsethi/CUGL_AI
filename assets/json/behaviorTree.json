@@ -1,0 +1,53 @@
+{
+	"ShipBehavior": {
+		"type": "selector",
+		"preempt": false,
+		"children": {
+			"DroppingResources": {
+				"type": "timer",
+				"timeDelay": true,
+				"delay": 1.0,
+				"children": {
+					"DropResources": {
+						"type": "leaf"
+					}
+				}
+			},
+			"PickingResourcesA": {
+				"type": "timer",
+				"timeDelay": true,
+				"delay": 1.0,
+				"children": {
+					"PickResourcesA": {
+						"type": "leaf"
+					}
+				}
+			},
+			"PickingResourcesB": {
+				"type": "timer",
+				"timeDelay": true,
+				"delay": 1.0,
+				"children": {
+					"PickResourcesB": {
+						"type": "leaf"
+					}
+				}
+			},
+			"ToHome": {
+				"type": "leaf"
+			},
+			"GoToPlanet": {
+				"type": "priority",
+				"preempt": true,
+				"children": {
+					"ToPlanetA": {
+						"type": "leaf"
+					},
+					"ToPlanetB": {
+						"type": "leaf"
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,7 +1,7 @@
 {
 	"textures": {
 		"ship": {
-            "file":   "textures/ships.png"
+            "file":   "textures/single.png"
         },
         "space": {
             "file":  "textures/space.png",
@@ -58,56 +58,143 @@
                                 "position": [1280,1280],
                                 "anchor":   [0.5,0.5]
                             },
-                            "children": {
-                                "planet_a": {
-                                    "type": "Image",
-                                    "data": {
-                                        "texture":  "planet1",
-                                        "anchor":   [0.5,0.5],
-                                        "position": [955,1080],
-                                        "scale":    0.25
-                                    }
-                                },
-                                "planet_b": {
-                                    "type": "Image",
-                                    "data": {
-                                        "texture":  "planet2",
-                                        "anchor":   [0.5,0.5],
-                                        "position": [1605,1480],
-                                        "scale":    0.25
-                                    }
-                                }
+							"children": {
+								"planetA": {
+									"type": "Image",
+									"data": {
+										"texture":  "planet1",
+										"anchor":   [0.5,0.5],
+										"position": [900,1200]
+									},
+									"children" : {
+										"resources" : {
+											"type": "Label",
+											"data": {
+												"font"       : "felt32",
+												"text"       : "3",
+												"foreground" : [255,255,255,255],
+												"size"       : [77,77],
+												"valign"     : "middle",
+												"halign"     : "center"
+											},
+											"layout" : {
+												"x_anchor" : "center",
+												"y_anchor" : "middle",
+												"x_offset" : 0,
+												"y_offset" : 0,
+												"absolute" : false
+											}
+										}
+									}
+								},
+								"planetB": {
+									"type": "Button",
+									"data": {
+										"up": {
+											"type": "Image",
+											"data": {
+												"texture": "planet2"
+											}
+										},
+										"anchor"   : [0.5,0.5],
+										"position": [1400,1400]
+									},
+									"layout" : {
+										"x_anchor" : "center",
+										"y_anchor" : "middle",
+										"x_offset" :  0.035,
+										"y_offset" : -0.175
+									},
+									"children" : {
+										"resources" : {
+											"type": "Label",
+											"data": {
+												"font"       : "felt32",
+												"text"       : "3",
+												"foreground" : [255,255,255,255],
+												"size"       : [77,77],
+												"valign"     : "middle",
+												"halign"     : "center"
+											},
+											"layout" : {
+												"x_anchor" : "center",
+												"y_anchor" : "middle",
+												"x_offset" : 0,
+												"y_offset" : 0,
+												"absolute" : false
+											}
+										}
+									}
+								},
+								"planetC": {
+									"type": "Button",
+									"data": {
+										"up": {
+											"type": "Image",
+											"data": {
+												"texture": "planet2"
+											}
+										},
+										"anchor"   : [0.5,0.5],
+										"position": [1605,1160]
+									},
+									"layout" : {
+										"x_anchor" : "center",
+										"y_anchor" : "middle",
+										"x_offset" :  0.035,
+										"y_offset" : -0.175
+									},
+									"children" : {
+										"resources" : {
+											"type": "Label",
+											"data": {
+												"font"       : "felt32",
+												"text"       : "3",
+												"foreground" : [255,255,255,255],
+												"size"       : [77,77],
+												"valign"     : "middle",
+												"halign"     : "center"
+											},
+											"layout" : {
+												"x_anchor" : "center",
+												"y_anchor" : "middle",
+												"x_offset" : 0,
+												"y_offset" : 0,
+												"absolute" : false
+											}
+										}
+									}
+								}
                             }
                         },
                         "player": {
-                            "type": "Animation",
+                            "type": "Image",
                             "data": {
                                 "texture":  "ship",
-                                "span":     18,
-                                "cols":     5,
-                                "frame":    9,
                                 "position": [1280,1280],
                                 "anchor":   [0.5,0.5]
-                            }
+							},
+							"children" : {
+								"resources" : {
+									"type": "Label",
+									"data": {
+										"font"       : "felt32",
+										"text"       : "0",
+										"foreground" : [255,255,255,255],
+										"size"       : [81,75],
+										"valign"     : "middle",
+										"halign"     : "center"
+									},
+									"layout" : {
+										"x_anchor" : "center",
+										"y_anchor" : "middle",
+										"x_offset" : 0,
+										"y_offset" : 0,
+										"absolute" : false
+									}
+								}
+							}
                         }
-                    }
-                },
-                "hud" : {
-                    "type": "Label",
-                    "data": {
-                        "font"       : "felt32",
-                        "text"       : "Coords: (128, 128)  ",
-                        "foreground" : [255,255,255,255],
-                        "size"       : [500,70],
-                        "valign"     : "bottom",
-                        "halign"     : "left"
-                    },
-                    "layout" : {
-                        "x_anchor" : "left",
-                        "y_anchor" : "bottom",
-                        "x_offset" : 10,
-                        "y_offset" : 10,
-                        "absolute" : true
                     }
                 }
             }

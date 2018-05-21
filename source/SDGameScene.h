@@ -19,7 +19,7 @@
 #define __SD_GAME_SCENE_H__
 #include <cugl/cugl.h>
 #include <vector>
-#include "SDShipModel.h"
+#include "SDResourceContainer.h"
 #include "SDInput.h"
 
 
@@ -33,7 +33,9 @@
 class GameScene : public cugl::Scene {
 protected:
     /** The asset manager for this game mode. */
-    std::shared_ptr<cugl::AssetManager> _assets;
+	std::shared_ptr<cugl::AssetManager> _assets;
+	/** The behavior tree manager for this game mode. */
+	std::shared_ptr<cugl::BehaviorManager> _behaviorManager;
 
     // CONTROLLERS
     /** Controller for abstracting out input across multiple platforms */
@@ -41,31 +43,20 @@ protected:
     
     // VIEW
     /** Filmstrip representing the animated ship */
-    std::shared_ptr<cugl::AnimationNode> _shipNode;
-    /** Label for on-screen coordinate HUD */
-    std::shared_ptr<cugl::Label> _coordHUD;
+    std::shared_ptr<cugl::Node> _shipNode;
     /** Node to hold all of our graphics. Necesary for resolution indepedence. */
     std::shared_ptr<cugl::Node> _allSpace;
-    /** Background in animation parallax. Stores the field of stars */
-    std::shared_ptr<cugl::Node> _farSpace;
-    /** Foreground in animation parallax. Stores the planets. */
-    std::shared_ptr<cugl::Node> _nearSpace;
 
     // MODEL
     // A page-out could dispose of the view as long as it just has this.
-    /** The current coordinates of the ship */
-    std::shared_ptr<ShipModel>  _shipModel;
-    
-    /**
-     * Returns an informative string for the position
-     *
-     * This function is for writing the current ship position to the HUD.
-     *
-     * @param coords The current ship coordinates
-     *
-     * @return an informative string for the position
-     */
-    std::string positionText(const cugl::Vec2& coords);
+    /** The model of the ship */
+	std::shared_ptr<ResourceContainer>  _shipModel;
+	/** The model of the home planet */
+	std::shared_ptr<ResourceContainer>  _homePlanet;
+	/** The model of resource planet a */
+	std::shared_ptr<ResourceContainer>  _planetA;
+	/** The model of resource planet b */
+	std::shared_ptr<ResourceContainer>  _planetB;
 
     
 public:
@@ -108,6 +99,17 @@ public:
     
 #pragma mark -
 #pragma mark Gameplay Handling
+
+	/** Function to setup behavior node def from json */
+	std::shared_ptr<cugl::BehaviorNodeDef> setupBehaviorTree();
+
+	/** Function returning BehaviorAction update for exchanging resources */
+	std::function<bool(float)> exchangeResources(const std::shared_ptr<ResourceContainer> from,
+														const std::shared_ptr<ResourceContainer> to);
+
+	/** Function return BehaviorAction update for ship moving */
+	std::function<bool(float)> move(cugl::Vec2 pos);
+
     /**
      * The method called to update the game mode.
      *

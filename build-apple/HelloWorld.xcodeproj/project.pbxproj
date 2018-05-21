@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		68823BE220AE31DB00AFC0FD /* SDLoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BD920AE31DB00AFC0FD /* SDLoadingScene.cpp */; };
+		68823BE320AE31DB00AFC0FD /* SDLoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BD920AE31DB00AFC0FD /* SDLoadingScene.cpp */; };
+		68823BE420AE31DB00AFC0FD /* SDApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BDA20AE31DB00AFC0FD /* SDApp.cpp */; };
+		68823BE520AE31DB00AFC0FD /* SDApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BDA20AE31DB00AFC0FD /* SDApp.cpp */; };
+		68823BE620AE31DB00AFC0FD /* SDGameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BDC20AE31DB00AFC0FD /* SDGameScene.cpp */; };
+		68823BE720AE31DB00AFC0FD /* SDGameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BDC20AE31DB00AFC0FD /* SDGameScene.cpp */; };
+		68823BE820AE31DB00AFC0FD /* SDInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BDD20AE31DB00AFC0FD /* SDInput.cpp */; };
+		68823BE920AE31DB00AFC0FD /* SDInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BDD20AE31DB00AFC0FD /* SDInput.cpp */; };
+		68823BF020B2347D00AFC0FD /* SDResourceContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BEE20B2347D00AFC0FD /* SDResourceContainer.cpp */; };
+		68823BF120B2347D00AFC0FD /* SDResourceContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68823BEE20B2347D00AFC0FD /* SDResourceContainer.cpp */; };
 		EB0FF5092016E4A700517030 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5082016E4A700517030 /* CoreFoundation.framework */; };
 		EB0FF53F2016E83700517030 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5352016E83500517030 /* CoreGraphics.framework */; };
 		EB0FF5412016E83700517030 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5392016E83500517030 /* CoreMotion.framework */; };
@@ -29,7 +39,6 @@
 		EB0FF61B2016EFC500517030 /* textures in Resources */ = {isa = PBXBuildFile; fileRef = EB2BE9BA1D7498D2002FE78B /* textures */; };
 		EB0FF61C2016EFC500517030 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = EB2BE9B81D7498C9002FE78B /* fonts */; };
 		EB0FF61D2016F06000517030 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB2BE9B41D74952A002FE78B /* main.cpp */; };
-		EB0FF61E2016F06000517030 /* HelloApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB2BE9B21D74952A002FE78B /* HelloApp.cpp */; };
 		EB0FF61F2016F09F00517030 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF53E2016E83700517030 /* Accelerate.framework */; };
 		EB0FF6202016F09F00517030 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF54B2016E8A700517030 /* AudioToolbox.framework */; };
 		EB0FF6212016F09F00517030 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF53A2016E83600517030 /* AVFoundation.framework */; };
@@ -45,7 +54,6 @@
 		EB0FF62B2016F09F00517030 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5512016E8D800517030 /* QuartzCore.framework */; };
 		EB0FF62C2016F09F00517030 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF54F2016E8D800517030 /* UIKit.framework */; };
 		EB0FF63B2016F42F00517030 /* libcugl-sim.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF6152016EF4F00517030 /* libcugl-sim.a */; };
-		EB2BE9B51D74952A002FE78B /* HelloApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB2BE9B21D74952A002FE78B /* HelloApp.cpp */; };
 		EB2BE9B61D74952A002FE78B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB2BE9B41D74952A002FE78B /* main.cpp */; };
 		EB2BE9B91D7498C9002FE78B /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = EB2BE9B81D7498C9002FE78B /* fonts */; };
 		EB2BE9BB1D7498D2002FE78B /* textures in Resources */ = {isa = PBXBuildFile; fileRef = EB2BE9BA1D7498D2002FE78B /* textures */; };
@@ -65,7 +73,6 @@
 		EB7454AC1D74D846002FBAE6 /* Landscape.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB7454A81D74D846002FBAE6 /* Landscape.storyboard */; };
 		EB7454AD1D74D846002FBAE6 /* Portrait.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB7454A91D74D846002FBAE6 /* Portrait.storyboard */; };
 		EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB2BE9B41D74952A002FE78B /* main.cpp */; };
-		EB7454AF1D74D891002FBAE6 /* HelloApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB2BE9B21D74952A002FE78B /* HelloApp.cpp */; };
 		EB7454D01D750623002FBAE6 /* textures in Resources */ = {isa = PBXBuildFile; fileRef = EB2BE9BA1D7498D2002FE78B /* textures */; };
 		EB7454D11D750623002FBAE6 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = EB2BE9B81D7498C9002FE78B /* fonts */; };
 		EBBF189B1D74904A008E2001 /* Mac.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EBBF189A1D74904A008E2001 /* Mac.xcassets */; };
@@ -101,6 +108,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		68823BD820AE31DA00AFC0FD /* SDInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDInput.h; sourceTree = "<group>"; };
+		68823BD920AE31DB00AFC0FD /* SDLoadingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SDLoadingScene.cpp; sourceTree = "<group>"; };
+		68823BDA20AE31DB00AFC0FD /* SDApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SDApp.cpp; sourceTree = "<group>"; };
+		68823BDB20AE31DB00AFC0FD /* SDApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDApp.h; sourceTree = "<group>"; };
+		68823BDC20AE31DB00AFC0FD /* SDGameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SDGameScene.cpp; sourceTree = "<group>"; };
+		68823BDD20AE31DB00AFC0FD /* SDInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SDInput.cpp; sourceTree = "<group>"; };
+		68823BE020AE31DB00AFC0FD /* SDLoadingScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLoadingScene.h; sourceTree = "<group>"; };
+		68823BE120AE31DB00AFC0FD /* SDGameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDGameScene.h; sourceTree = "<group>"; };
+		68823BEE20B2347D00AFC0FD /* SDResourceContainer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SDResourceContainer.cpp; sourceTree = "<group>"; };
+		68823BF220B234DD00AFC0FD /* SDResourceContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDResourceContainer.h; sourceTree = "<group>"; };
 		EB0FF5082016E4A700517030 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		EB0FF5352016E83500517030 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		EB0FF5392016E83500517030 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
@@ -117,8 +134,6 @@
 		EB0FF5502016E8D800517030 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		EB0FF5512016E8D800517030 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		EB0FF5FC2016EF4F00517030 /* HelloWorld (Sim).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HelloWorld (Sim).app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		EB2BE9B21D74952A002FE78B /* HelloApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HelloApp.cpp; sourceTree = "<group>"; };
-		EB2BE9B31D74952A002FE78B /* HelloApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelloApp.h; sourceTree = "<group>"; };
 		EB2BE9B41D74952A002FE78B /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		EB2BE9B81D7498C9002FE78B /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		EB2BE9BA1D7498D2002FE78B /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = textures; sourceTree = "<group>"; };
@@ -327,9 +342,17 @@
 		EBBF18B11D749176008E2001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				68823BDA20AE31DB00AFC0FD /* SDApp.cpp */,
+				68823BDB20AE31DB00AFC0FD /* SDApp.h */,
+				68823BDC20AE31DB00AFC0FD /* SDGameScene.cpp */,
+				68823BE120AE31DB00AFC0FD /* SDGameScene.h */,
+				68823BDD20AE31DB00AFC0FD /* SDInput.cpp */,
+				68823BD820AE31DA00AFC0FD /* SDInput.h */,
+				68823BD920AE31DB00AFC0FD /* SDLoadingScene.cpp */,
+				68823BE020AE31DB00AFC0FD /* SDLoadingScene.h */,
+				68823BEE20B2347D00AFC0FD /* SDResourceContainer.cpp */,
+				68823BF220B234DD00AFC0FD /* SDResourceContainer.h */,
 				EB2BE9B41D74952A002FE78B /* main.cpp */,
-				EB2BE9B31D74952A002FE78B /* HelloApp.h */,
-				EB2BE9B21D74952A002FE78B /* HelloApp.cpp */,
 			);
 			name = Source;
 			path = ../source;
@@ -508,7 +531,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB0FF61D2016F06000517030 /* main.cpp in Sources */,
-				EB0FF61E2016F06000517030 /* HelloApp.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,8 +538,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68823BE520AE31DB00AFC0FD /* SDApp.cpp in Sources */,
+				68823BE320AE31DB00AFC0FD /* SDLoadingScene.cpp in Sources */,
+				68823BE920AE31DB00AFC0FD /* SDInput.cpp in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
-				EB7454AF1D74D891002FBAE6 /* HelloApp.cpp in Sources */,
+				68823BE720AE31DB00AFC0FD /* SDGameScene.cpp in Sources */,
+				68823BF120B2347D00AFC0FD /* SDResourceContainer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,8 +551,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68823BE420AE31DB00AFC0FD /* SDApp.cpp in Sources */,
+				68823BE220AE31DB00AFC0FD /* SDLoadingScene.cpp in Sources */,
+				68823BE820AE31DB00AFC0FD /* SDInput.cpp in Sources */,
 				EB2BE9B61D74952A002FE78B /* main.cpp in Sources */,
-				EB2BE9B51D74952A002FE78B /* HelloApp.cpp in Sources */,
+				68823BE620AE31DB00AFC0FD /* SDGameScene.cpp in Sources */,
+				68823BF020B2347D00AFC0FD /* SDResourceContainer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
