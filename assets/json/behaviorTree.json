@@ -40,11 +40,25 @@
 				"type": "priority",
 				"preempt": true,
 				"children": {
-					"ToPlanetA": {
-						"type": "leaf"
+					"MovingPlanetA": {
+						"type": "timer",
+						"timeDelay": false,
+						"delay": 10.0,
+						"children": {
+							"ToPlanetA": {
+								"type": "leaf"
+							}
+						}
 					},
-					"ToPlanetB": {
-						"type": "leaf"
+					"MovingPlanetB": {
+						"type": "timer",
+						"timeDelay": false,
+						"delay": 10.0,
+						"children": {
+							"ToPlanetB": {
+								"type": "leaf"
+							}
+						}
 					}
 				}
 			}
