@@ -1,6 +1,6 @@
 //
-//  SDLoadingScene.cpp
-//  Ship Demo
+//  BDLoadingScene.cpp
+//  BehaviorTree Demo
 //
 //  This module provides a very barebones loading screen.  Most of the time you
 //  will not need a loading screen, because the assets will load so fast.  But
@@ -14,7 +14,7 @@
 //  Author: Walker White
 //  Version: 1/10/18
 //
-#include "SDLoadingScene.h"
+#include "BDLoadingScene.h"
 
 using namespace cugl;
 

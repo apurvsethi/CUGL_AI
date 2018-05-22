@@ -28,7 +28,7 @@
 //  Version: 7/1/16
 
 // Include your application class
-#include "SDApp.h"
+#include "BDApp.h"
 
 using namespace cugl;
 
@@ -43,10 +43,10 @@ using namespace cugl;
  */
 int main(int argc, char * argv[]) {
     // Change this to your application class
-    ShipApp app;
+    BehaviorApp app;
     
     // Set the properties of your application
-    app.setName("Ship Demo");
+    app.setName("BehaviorTree Demo");
     app.setOrganization("GDIAC");
     app.setHighDPI(true);
     

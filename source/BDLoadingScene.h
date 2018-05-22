@@ -1,6 +1,6 @@
 //
-//  SDLoadingScene.h
-//  Ship Demo
+//  BDLoadingScene.h
+//  BehaviorTree Demo
 //
 //  This module provides a very barebones loading screen.  Most of the time you
 //  will not need a loading screen, because the assets will load so fast.  But
@@ -14,8 +14,8 @@
 //  Author: Walker White
 //  Version: 1/10/18
 //
-#ifndef __SD_LOADING_SCENE_H__
-#define __SD_LOADING_SCENE_H__
+#ifndef __BD_LOADING_SCENE_H__
+#define __BD_LOADING_SCENE_H__
 #include <cugl/cugl.h>
 
 
@@ -107,4 +107,4 @@ public:
     bool isPending( ) const;
 };
 
-#endif /* __SD_LOADING_SCENE_H__ */
+#endif /* __BD_LOADING_SCENE_H__ */

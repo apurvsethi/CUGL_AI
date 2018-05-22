@@ -1,6 +1,6 @@
 //
-//  SDGameScene.h
-//  Ship Demo
+//  BDGameScene.h
+//  BehaviorTree Demo
 //
 //  This is the most important class in this demo.  This class manages the
 //  gameplay for this demo.  It is a relativeluy simple class as we are not
@@ -12,22 +12,21 @@
 //  classes and how they are initialized will need to be changed if you add
 //  dynamic level loading.
 //
-//  Author: Walker White
-//  Version: 1/10/18
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/22/2018
 //
-#ifndef __SD_GAME_SCENE_H__
-#define __SD_GAME_SCENE_H__
+#ifndef __BD_GAME_SCENE_H__
+#define __BD_GAME_SCENE_H__
 #include <cugl/cugl.h>
 #include <vector>
-#include "SDResourceContainer.h"
+#include "BDResourceContainer.h"
 
 
 /**
  * This class is the primary gameplay constroller for the demo.
  *
- * A world has its own objects, assets, and input controller.  Thus this is
- * really a mini-GameEngine in its own right.  As in 3152, we separate it out
- * so that we can have a separate mode for the loading screen.
+ * A world has its own objects, assets, and behavior manager. As in 3152, we
+ * separate it out so that we can have a separate mode for the loading screen.
  */
 class GameScene : public cugl::Scene {
 protected:
@@ -45,7 +44,6 @@ protected:
 	std::shared_ptr<cugl::Node> _checkpoint;
 
     // MODEL
-    // A page-out could dispose of the view as long as it just has this.
     /** The model of the ship */
 	std::shared_ptr<ResourceContainer>  _shipModel;
 	/** The model of the home planet */
@@ -95,15 +93,55 @@ public:
     
 #pragma mark -
 #pragma mark Gameplay Handling
-
-	/** Function to setup behavior node def from json */
+	/**
+	 * Returns a shared pointer to a fully defined behavior node def.
+	 *
+	 * This method creates a barebones behavior node def using the
+	 * {@link BehaviorParser} in order to read a json file. The behavior node
+	 * def created by a json file (and the parser) does not have any of the
+	 * mandatory functions originally.
+	 *
+	 * This method then goes through each of the leaf nodes, adding the
+	 * mandatory priority function for each leaf node, creating an associated
+	 * action for each leaf node, and adding the mandatory update function
+	 * for each action created.
+	 *
+	 * @return a shared pointer to a fully defined behavior node def.
+	 */
 	std::shared_ptr<cugl::BehaviorNodeDef> setupBehaviorTree();
 
-	/** Function returning BehaviorAction update for exchanging resources */
+	/**
+	 * Returns a function that accepts a timestep float and returns whether it
+	 * is done.
+	 *
+	 * This method demonstrates a way to create an update function for an
+	 * action. The lambda function uses the variables available to this object
+	 * instance and this function in order to exchange a resource between two
+	 * resource containers.
+	 *
+	 * @param from	The resource container giving a resource.
+	 * @param to	The resource container getting a resource.
+	 *
+	 * @return a function that accepts a timestep float and returns whether it
+	 * is done.
+	 */
 	std::function<bool(float)> exchangeResources(const std::shared_ptr<ResourceContainer> from,
-														const std::shared_ptr<ResourceContainer> to);
+												 const std::shared_ptr<ResourceContainer> to);
 
-	/** Function return BehaviorAction update for ship moving */
+	/**
+	 * Returns a function that accepts a timestep float and returns whether it
+	 * is done.
+	 *
+	 * This function demonstrates a way to create an update function for an
+	 * action. The lambda function uses the variables available to this object
+	 * instance and this function in order to move the ship towards the
+	 * position provided over time.
+	 *
+	 * @param pos	The position to which the ship should move.
+	 *
+	 * @return a function that accepts a timestep float and returns whether it
+	 * is done
+	 */
 	std::function<bool(float)> move(cugl::Vec2 pos);
 
     /**
@@ -122,4 +160,4 @@ public:
 
 };
 
-#endif /* __SD_GAME_SCENE_H__ */
+#endif /* __BD_GAME_SCENE_H__ */

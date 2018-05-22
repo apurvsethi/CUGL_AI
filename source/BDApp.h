@@ -1,25 +1,25 @@
 //
-//  SDApp.cpp
-//  Ship Demo
+//  BDApp.cpp
+//  Behavior Demo
 //
 //  This is the root class for your game.  The file main.cpp accesses this class
 //  to run the application.  While you could put most of your game logic in
 //  this class, we prefer to break the game up into player modes and have a
 //  class for each mode.
 //
-//  Author: Walker White
-//  Version: 1/10/17
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/22/2018
 //
-#ifndef __SD_APP_H__
-#define __SD_APP_H__
+#ifndef __BD_APP_H__
+#define __BD_APP_H__
 #include <cugl/cugl.h>
-#include "SDGameScene.h"
-#include "SDLoadingScene.h"
+#include "BDGameScene.h"
+#include "BDLoadingScene.h"
 
 /**
  * This class represents the application root for the ship demo.
  */
-class ShipApp : public cugl::Application {
+class BehaviorApp : public cugl::Application {
 protected:
     /** The global sprite batch for drawing (only want one of these) */
     std::shared_ptr<cugl::SpriteBatch> _batch;
@@ -45,7 +45,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    ShipApp() : cugl::Application(), _loaded(false) {}
+    BehaviorApp() : cugl::Application(), _loaded(false) {}
     
     /**
      * Disposes of this application, releasing all resources.
@@ -54,7 +54,7 @@ public:
      * It simply calls the dispose() method in Application.  There is nothing
      * special to do here.
      */
-    ~ShipApp() { }
+    ~BehaviorApp() { }
     
     /**
      * The method called after OpenGL is initialized, but before running the application.
@@ -106,4 +106,4 @@ public:
     virtual void draw() override;
 };
 
-#endif /* __SD_APP_H__ */
+#endif /* __BD_APP_H__ */

@@ -1,9 +1,9 @@
 //
-//  SDResourceContainer.h
+//  BDResourceContainer.h
 //  BehaviorTree Demo
 //
-//  This model encapsulates all of the information for the ship demo. As there
-//  are no collisions in ship demo, this class is pretty simple.
+//  This model is used for all of the models for the behavior demo. As there
+//  are no collisions in behavior demo, this class is pretty simple.
 //
 //  WARNING: There are a lot of shortcuts in this design that will do not adapt
 //  well to data driven design.  This demo has a lot of simplifications to make
@@ -27,33 +27,25 @@
 //  scene graph node.  This is a very common way that we will approach complex
 //  objects.
 //
-//  Author: Walker White
-//  Version: 1/10/17
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/22/2018
 //
-#ifndef __SD_RESOURCE_CONTAINER_H__
-#define __SD_RESOURCE_CONTAINER_H__
+#ifndef __BD_RESOURCE_CONTAINER_H__
+#define __BD_RESOURCE_CONTAINER_H__
 #include <cugl/cugl.h>
 
-
-#pragma mark -
-#pragma mark Resource Container
-
 /**
- * Player avatar for the ship demo.
+ * Resource containers for the behavior demo.
  *
- * All positional information about the ship goes in this class and not
- * in the sprite node.  That is because we are not animating the ship
- * (other than using the filmstrip to show banking).  We are animating
- * the background.  This forces us to decouple the model from the sprite.
- *
- * You should ALWAYS do this. If you do not do this, I will be most
- * displeased with you.
+ * All positional information about the container goes in this class and not
+ * in the sprite node.  That is because we are not animating the container.
  */
 class ResourceContainer {
 private:
 	/** This macro disables the copy constructor (not allowed on models) */
 	CU_DISALLOW_COPY_AND_ASSIGN(ResourceContainer);
 
+#pragma mark Values
 protected:
 	/** Initial osition of the container in world space */
 	cugl::Vec2    _initialPos;
@@ -66,8 +58,9 @@ protected:
 	/** The label for the number of resources this container has */
 	std::shared_ptr<cugl::Label> _resourcesSprite;
 
-public:
+#pragma mark -
 #pragma mark Constructors
+public:
 	/*
 	 * Creates a new container at the origin.
 	 *
@@ -82,7 +75,7 @@ public:
 	~ResourceContainer(void) { dispose(); }
 
 	/**
-	 * Disposes all resources and assets of this container
+	 * Disposes all resources and assets of this container.
 	 *
 	 * Any assets owned by this object will be immediately released.  Once
 	 * disposed, a container may not be used until it is initialized again.
@@ -116,7 +109,7 @@ public:
 	virtual bool init(const cugl::Vec2& pos, unsigned int resources,
 					  const std::shared_ptr<cugl::Label> resourcesSprite);
 
-
+#pragma mark -
 #pragma mark Static Constructors
 	/**
 	 * Returns a newly allocated container at the origin with 0 resources.
@@ -146,14 +139,14 @@ public:
 	 * @param resources			The initial number of resources in this container
 	 * @param resourcesSprite	The label for resources of this container
 	 *
-	 * @return a newly allocated ship at the given position and resources.
+	 * @return a newly allocated container with the given sprite, position, and
+	 * resources.
 	 */
 	static std::shared_ptr<ResourceContainer> alloc(const cugl::Vec2& pos, unsigned int resources,
 											  const std::shared_ptr<cugl::Label> resourcesSprite) {
 		std::shared_ptr<ResourceContainer> result = std::make_shared<ResourceContainer>();
 		return (result->init(pos, resources, resourcesSprite) ? result : nullptr);
 	}
-
 
 #pragma mark -
 #pragma mark Accessors
@@ -180,10 +173,7 @@ public:
 	 *
 	 * @param resources	The number of resources in this container
 	 */
-	void setNumResources(unsigned int resources) {
-		_resources = resources;
-		_resourcesSprite->setText(std::to_string(resources));
-	}
+	void setNumResources(unsigned int resources);
 
 #pragma mark -
 #pragma mark Game
@@ -192,4 +182,4 @@ public:
 
 };
 
-#endif /* __SD_RESOURCE_CONTAINER_H__ */
+#endif /* __BD_RESOURCE_CONTAINER_H__ */

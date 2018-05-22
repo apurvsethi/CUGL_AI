@@ -1,5 +1,5 @@
 //
-//  SDResourceContainer.cpp
+//  BDResourceContainer.cpp
 //  BehaiorTree Demo
 //
 //  This model encapsulates all of the information for the ship demo. As there
@@ -27,10 +27,10 @@
 //  scene graph node.  This is a very common way that we will approach complex
 //  objects.
 //
-//  Author: Walker White
-//  Version: 1/10/17
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/22/2018
 //
-#include "SDResourceContainer.h"
+#include "BDResourceContainer.h"
 
 
 using namespace cugl;
@@ -69,6 +69,18 @@ bool ResourceContainer::init(const cugl::Vec2& pos, unsigned int resources,
  */
 void ResourceContainer::dispose() {
 	_resourcesSprite = nullptr;
+}
+
+#pragma mark -
+#pragma mark Accessors
+/**
+ * Sets the current number of resources in this container
+ *
+ * @param resources	The number of resources in this container
+ */
+void ResourceContainer::setNumResources(unsigned int resources) {
+	_resources = resources;
+	_resourcesSprite->setText(std::to_string(resources));
 }
 
 #pragma mark -
