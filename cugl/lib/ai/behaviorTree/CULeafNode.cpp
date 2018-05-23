@@ -25,7 +25,6 @@
 
 using namespace cugl;
 
-#pragma mark -
 #pragma mark Constructors
 /**
  * Initializes a leaf node with the given name, priority function, and

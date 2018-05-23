@@ -24,7 +24,6 @@
 
 using namespace cugl;
 
-#pragma mark -
 #pragma mark Identifiers
 /**
  * Returns a string representation of this node for debugging purposes.

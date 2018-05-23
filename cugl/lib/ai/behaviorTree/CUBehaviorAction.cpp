@@ -16,9 +16,7 @@
 
 using namespace cugl;
 
-#pragma mark -
 #pragma mark Constructors
-
 /**
  * Creates an uninitialized action.
  *
