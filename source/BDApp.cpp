@@ -1,6 +1,6 @@
 //
-//  SDApp.cpp
-//  Ship Demo
+//  BDApp.cpp
+//  Behavior Demo
 //
 //  This is the root class for your game.  The file main.cpp accesses this class
 //  to run the application.  While you could put most of your game logic in
@@ -10,7 +10,7 @@
 //  Author: Walker White
 //  Version: 1/10/17
 //
-#include "SDApp.h"
+#include "BDApp.h"
 
 using namespace cugl;
 
@@ -28,7 +28,7 @@ using namespace cugl;
  * very last line.  This ensures that the state will transition to FOREGROUND,
  * causing the application to run.
  */
-void ShipApp::onStartup() {
+void BehaviorApp::onStartup() {
     _assets = AssetManager::alloc();
     _batch  = SpriteBatch::alloc();
     
@@ -64,7 +64,7 @@ void ShipApp::onStartup() {
  * very last line.  This ensures that the state will transition to NONE,
  * causing the application to be deleted.
  */
-void ShipApp::onShutdown() {
+void BehaviorApp::onShutdown() {
     _loading.dispose();
     _gameplay.dispose();
     _assets = nullptr;
@@ -91,7 +91,7 @@ void ShipApp::onShutdown() {
  *
  * @param timestep  The amount of time (in seconds) since the last frame
  */
-void ShipApp::update(float timestep) {
+void BehaviorApp::update(float timestep) {
     if (!_loaded && _loading.isActive()) {
         _loading.update(0.01f);
     } else if (!_loaded) {
@@ -112,7 +112,7 @@ void ShipApp::update(float timestep) {
  * When overriding this method, you do not need to call the parent method
  * at all. The default implmentation does nothing.
  */
-void ShipApp::draw() {
+void BehaviorApp::draw() {
     if (!_loaded) {
         _loading.render(_batch);
     } else {

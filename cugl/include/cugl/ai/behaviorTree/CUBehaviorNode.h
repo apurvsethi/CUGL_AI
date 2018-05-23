@@ -31,7 +31,6 @@
 #include <functional>
 #include <string>
 #include <vector>
-#include <unordered_map>
 #include <cugl/ai/behaviorTree/CUBehaviorAction.h>
 
 namespace cugl {
@@ -229,7 +228,6 @@ public:
 	};
 
 protected:
-
 	/** The descriptive, identifying name of the node. */
 	std::string _name;
 
@@ -416,6 +414,9 @@ public:
 	/**
 	 * Reset this node and all nodes below it to an uninitialized state. Also
 	 * resets any class values to those set at the start of the tree.
+	 *
+	 * This function allows the node to be started again, as if it had not
+	 * been run before.
 	 */
 	virtual void reset();
 

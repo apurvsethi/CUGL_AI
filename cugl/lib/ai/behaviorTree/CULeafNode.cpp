@@ -4,6 +4,7 @@
 //
 //  This module provides support for a leaf behavior node.
 //
+<<<<<<< HEAD
 //  This class uses our standard shared-pointer architecture.
 //
 //  1. The constructor does not perform any initialization; it just sets all
@@ -17,6 +18,10 @@
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
 //  Version: 5/22/2018
+=======
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/21/2018
+>>>>>>> f04e2424f59328867bff7f4811ded232f88e50f9
 //
 
 #include <cugl/ai/behaviorTree/CULeafNode.h>

@@ -4,8 +4,8 @@
 //
 //  This module provides support for a leaf behavior node.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/21/2018
 //
 
 #ifndef __CU_LEAF_NODE_H__
