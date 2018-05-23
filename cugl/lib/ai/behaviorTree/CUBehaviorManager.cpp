@@ -1,11 +1,22 @@
 //
-//  CUBehaviorManager.h
+//  CUBehaviorManager.cpp
 //  Cornell University Game Library (CUGL)
 //
-//  This module provides support for a behavior tree manager.
+//  This module provides support for a behavior tree manager. The behavior tree
+//  manager controls the creation and execution of behavior trees.
+//
+//  This class uses our standard shared-pointer architecture.
+//
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/21/2018
 //
 
 #include <cstdlib>
@@ -44,10 +55,24 @@ bool BehaviorManager::init() {
 #pragma mark -
 #pragma mark Behavior Trees
 /**
- * Returns a (weak) reference to the tree with the given name.
+* Returns whether this manager contains a tree with the given name.
+*
+* @param name	An identifier to find the tree.
+*
+* @return whether this manager contains a tree with the given name.
+*/
+bool BehaviorManager::containsTree(const std::string& name) const {
+	auto tree = _trees.find(name);
+	return (tree != _trees.end());
+}
+
+/**
+ * Returns a (weak) reference to the behavior tree with the given name.
  *
- * All trees must be stored with unique names in the BehaviorManager,
+ * All trees must be stored with a unique names in the BehaviorManager,
  * and thus there cannot be multiple possible return values.
+ *
+ * As a weak reference, this manager does not pass ownership of the tree.
  *
  * @param name	An identifier to find the tree.
  *
@@ -74,7 +99,7 @@ void BehaviorManager::startTree(const std::string& name) {
 }
 
 /**
- * Pauses the tree with the given name.
+ * Pauses the running tree with the given name.
  *
  * All trees must be stored with unique names in the BehaviorManager,
  * and thus there cannot be multiple possible trees to start.
@@ -154,18 +179,18 @@ void BehaviorManager::update(float dt) {
 }
 
 /**
- * Returns whether BehaviorNode tree was successfully created and added.
+ * Adds the behavior tree described by the provided definition to the
+ * manager.
  *
- * The name given to a treeDef must be unique amongst the trees added to the
- * BehaviorManager, in order to ensure that trees are accessed properly.
+ * Recursively creates a behavior tree from the template provided by
+ * BehaviorNodeDefs, and adds it to the BehaviorManager. Returns false if
+ * the BehaviorNodeDef provided does not allow creation of a valid
+ * BehaviorNode, or if the name provided to the treeDef is equal to a name
+ * provided for another tree in the manager, true otherwise.
  *
- * Creates BehaviorNodes from template provided by BehaviorNodeDefs, and
- * adds it to the BehaviorManager. Returns false if a BehaviorNodeDef
- * provided does not allow creation of a matching BehaviorNode, true otherwise.
+ * @param treeDef	The definition for the root of the behavior tree.
  *
- * @param treeDef	BehaviorNodeDef tree template for a BehaviorNode tree.
- *
- * @return whether BehaviorNode tree was successfully created and added.
+ * @return whether the behaivor tree was successfully created and added.
  */
 bool BehaviorManager::addTree(const std::shared_ptr<BehaviorNodeDef>& treeDef) {
 	CUAssertLog(_trees.find(treeDef->_name) == _trees.end(),
@@ -179,15 +204,15 @@ bool BehaviorManager::addTree(const std::shared_ptr<BehaviorNodeDef>& treeDef) {
 }
 
 /**
- * Returns BehaviorNode tree created from BehaviorNodeDef tree.
+ * Creates the behavior tree created from the provided definition.
  *
- * Creates BehaviorNodes from template provided by BehaviorNodeDefs, and
- * returns a nullptr if a BehaviorNodeDef provided does not allow creation
- * of a matching BehaviorNode.
+ * Recursively creates a behavior tree from the template provided by the
+ *{@link BehaviorNodeDef} of the root. This method will fail if the
+ * behavior node definition does not define a valid behavior tree.
  *
- * @param treeDef	BehaviorNodeDef tree template for a BehaviorNode tree.
+ * @param treeDef	The definition for the root of the behavior tree.
  *
- * @return BehaviorNode tree created from BehaviorNodeDef tree.
+ * @return The behavior tree created from provided definition.
  */
 std::shared_ptr<BehaviorNode> BehaviorManager::createTree(const std::shared_ptr<BehaviorNodeDef>& treeDef) {
 	if (treeDef->_type == BehaviorNodeDef::Type::INVERTER_NODE) {
@@ -233,15 +258,16 @@ std::shared_ptr<BehaviorNode> BehaviorManager::createTree(const std::shared_ptr<
 }
 
 /**
- * Returns BehaviorNode trees created from BehaviorNodeDef tree templates.
+ * Creates an array of behavior trees created from the provided definitions.
  *
- * Creates BehaviorNodes from templates provided by BehaviorNodeDefs, and
- * returns a nullptr for a BehaviorNode if a BehaviorNodeDef provided does
- * not allow creation of a matching BehaviorNode.
+ * Recursively creates each behavior tree from the template provided by the
+ * {@link BehaviorNodeDef}. This method will fail if one of the behavior
+ * node definition does not define a valid behavior tree.
  *
- * @param treeDefs	BehaviorNodeDef tree templates for BehaviorNode trees.
+ * @param treeDefs	An array of definitions for the roots of each behavior
+ * tree.
  *
- * @return BehaviorNode trees created from BehaviorNodeDef tree templates.
+ * @return An array of behavior trees created from the provided definitions.
  */
 std::vector<std::shared_ptr<BehaviorNode>> BehaviorManager::createTrees(const std::vector<std::shared_ptr<BehaviorNodeDef>>& treeDefs) {
 	std::vector<std::shared_ptr<BehaviorNode>> trees;

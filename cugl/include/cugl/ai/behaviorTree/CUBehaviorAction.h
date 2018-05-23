@@ -60,8 +60,8 @@ struct BehaviorActionDef {
 };
 
 /**
- * This class provides an action, used to represent actions in leaf nodes
- * of behavior trees.
+ * This class provides an action, used to represent actions contained in leaf
+ * nodes of behavior trees.
  *
  * An BehaviorAction refers to the action chosen to execute by a behavior
  * tree. Each action is provided to a leaf node of a behavior tree, and is
@@ -75,7 +75,7 @@ class BehaviorAction {
 public:
 	/** The current state of the action. */
 	enum class State : unsigned int {
-		/** The action is not currently running or has finished running. */
+		/** The action is neither currently running mor has finished running. */
 		INACTIVE = 0,
 		/** The action is running. */
 		RUNNING = 1,
@@ -94,6 +94,8 @@ protected:
 
 	/**
 	 * The initialization function to begin running an action.
+	 *
+	 * This method is optional to provide.
 	 */
 	std::function<void()> _start;
 
@@ -108,6 +110,8 @@ protected:
 	 * The terminate function to interrupt an action over time.
 	 *
 	 * This return true if the action is finished and false otherwise.
+	 *
+	 * This method is optional to provide.
 	 */
 	std::function<void()> _terminate;
 
@@ -130,7 +134,9 @@ public:
 	/**
 	 * Disposes all of the resources used by this action.
 	 *
-	 * It is unsafe to call this on an Action that is still currently
+	 *  A disposed action can be safely reinitialized.
+	 *
+	 * It is unsafe to call this on an action that is still currently
 	 * inside of a running behavior tree.
 	 */
 	void dispose();
@@ -151,7 +157,8 @@ public:
 	 * Returns a newly allocated BehaviorAction, using the definition as a
 	 * template.
 	 *
-	 * @param actionDef Def through which this Action is constructed.
+	 * @param actionDef The definition through which this action is
+	 * constructed.
 	 *
 	 * @return a newly allocated BehaviorAction specified by the definition.
 	 */
@@ -183,7 +190,9 @@ public:
 	BehaviorAction::State getState() const { return _state; }
 
 	/**
-	 * Initializes the action to begin running.
+	 * Begins running the action.
+	 *
+	 * This method will call the _start function, if one was provided.
 	 */
 	void start();
 
@@ -201,32 +210,36 @@ public:
 	BehaviorAction::State update(float dt);
 
 	/**
-	 * Terminates an action, possibly while running. 
+	 * Terminates an currently running action.. 
 	 * 
 	 * This method provided a way to get back to a stable state while in the
 	 * middle of running an action.
+	 *
+	 * You should only call this method on a running action.
 	 */
 	void terminate();
 
 	/**
-	 * Pauses the running action. Actions will not be updated while paused.
+	 * Pauses the currently running action. Actions will not be updated while
+	 * paused.
 	 *
 	 * You should only call this method on a running action.
 	 */
 	void pause();
 	
 	/**
-	 * Resumes a currently paused action. 
+	 * Resumes the currently paused action. 
 	 *
 	 * You should only call this method on a paused action.
 	 */
 	void resume();
 
 	/**
-	 * Resets the current finished action.
+	 * Resets the currently finished action.
 	 *
-	 * An action can be safely rerun after resetting. You should
-	 * only call this method on a finished action.
+	 * An action can be safely rerun after resetting.
+	 *
+	 * You should only call this method on a finished action.
 	 */
 	void reset();
 

@@ -46,8 +46,9 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	/**
 	 * This enum is used to describe the type of the {@link BehaviorNode}.
 	 *
-	 * When creating an instance of a behavior tree node from a BehaviorNodeDef,
-	 * this enum is used to determine the type of behavior tree node created.
+	 * When creating an instance of a behavior tree node from a
+	 * BehaviorNodeDef, this enum is used to determine the type of
+	 * {@link BehaviorNode} created.
 	 */
 	enum class Type : int {
 		/**
@@ -64,22 +65,22 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 		/**
 		 * A random node is a composite node, or a node with one or more
 		 * children, that runs a child either uniformly at random or uses a
-		 * weighted random based on priority values..
+		 * weighted probability based on priority values.
 		 */
 		RANDOM_NODE,
 		/**
 		 * An inverter node is a decorator node, or a node with one child,
 		 * that sets its priority value by inverting its child's priority value.
-		 * In other words, 1 - priority of child where priority is from 0 to 1.
+		 * In other words, its priority value will be 1 - priority of its child
 		 * This node does not use the priority function provided by the user.
 		 */
 		INVERTER_NODE,
 		/**
 		 * A timer node is a decorator node, or a node with one child, that
 		 * either delays execution of its child node when the child is chosen
-		 * for execution by a given time, or ensures that the child is not run
-		 * again after its execution for a given time. This choice is based on
-		 * the _timeDelay flag described below.
+		 * to run by a given time, or ensures that the child is not run again
+		 * after its execution for a given time. This choice is based on the
+		 * _timeDelay flag.
 		 */
 		TIMER_NODE,
 		/**
@@ -110,10 +111,10 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	std::function<float()> _priorityFunc;
 
 	/**
-	 * Whether a node should choose a new child node on each update, possibly
+	 * Whether a node should choose a child to run on each update, possibly
 	 * interrupting an old child node's execution if a different child is
-	 * chosen. If true, the node can interrupt a running child node,
-	 * otherwise a choosen running child cannot be interrupted to run a
+	 * chosen. If true, the node can interrupt a running child node for another
+	 * child, otherwise a choosen running child cannot be interrupted to run a
 	 * different child.
 	 *
 	 * This flag is only used if this node is a composite node
@@ -133,7 +134,7 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	bool _uniformRandom;
 
 	/**
-	 * The array of children for this node.
+	 * The array of definitions for the children for this node.
 	 *
 	 * If this node is a leaf node, then this vector should be empty. If this
 	 * node is a decorator node, then this vector should have exactly one
@@ -200,8 +201,8 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
  * a parent is the the root of the tree. The tree chooses the action to run
  * based on the priority value of each of the root's descendents. The tree
  * must use an update function to run on each tick, updating the state of each
- * node. The root node of a behavior tree returns the state of the currently
- * running node or of the node that ran during the behavior tree's execution.
+ * node. The root node of a behavior tree returns the state of the selected
+ * leaf node to run.
  *
  * This class has abstract methods for calculating the priority and updating,
  * which are implemented by the subclasses.
@@ -345,7 +346,7 @@ public:
 #pragma mark -
 #pragma mark Behavior Trees
 	/**
-	 * Returns a float that signifies the priority of this behavior tree node.
+	 * Returns the current priority of this node.
 	 *
 	 * This priority value is used to determine the relevance of a node in
 	 * comparison to other nodes. This value is between 0 and 1.

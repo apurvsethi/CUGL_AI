@@ -35,7 +35,9 @@ _terminate(nullptr) {};
 /**
  * Disposes all of the resources used by this action.
  *
- * It is unsafe to call this on an Action that is still currently
+ *  A disposed action can be safely reinitialized.
+ *
+ * It is unsafe to call this on an action that is still currently
  * inside of a running behavior tree.
  */
 void BehaviorAction::dispose() {
@@ -68,8 +70,10 @@ bool BehaviorAction::init(const std::shared_ptr<BehaviorActionDef>& actionDef) {
 #pragma mark -
 #pragma mark Behavior Trees
 /**
-* Initializes the action to begin running.
-*/
+ * Begins running the action.
+ *
+ * This method will call the _start function, if one was provided.
+ */
 void BehaviorAction::start() {
 	CUAssertLog(getState() == BehaviorAction::State::INACTIVE, "Must start an inactive action");
 	setState(BehaviorAction::State::RUNNING);
@@ -79,11 +83,13 @@ void BehaviorAction::start() {
 }
 
 /**
-* Terminates an action, possibly while running.
-*
-* This method provided a way to get back to a stable state while in the
-* middle of running an action.
-*/
+ * Terminates an currently running action..
+ *
+ * This method provided a way to get back to a stable state while in the
+ * middle of running an action.
+ *
+ * You should only call this method on a running action.
+ */
 void BehaviorAction::terminate() {
 	CUAssertLog(getState() == BehaviorAction::State::RUNNING,
 		"Cannot call terminate on not running action");
@@ -94,7 +100,8 @@ void BehaviorAction::terminate() {
 }
 
 /**
- * Pauses the running action. Actions will not be updated while paused.
+ * Pauses the currently running action. Actions will not be updated while
+ * paused.
  *
  * You should only call this method on a running action.
  */
@@ -105,7 +112,7 @@ void BehaviorAction::pause() {
 }
 
 /**
- * Resumes a currently paused action.
+ * Resumes the currently paused action.
  *
  * You should only call this method on a paused action.
  */
@@ -116,10 +123,11 @@ void BehaviorAction::resume() {
 }
 
 /**
- * Resets the current finished action.
+ * Resets the currently finished action.
  *
- * An action can be safely rerun after resetting. You should
- * only call this method on a finished action.
+ * An action can be safely rerun after resetting.
+ *
+ * You should only call this method on a finished action.
  */
 void BehaviorAction::reset() {
 	CUAssertLog(getState() == BehaviorAction::State::FINISHED,
