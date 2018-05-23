@@ -41,9 +41,9 @@ std::unordered_map<std::string, BehaviorNodeDef::Type> typeMap = {
 
 #pragma mark Parsing
 /**
- * Parses the json file provided to create behavior node defs, and adds these
+ * Parses the JSON file provided to create behavior node defs, and adds these
  * BehaviorNodeDefs to a map, used to allow the user to get individual
- * BehaviorNodeDefs created using the getDef method.
+ * BehaviorNodeDefs by using the name of the root as the key.
  *
  * This function assumes that the file name is a relative path. It will
  * search the application assert directory
@@ -53,7 +53,8 @@ std::unordered_map<std::string, BehaviorNodeDef::Type> typeMap = {
  * @param file  The relative path to the file.
  */
 std::unordered_map<std::string, std::shared_ptr<BehaviorNodeDef>> BehaviorParser::parseFile(const char* file) {
-	std::unordered_map<std::string, std::shared_ptr<BehaviorNodeDef>> defs = std::unordered_map<std::string, std::shared_ptr<BehaviorNodeDef>>();
+	std::unordered_map<std::string, std::shared_ptr<BehaviorNodeDef>> defs = 
+		std::unordered_map<std::string, std::shared_ptr<BehaviorNodeDef>>();
 	std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);
 	std::shared_ptr<JsonValue> json = reader->readJson();
 	for (int ii = 0; ii < json->size(); ii++) {
@@ -66,8 +67,8 @@ std::unordered_map<std::string, std::shared_ptr<BehaviorNodeDef>> BehaviorParser
 /**
  * Returns a BehaviorNodeDef constructed from the given JsonValue.
  *
- * This function uses a json in order to construct a BehaviorNodeDef. The
- * json must follow certain guidelines required to create a BehaviorNodeDef
+ * This function uses a JSON in order to construct a BehaviorNodeDef. The
+ * JSON must follow certain guidelines required to create a BehaviorNodeDef
  * in order to be parsed by the function.
  *
  * @param json	The JsonValue representing a BehaviorNodeDef.

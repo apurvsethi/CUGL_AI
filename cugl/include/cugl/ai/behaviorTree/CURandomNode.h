@@ -32,25 +32,13 @@ namespace cugl {
  * This class provides a random composite node for a behavior tree.
  *
  * A random node is a composite node which is designed to run a randomly
- * selected nodes out of its children, based on either uniform probability or
- * weighted probability. A random node using a weighted probability will base
- * the weights of the probability of each node running on the priority of its
- * children.
- *
- * The random node finishes after its selected node has
- * also finished.
- */
-
-/**
- * This class provides a random composite node for a behavior tree.
- *
- * A random node will randomly choose among its children based either on a
- * uniform or a weighted probability. If the random node uses a weighted
- * probability it will base its weightage of the probability of running each
- * child on that child's priority value.
+ * selected nodes out of its children, based on either a uniform probability or
+ * a weighted probability. A random node using a weighted probability will base
+ * the weights of the probability of selecting each child on the priority of
+ * that child.
  *
  * If a random node is not given a priority function, it will set its priority
- * as the average priorities of its children.
+ * as the average of the priorities of its children.
  *
  * A random node's state is directly based upon the child node currently
  * running or the child node that has finished running. Only one child node
@@ -191,7 +179,8 @@ public:
 	 * running the priority function provided or default priority function
 	 * if available for the class.
 	 *
-	 * This node will set its priority to the average priority of its children.
+	 * This node will set its priority to the average priority of its children
+	 * if a priority function is not provided.
 	 */
 	void updatePriority() override;
 
@@ -205,7 +194,7 @@ public:
 	 * choose among its children with each child's probability of being
 	 * selected weighted by that child's priority value.
 	 *
-	 * @return the child choosen by this composite node.
+	 * @return the child choosen by this random node.
 	 */
 	const std::shared_ptr<BehaviorNode>& getChosenChild() const override;
 };

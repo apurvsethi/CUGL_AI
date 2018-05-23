@@ -36,25 +36,23 @@
 namespace cugl {
 
 /**
- * This class provides a behavior node for a behavior tree.
+ * This class provides methods to parse a JSON file describing a behavior tree.
  *
- * A behavior node refers to any given node within a beahvior tree,
- * whether it is a CompositeNode, DecoratorNode, or LeafNode.
+ * This class parses a JSON file to create a mapping from the names of the
+ * of each behavior tree to the {@link BehaviorTreeDef} of that tree. After
+ * parsing a JSON file, you must add an action definition to each leaf, and
+ * any required priority function to the defs.
  *
- * A behavior tree is a construction of behavior nodes, with the top
- * node that does not have a parent referring to the root of the tree.
- * The tree must use an update function to run on each tick, updating
- * the state of each node.
- *
- * The root node of a behavior tree returns the state of the currently
- * running node, or the node that ran during the update cycle.
+ * This class contains only static methods, and should not be instantiated.
  */
 class BehaviorParser {
 #pragma mark -
 #pragma mark Parsing
 public:
 	/**
-	 * Returns a map of BehaviorNodeDefs constructed from the given file.
+	 * Parses the JSON file provided to create behavior node defs, and adds these
+	 * BehaviorNodeDefs to a map, used to allow the user to get individual
+	 * BehaviorNodeDefs by using the name of the root as the key.
 	 *
 	 * This function assumes that the file name is a relative path. It will
 	 * search the application assert directory
@@ -62,15 +60,15 @@ public:
 	 * it cannot find it there.
 	 *
 	 * @param file  The relative path to the file.
-	 *
-	 * @return a map of BehaviorNodeDefs constructed from the given file.
 	 */
 	static std::unordered_map<std::string, std::shared_ptr<BehaviorNodeDef>> parseFile(const std::string& file) {
 		return parseFile(file.c_str());
 	}
 
 	/**
-	 * Returns a map of BehaviorNodeDefs constructed from the given file.
+	 * Parses the JSON file provided to create behavior node defs, and adds these
+	 * BehaviorNodeDefs to a map, used to allow the user to get individual
+	 * BehaviorNodeDefs by using the name of the root as the key.
 	 *
 	 * This function assumes that the file name is a relative path. It will
 	 * search the application assert directory
@@ -78,8 +76,6 @@ public:
 	 * it cannot find it there.
 	 *
 	 * @param file  The relative path to the file.
-	 *
-	 * @return a map of BehaviorNodeDefs constructed from the given file.
 	 */
 	static std::unordered_map<std::string, std::shared_ptr<BehaviorNodeDef>> parseFile(const char* file);
 
@@ -87,8 +83,8 @@ private:
 	/**
 	 * Returns a BehaviorNodeDef constructed from the given JsonValue.
 	 *
-	 * This function uses a json in order to construct a BehaviorNodeDef. The
-	 * json must follow certain guidelines required to create a BehaviorNodeDef
+	 * This function uses a JSON in order to construct a BehaviorNodeDef. The
+	 * JSON must follow certain guidelines required to create a BehaviorNodeDef
 	 * in order to be parsed by the function.
 	 *
 	 * @param json	The JsonValue representing a BehaviorNodeDef.

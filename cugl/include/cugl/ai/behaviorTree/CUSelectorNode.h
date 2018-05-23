@@ -34,10 +34,10 @@ namespace cugl {
  * node is allowed to preempt, a child that is running may be overridden by an
  * earlier child with a non-zero priority during the update function.
  *
- * If the selector node is not assigned a priority function, its priority
- * will be assigned as the running child if this node is currently running,
- * or as the the first child with a non-zero priority. If all children have
- * a priority of 0, then this node's priority will also be 0.
+ * If the selector node is not assigned a priority function, its priority will
+ * be assigned as the priority of the running child if this node is currently
+ * running, or as the priority of first of its children with a non-zero
+ * priority.
  *
  * A selector node's state is directly based upon the child node currently
  * running or the child node that has finished running. Only one child node

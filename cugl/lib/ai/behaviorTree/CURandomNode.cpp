@@ -122,7 +122,7 @@ void RandomNode::updatePriority() {
  * choose among its children with each child's probability of being
  * selected weighted by that child's priority value.
  *
- * @return the child choosen by this composite node.
+ * @return the child choosen by this random node.
  */
 const std::shared_ptr<BehaviorNode>& RandomNode::getChosenChild() const {
 	if (!_uniformRandom) {
