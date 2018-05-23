@@ -26,7 +26,6 @@
 
 using namespace cugl;
 
-#pragma mark -
 #pragma mark Constructors
 /**
  * Initializes a composite node with the given name, type, children, and

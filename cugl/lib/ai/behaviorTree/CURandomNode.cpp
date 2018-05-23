@@ -24,7 +24,6 @@
 
 using namespace cugl;
 
-#pragma mark -
 #pragma mark Constructors
 /**
  * Disposes all of the resources used by this node.
