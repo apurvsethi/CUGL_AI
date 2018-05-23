@@ -1125,8 +1125,8 @@
 				68092F6B206BCC8E005EFDA5 /* CUInverterNode.h */,
 				68DC9E3320811046009F1725 /* CUTimerNode.h */,
 				68092F4E206ADDB0005EFDA5 /* CULeafNode.h */,
-				68F4E76D207FB8F000E43431 /* CUBehaviorManager.h */,
 				68F4E76A207FAF2A00E43431 /* CUBehaviorAction.h */,
+				68F4E76D207FB8F000E43431 /* CUBehaviorManager.h */,
 				6860536C2097E61000F76BEA /* CUBehaviorParser.h */,
 			);
 			path = behaviorTree;
@@ -1143,8 +1143,6 @@
 		68092F5B206ADF5F005EFDA5 /* behaviorTree */ = {
 			isa = PBXGroup;
 			children = (
-				68823BF320B27D7800AFC0FD /* CUBehaviorAction.cpp */,
-				6860534C20969CD000F76BEA /* CUBehaviorManager.cpp */,
 				686053512097337500F76BEA /* CUBehaviorNode.cpp */,
 				686053542097338500F76BEA /* CUCompositeNode.cpp */,
 				6860535A209733CD00F76BEA /* CUPriorityNode.cpp */,
@@ -1154,6 +1152,8 @@
 				6860536320978C9A00F76BEA /* CUTimerNode.cpp */,
 				6860536620978CA900F76BEA /* CUInverterNode.cpp */,
 				6860536920978CCB00F76BEA /* CULeafNode.cpp */,
+				68823BF320B27D7800AFC0FD /* CUBehaviorAction.cpp */,
+				6860534C20969CD000F76BEA /* CUBehaviorManager.cpp */,
 				6860536F2097E81400F76BEA /* CUBehaviorParser.cpp */,
 			);
 			path = behaviorTree;
