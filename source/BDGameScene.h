@@ -114,8 +114,9 @@ public:
 	std::shared_ptr<cugl::BehaviorNodeDef> setupBehaviorTree();
 
 	/**
-	 * Returns a function that accepts a timestep float and returns whether it
-	 * is done.
+	 * Returns a function that accepts a timestep float and updates the
+	 * exchanging of resources for that timestep, returning whether the
+	 * exchange is complete.
 	 *
 	 * This method demonstrates a way to create an update function for an
 	 * action. The lambda function uses the variables available to this object
@@ -132,8 +133,9 @@ public:
 												 const std::shared_ptr<ResourceContainer> to);
 
 	/**
-	 * Returns a function that accepts a timestep float and returns whether it
-	 * is done.
+	 * Returns a function that accepts a timestep float and updates the
+	 * movement of the ship for that timestep, returning whether the movement
+	 * is finished.
 	 *
 	 * This function demonstrates a way to create an update function for an
 	 * action. The lambda function uses the variables available to this object

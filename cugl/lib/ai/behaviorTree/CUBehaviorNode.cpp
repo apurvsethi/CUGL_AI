@@ -10,7 +10,7 @@
 //  abstract class, it has no allocators.  It only has an initializer.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/21/2018
+//  Version: 5/22/2018
 //
 
 #include <cugl/ai/behaviorTree/CUBehaviorNode.h>

@@ -128,11 +128,11 @@ void GameScene::dispose() {
 #pragma mark -
 #pragma mark Gameplay Handling
 /**
- * Returns a shared pointer to a fully defined behavior node def.
+ * Returns a shared pointer to a fully defined behavior node definition.
  *
- * This method creates a barebones behavior node def using the
+ * This method creates a barebones behavior node definition using the
  * {@link BehaviorParser} in order to read a json file. The behavior node
- * def created by a json file (and the parser) does not have any of the
+ * defintion created by a json file (and the parser) does not have any of the
  * mandatory functions originally.
  *
  * This method then goes through each of the leaf nodes, adding the
@@ -140,11 +140,11 @@ void GameScene::dispose() {
  * action for each leaf node, and adding the mandatory update function
  * for each action created.
  *
- * @return a shared pointer to a fully defined behavior node def.
+ * @return a shared pointer to a fully defined behavior node definition.
  */
 std::shared_ptr<BehaviorNodeDef> GameScene::setupBehaviorTree() {
-	// Create the BehaviorNodeDefs, which are templates for behavior trees,
-	// using the BehaviorParser on a json file, and access the def used here.
+	// Create the behavior node definitions, which are templates for behavior
+	// trees, using the BehaviorParser on a json file. Access the def used here.
 	_defs = BehaviorParser::parseFile("json/behaviorTree.json");
 	std::shared_ptr<BehaviorNodeDef> behaviorNodeDef = _defs.at("ShipBehavior");
 
@@ -175,7 +175,7 @@ std::shared_ptr<BehaviorNodeDef> GameScene::setupBehaviorTree() {
 	leafNode->_action = action;
 
 	// Continue adding priority functions and actions for each of the leaf nodes
-	// in the behavior node def.
+	// in the behavior node definition.
 	leafNode = behaviorNodeDef->getNodeByName("DropResources");
 	leafNode->_priorityFunc = [=] () -> float {
 		return (_shipModel->getPosition().distance(_homePlanet->getPosition()) < 60.0f
@@ -265,8 +265,9 @@ std::shared_ptr<BehaviorNodeDef> GameScene::setupBehaviorTree() {
 }
 
 /**
- * Returns a function that accepts a timestep float and returns whether it
- * is done.
+ * Returns a function that accepts a timestep float and updates the
+ * exchanging of resources for that timestep, returning whether the
+ * exchange is complete.
  *
  * This method demonstrates a way to create an update function for an
  * action. The lambda function uses the variables available to this object
@@ -289,9 +290,10 @@ std::function<bool(float)> GameScene::exchangeResources(const std::shared_ptr<Re
 }
 
 /**
- * Returns a function that accepts a timestep float and returns whether it
- * is done.
- *
+ * Returns a function that accepts a timestep float and updates the
+ * movement of the ship for that timestep, returning whether the movement
+ * is finished.
+ * 
  * This function demonstrates a way to create an update function for an
  * action. The lambda function uses the variables available to this object
  * instance and this function in order to move the ship towards the

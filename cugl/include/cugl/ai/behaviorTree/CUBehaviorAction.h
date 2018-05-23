@@ -24,7 +24,8 @@ namespace cugl {
 
 /**
  * This struct is a reusable definition containing the necessary info to
- * construct a {@link BehaviorAction}.
+ * construct a {@link BehaviorAction}. A BehaviorActionDef is used to
+ * specify an action for the {@link BehaviorNodeDef} of a {@link LeafNode}.
  */
 struct BehaviorActionDef {
 	/** The descriptive, identifying name of the action. */
@@ -50,6 +51,11 @@ struct BehaviorActionDef {
 	 */
 	std::function<void()> _terminate;
 
+	/**
+	 * Creates an uninitialized BehaviorActionDef.
+	 *
+	 * To create a definition for an action, set the fields for this struct.
+	 */
 	BehaviorActionDef() : _start(nullptr), _update(nullptr), _terminate(nullptr) {}
 };
 
@@ -57,8 +63,12 @@ struct BehaviorActionDef {
  * This class provides an action, used to represent actions in leaf nodes
  * of behavior trees.
  *
- * An action refers to behavior followed by a behavior tree when a leaf node
- * is being run, with updates run over time.
+ * An BehaviorAction refers to the action chosen to execute by a behavior
+ * tree. Each action is provided to a leaf node of a behavior tree, and is
+ * updated during each tick while that leaf node is running.
+ *
+ * To create a BehaviorAction, you should provide a BehaviorActionDef to the
+ * BehaviorNodeDef specifying a leaf node.
  */
 class BehaviorAction {
 #pragma mark Values
@@ -164,11 +174,11 @@ public:
 #pragma mark -
 #pragma mark Behavior Trees
 	/**
-	 * Returns a BehaviorAction::State that represents the action's state.
+	 * Returns the current state of the action.
 	 *
 	 * This state is used to identify the state of the action.
 	 *
-	 * @return a BehaviorAction::State that represents the action's state.
+	 * @return the state of the action.
 	 */
 	BehaviorAction::State getState() const { return _state; }
 
@@ -191,28 +201,34 @@ public:
 	BehaviorAction::State update(float dt);
 
 	/**
-	 * Terminates an action, possibly while running. A way to get back
-	 * to a stable state while in the middle of running an action.
+	 * Terminates an action, possibly while running. 
+	 * 
+	 * This method provided a way to get back to a stable state while in the
+	 * middle of running an action.
 	 */
 	void terminate();
 
 	/**
 	 * Pauses the running action. Actions will not be updated while paused.
+	 *
+	 * You should only call this method on a running action.
 	 */
-	void pause() {
-		CUAssertLog(getState() == BehaviorAction::State::RUNNING,
-			"Cannot pause an action that is not currently running.");
-		setState(BehaviorAction::State::PAUSED);
-	}
+	void pause();
 	
 	/**
-	 * Resumes a currently paused action.
+	 * Resumes a currently paused action. 
+	 *
+	 * You should only call this method on a paused action.
 	 */
-	void resume() {
-		CUAssertLog(getState() == BehaviorAction::State::PAUSED,
-			"Cannot resume a action that is not currently paused.");
-		setState(BehaviorAction::State::RUNNING);
-	}
+	void resume();
+
+	/**
+	 * Resets the current finished action.
+	 *
+	 * An action can be safely rerun after resetting. You should
+	 * only call this method on a finished action.
+	 */
+	void reset();
 
 #pragma mark -
 #pragma mark Internal Helpers

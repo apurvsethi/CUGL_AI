@@ -22,7 +22,7 @@
 //     pointer.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/21/2018
+//  Version: 5/22/2018
 //
 
 #ifndef __CU_BEHAVIOR_NODE_H__
@@ -402,6 +402,16 @@ public:
 	void removeFromParent() { if (_parent) _parent->removeChild(_childOffset); }
 
 	/**
+	* Returns the child offset of this behavior tree node.
+	*
+	* The child offset refers to the position of this node within its parent's
+	* children. If this child is a root node, it will return -1.
+	*
+	* @return The child offset of this behavior node.
+	*/
+	int getChildOffset() const { return _childOffset; }
+
+	/**
 	 * Reset this node and all nodes below it to an uninitialized state. Also
 	 * resets any class values to those set at the start of the tree.
 	 *
@@ -468,13 +478,6 @@ public:
 
 #pragma mark -
 #pragma mark Internal Helpers
-	/**
-	 * Returns the child offset of this behavior tree node.
-	 *
-	 * @return The child offset of this behavior node.
-	 */
-	int getChildOffset() const { return _childOffset;  }
-
 protected:
 	/**
 	 * Sets the priority of this node.
