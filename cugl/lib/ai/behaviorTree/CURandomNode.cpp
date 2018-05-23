@@ -16,7 +16,7 @@
 //     pointer.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/16/2018
+//  Version: 5/22/2018
 //
 
 #include <sstream>
@@ -77,7 +77,6 @@ std::string RandomNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::RandomNode(name:" : "(name:");
 	ss << ", priority:" << _priority;
-	ss << ", state:" << _stateToString[getState()];
 	ss << ", random type:" << (_uniformRandom ? "uniform" : "weighted");
 	ss << ", children:[";
 	for (auto it = _children.begin(); it != _children.end(); ++it) {

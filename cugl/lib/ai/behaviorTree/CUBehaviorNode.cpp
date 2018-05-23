@@ -10,7 +10,7 @@
 //  abstract class, it has no allocators.  It only has an initializer.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/21/2018
+//  Version: 5/22/2018
 //
 
 #include <cugl/ai/behaviorTree/CUBehaviorNode.h>
@@ -44,16 +44,6 @@ std::shared_ptr<BehaviorNodeDef> BehaviorNodeDef::getNodeByName(const std::strin
 	}
 	return nullptr;
 }
-
-#pragma mark -
-#pragma mark Values
-
-std::unordered_map<BehaviorNode::State, std::string> BehaviorNode::_stateToString = {
-	{BehaviorNode::State::INACTIVE, "inactive"},
-	{BehaviorNode::State::RUNNING, "running"},
-	{BehaviorNode::State::PAUSED, "paused"},
-	{BehaviorNode::State::FINISHED, "finished"}
-};
 
 #pragma mark -
 #pragma mark Constructors

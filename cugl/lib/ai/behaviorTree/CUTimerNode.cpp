@@ -17,7 +17,7 @@
 //     pointer.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/16/2018
+//  Version: 5/22/2018
 //
 
 #include <sstream>
@@ -82,7 +82,6 @@ std::string TimerNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::TimerNode(name:" : "(name:") << _name;
 	ss << ", priority:" << _priority;
-	ss << ", state:" << _stateToString[getState()];
 	ss << ", child:" << (_children[0] ? _children[0]->getName() : "None");
 	ss << ", delay type:" << (_timeDelay ? "Before" : "After");
 	ss << ", delay time:" << _delay;

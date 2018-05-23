@@ -79,14 +79,51 @@ void BehaviorAction::start() {
 }
 
 /**
- * Terminates an action, possibly while running. A way to get back
- * to a stable state while in the middle of running an action.
- */
+* Terminates an action, possibly while running.
+*
+* This method provided a way to get back to a stable state while in the
+* middle of running an action.
+*/
 void BehaviorAction::terminate() {
-	if (_terminate && (getState() == BehaviorAction::State::RUNNING 
-					   || getState() == BehaviorAction::State::PAUSED)) {
+	CUAssertLog(getState() == BehaviorAction::State::RUNNING,
+		"Cannot call terminate on not running action");
+	if (_terminate) {
 		_terminate();
 	}
+	setState(BehaviorAction::State::INACTIVE);
+}
+
+/**
+ * Pauses the running action. Actions will not be updated while paused.
+ *
+ * You should only call this method on a running action.
+ */
+void BehaviorAction::pause() {
+	CUAssertLog(getState() == BehaviorAction::State::RUNNING,
+		"Cannot pause an action that is not currently running.");
+	setState(BehaviorAction::State::PAUSED);
+}
+
+/**
+ * Resumes a currently paused action.
+ *
+ * You should only call this method on a paused action.
+ */
+void BehaviorAction::resume() {
+	CUAssertLog(getState() == BehaviorAction::State::PAUSED,
+		"Cannot resume a action that is not currently paused.");
+	setState(BehaviorAction::State::RUNNING);
+}
+
+/**
+ * Resets the current finished action.
+ *
+ * An action can be safely rerun after resetting. You should
+ * only call this method on a finished action.
+ */
+void BehaviorAction::reset() {
+	CUAssertLog(getState() == BehaviorAction::State::FINISHED,
+		"Cannot reset an action that hasn't finished");
 	setState(BehaviorAction::State::INACTIVE);
 }
 

@@ -15,7 +15,7 @@
 //  3. All allocation takes place via static constructors which return a shared
 //     pointer.
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/15/2018
+//  Version: 5/22/2018
 //
 
 #include <algorithm>

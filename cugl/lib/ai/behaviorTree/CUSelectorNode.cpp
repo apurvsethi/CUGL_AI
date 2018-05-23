@@ -16,7 +16,7 @@
 //     pointer.
 //
 //  Author: Apurv Sethi and Andrew Matsumoto
-//  Version: 5/15/2018
+//  Version: 5/22/2018
 //
 
 #include <sstream>
@@ -40,7 +40,6 @@ std::string SelectorNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::SelectorNode(name:" : "(name:");
 	ss << ", priority:" << _priority;
-	ss << ", state:" << _stateToString[getState()];
 	ss << ", children:[";
 	for (auto it = _children.begin(); it != _children.end(); ++it) {
 		ss << (*it)->getName();

@@ -1,11 +1,22 @@
 //
-//  CULeafNode.h
+//  CULeafNode.cpp
 //  Cornell University Game Library (CUGL)
 //
 //  This module provides support for a leaf behavior node.
 //
-//  Author: Apurv Sethi
-//  Version: 3/28/2018
+//  This class uses our standard shared-pointer architecture.
+//
+//  1. The constructor does not perform any initialization; it just sets all
+//     attributes to their defaults.
+//
+//  2. All initialization takes place via init methods, which can fail if an
+//     object is initialized more than once.
+//
+//  3. All allocation takes place via static constructors which return a shared
+//     pointer.
+//
+//  Author: Apurv Sethi and Andrew Matsumoto
+//  Version: 5/22/2018
 //
 
 #include <cugl/ai/behaviorTree/CULeafNode.h>
@@ -63,7 +74,6 @@ std::string LeafNode::toString(bool verbose) const {
 	std::stringstream ss;
 	ss << (verbose ? "cugl::LeafNode(name:" : "(name:") << _name;
 	ss << ", priority:" << _priority;
-	ss << ", state:" << _stateToString[getState()];
 	ss << ", action:" << (_action ? _action->getName() : "None");
 	ss << ")";
 	return ss.str();
@@ -77,7 +87,9 @@ std::string LeafNode::toString(bool verbose) const {
 */
 void LeafNode::reset() {
 	setPriority(0.0f);
-	_action->terminate();
+	if (getState() == BehaviorNode::State::FINISHED) {
+		_action->reset();
+	}
 	setState(BehaviorNode::State::INACTIVE);
 }
 
