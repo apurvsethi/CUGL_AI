@@ -143,9 +143,10 @@ void GameScene::dispose() {
  * @return a shared pointer to a fully defined behavior node def.
  */
 std::shared_ptr<BehaviorNodeDef> GameScene::setupBehaviorTree() {
-	// Create a behavior node def, which is a template for the behavior tree,
-	// using the BehaviorParser on a json file.
-	std::shared_ptr<BehaviorNodeDef> behaviorNodeDef = BehaviorParser::parseFile("json/behaviorTree.json");
+	// Create the BehaviorNodeDefs, which are templates for behavior trees,
+	// using the BehaviorParser on a json file, and access the def used here.
+	_defs = BehaviorParser::parseFile("json/behaviorTree.json");
+	std::shared_ptr<BehaviorNodeDef> behaviorNodeDef = _defs.at("ShipBehavior");
 
 	// For each leaf node, add the priority function which defines the priority
 	// of the leaf node to run. If this priority is 0, then the leaf node cannot

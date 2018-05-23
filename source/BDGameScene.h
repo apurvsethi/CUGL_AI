@@ -19,6 +19,7 @@
 #define __BD_GAME_SCENE_H__
 #include <cugl/cugl.h>
 #include <vector>
+#include <unordered_map>
 #include "BDResourceContainer.h"
 
 
@@ -34,6 +35,8 @@ protected:
 	std::shared_ptr<cugl::AssetManager> _assets;
 	/** The behavior tree manager for this game mode. */
 	std::shared_ptr<cugl::BehaviorManager> _behaviorManager;
+	/** The behavior node defs available as templates from parsing. */
+	std::unordered_map<std::string, std::shared_ptr<cugl::BehaviorNodeDef>> _defs;
     
     // VIEW
     /** Filmstrip representing the animated ship */

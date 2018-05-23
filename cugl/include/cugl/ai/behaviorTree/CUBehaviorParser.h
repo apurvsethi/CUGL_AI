@@ -17,6 +17,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <cugl/ai/behaviorTree/CUBehaviorNode.h>
 #include <cugl/io/CUJsonReader.h>
 
@@ -37,9 +38,11 @@ namespace cugl {
  * running node, or the node that ran during the update cycle.
  */
 class BehaviorParser {
+#pragma mark -
+#pragma mark Parsing
 public:
 	/**
-	 * Returns a BehaviorNodeDef constructed from the given file.
+	 * Returns a map of BehaviorNodeDefs constructed from the given file.
 	 *
 	 * This function assumes that the file name is a relative path. It will
 	 * search the application assert directory
@@ -48,14 +51,14 @@ public:
 	 *
 	 * @param file  The relative path to the file.
 	 *
-	 * @return a BehaviorNodeDef constructed from the given file.
+	 * @return a map of BehaviorNodeDefs constructed from the given file.
 	 */
-	static std::shared_ptr<BehaviorNodeDef> parseFile(const std::string& file) {
+	static std::unordered_map<std::string, std::shared_ptr<BehaviorNodeDef>> parseFile(const std::string& file) {
 		return parseFile(file.c_str());
 	}
 
 	/**
-	 * Returns a BehaviorNodeDef constructed from the given file.
+	 * Returns a map of BehaviorNodeDefs constructed from the given file.
 	 *
 	 * This function assumes that the file name is a relative path. It will
 	 * search the application assert directory
@@ -64,9 +67,9 @@ public:
 	 *
 	 * @param file  The relative path to the file.
 	 *
-	 * @return a BehaviorNodeDef constructed from the given file.
+	 * @return a map of BehaviorNodeDefs constructed from the given file.
 	 */
-	static std::shared_ptr<BehaviorNodeDef> parseFile(const char* file);
+	static std::unordered_map<std::string, std::shared_ptr<BehaviorNodeDef>> parseFile(const char* file);
 
 private:
 	/**
