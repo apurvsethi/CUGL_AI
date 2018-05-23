@@ -31,33 +31,29 @@ namespace cugl {
 /**
  * This class provides a composite node for a behavior tree.
  *
- * A composite node is a node that has multiple children. When a composite node
- * starts, it chooses a child to run in some order specified by its subclasses.
- * The composite node can be set to interrupt its running child and choose a
- * new child to run. If it is not set to preempt, the child will continue
- * running until it has either finished running, or the composite node itself
- * is interrupted by its parent. If a child successfully finished running, the
- * composite node will return.
+ * A composite node is a node that has one or more children. When a composite
+ * node starts, it chooses a child to run in some order specified by its
+ * subclasses. The composite node can be set to interrupt its running child and
+ * choose a new child to run. If it is not set to preempt, the child will
+ * continue running until it has either finished running, or the composite node
+ * itself is interrupted by its parent. If a child successfully finished
+ * running, the composite node will return.
  *
  * A composite node can be provided with a priority function to call when
  * updating its own priority. If a function is not provided, the composite node
  * will set its priority to using a default algorithm, which is specified by
  * its subclasses.
- *
- * This class should not be instantiated directly. Instead, you should use
- * one of its subclasses ({@link PriorityNode}, {@link SelectorNode},
- * {@link RandomNode}).
  */
 class CompositeNode : public BehaviorNode {
 #pragma mark Values
 protected:
 	/**
-	 * Whether to allow preemption among this nodes children.
+	 * Whether to allow preemption among this node's children.
 	 *
-	 * If preemption is allowed, this node may choose a new child not to run
-	 * during an update, possibly interrupting an old child node if a different
-	 * new child is chosen. Otherwise, the composite node cannot interrupt its
-	 * running child to select another child to run.
+	 * If preemption is allowed, this node may choose a new child to run during an
+	 * update, possibly interrupting an old child node if a different new child is
+	 * chosen. Otherwise, the composite node cannot interrupt its running child to
+	 * select another child to run.
 	 */
 	bool _preempt;
 
@@ -224,7 +220,8 @@ public:
 	 * Returns a (weak) reference to the child with the given priority index.
 	 *
 	 * A child with a specific priority index i is the child with the ith
-	 * highest priority. Ties are broken arbitrarily.
+	 * highest priority. Ties are broken by the position of the child  in its
+	 * parent's list.
 	 *
 	 * As a weak reference, this composite node does not pass ownership of its
 	 * child.
@@ -244,8 +241,9 @@ public:
 	 * access them by their specific subclass.  If the child is not an instance
 	 * of type T (or a subclass), this method returns nullptr.
 	 *
-	 * If there is more than one child with the same priority value, the tie is
-	 * broken by the child's position in the parent list.
+	 * A child with a specific priority index i is the child with the ith
+	 * highest priority. Ties are broken by the position of the child  in its
+	 * parent's list.
 	 *
 	 * As a weak reference, this composite node does not pass ownership of its
 	 * child.

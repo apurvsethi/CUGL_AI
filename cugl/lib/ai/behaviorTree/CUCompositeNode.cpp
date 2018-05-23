@@ -107,7 +107,8 @@ const BehaviorNode* CompositeNode::getChildByName(const std::string& name) const
  * Returns a (weak) reference to the child with the given priority index.
  *
  * A child with a specific priority index i is the child with the ith
- * highest priority. Ties are broken arbitrarily.
+ * highest priority. Ties are by the position of the child in its
+ * parent's list.
  *
  * As a weak reference, this composite node does not pass ownership of its
  * child.
