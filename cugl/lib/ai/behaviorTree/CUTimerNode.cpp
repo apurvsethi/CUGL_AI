@@ -167,6 +167,9 @@ BehaviorNode::State TimerNode::update(float dt) {
 /**
  * Stops this node from running, and also stops any running nodes under
  * this node in the tree if they exist.
+ *
+ * If this node is specified to delay after preemption, then this method
+ * will begin the delay.
  */
 void TimerNode::preempt() {
 	if (!_timeDelay) {

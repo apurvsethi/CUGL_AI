@@ -31,10 +31,10 @@ namespace cugl {
 /**
  * This class provides an inverter decorator node for a behavior tree.
  *
- * An inverter node is a decorator node which is designed to run the node below
- * it and set its priority equal to the opposite of its child's priority. As
- * the priority values for behavior tree nodes are between 0 to 1, the priority
- * of this node is 1 - the child's priority value.
+ * An inverter node is a decorator node that sets its priority value equal to
+ * the opposite of its child's priority. As the priority values for behavior
+ * tree nodes are between 0 to 1, the priority of this node is 1 - the child's
+ * priority value.
  *
  * An inverter node's state is directly based on its child's state. When an
  * inverter node starts, it immediately starts its child. When the child

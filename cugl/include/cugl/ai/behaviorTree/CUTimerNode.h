@@ -28,16 +28,18 @@
 #include <cugl/ai/behaviorTree/CUDecoratorNode.h>
 
 namespace cugl {
+
 /**
  * This class provides a decorator node for a behavior tree with a timed delay.
  *
- * A timer decorator node can be specified to either delay the execution of its
- * child for a given amount of time, or ensure that its child cannot be run
- * again for a given amount of time after being preempted by its parent.
+ * A timer node is a decorator node that can be specified to either delay the
+ * execution of its child for a given amount of time, or ensure that its child
+ * cannot be run again for a given amount of time after being preempted by its
+ * parent.
  *
- * The priority of a timer decorator node that is not delaying is the priority
- * of its child. If this node is delaying after preemption, the priority of
- * this node is 0.
+ * The priority of a timer decorator node that is stopping execution of its
+ * child after preemption is set to 0. Otherwise, its priority will be assigned
+ * as the priority of its child.
  */
 class TimerNode : public DecoratorNode {
 #pragma mark Values
@@ -51,13 +53,22 @@ protected:
 	 */
 	bool _timeDelay;
 
-	/** The delay before beginning executing in seconds. */
+	/**
+	 * The amount of time that the TimerNode will delay execution of its child
+	 * or prevent its child from running after preemption.
+	 */
 	float _delay;
 
-	/** Whether this node is currently acting to delay. */
+	/**
+	 * Whether this node is currently acting to delay execution of its child
+	 * or prevent its child from running after preemption.
+	 */
 	bool _delaying;
 
-	/** The current time that has been delayed. */
+	/**
+	 * The current amount of time for which the TimerNode has delayed execution
+	 * of its child or prevented its child from running after preemption.
+	 */
 	float _currentDelay;
 
 #pragma mark -
@@ -180,22 +191,22 @@ public:
 	bool getDelayType() const { return _timeDelay; }
 
 	/**
-	 * Returns the number of seconds before the child node can run.
+	 * Returns the number of seconds that the TimerNode will delay execution of
+	 * its child or prevent its child from running after preemption.
 	 *
-	 * The delay will prevent the child from returning for a certain
-	 * period of time.
-	 *
-	 * @return the number of seconds before the child node can run.
+	 * @return the number of seconds that the TimerNode will delay execution of
+	 * its child or prevent its child from running after preemption.
 	 */
 	float getDelay() const { return _delay; }
 
 	/**
-	 * Returns the current time that has been delayed.
+	 * Returns current amount of time for which the TimerNode has delayed
+	 * execution of its child or prevented its child from running after
+	 * preemption.
 	 *
-	 * The child will be prevented from running until the current time delayed
-	 * is greater than the delay.
-	 *
-	 * @param The current time that has been delayed
+	 * @param The current amount of time for which the TimerNode has delayed
+	 * execution of its child or prevented its child from running after
+	 * preemption.
 	 */
 	float getCurrentDelay() const { return _currentDelay; }
 
@@ -241,8 +252,8 @@ public:
 	 * Stops this node from running, and also stops any running nodes under
 	 * this node in the tree if they exist.
 	 *
-	 * If this node is specified to delay after preemption. This method will
-	 * begin the delay.
+	 * If this node is specified to delay after preemption, then this method
+	 * will begin the delay.
 	 */
 	void preempt() override;
 };
