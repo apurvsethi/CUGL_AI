@@ -31,7 +31,7 @@ namespace cugl {
 /**
  * This class provides a random composite node for a behavior tree.
  *
- * A random node is a composite node which is designed to run a randomly
+ * A random node is a composite node that is designed to run a randomly
  * selected nodes out of its children, based on either a uniform probability or
  * a weighted probability. A random node using a weighted probability will base
  * the weights of the probability of selecting each child on the priority of

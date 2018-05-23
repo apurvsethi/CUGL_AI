@@ -225,7 +225,7 @@ void BehaviorNode::setPriority(float priority) {
 /**
 * Removes the child at the given position from this node.
 *
-* @param pos   The position of the child node which will be removed.
+* @param pos   The position of the child node that will be removed.
 */
 void BehaviorNode::removeChild(unsigned int pos) {
 	CUAssertLog(pos < _children.size(), "Index out of bounds");

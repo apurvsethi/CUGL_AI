@@ -31,7 +31,7 @@ namespace cugl {
 /**
  * This class provides a priority composite node for a behavior tree.
  *
- * A priority node is a composite node which chooses a child to run with the
+ * A priority node is a composite node that chooses a child to run with the
  * highest priority value. If a priority node is allowed to preempt, a child
  * node that is running may be interrupted by another child node that has a
  * higher priority value during the update function.

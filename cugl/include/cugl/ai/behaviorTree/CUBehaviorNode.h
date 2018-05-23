@@ -143,16 +143,19 @@ struct BehaviorNodeDef : std::enable_shared_from_this<BehaviorNodeDef> {
 	std::vector<std::shared_ptr<BehaviorNodeDef>> _children;
 
 	/**
-	 * Whether a timer node should delay before execution or after preemption.
-	 * If true, then the node will delay before running its child, otherwise,
-	 * the node cannot be choosen for a certain amount of time after preemption.
-	 *
+	 * Whether the time provided to the TimerNode should be used to delay
+	 * execution of its child node, or should be used to ensure that the child
+	 * node is not chosen again for the given amount of time. If true, then
+	 * execution is delayed, otherwise the child is not chosen after execution
+	 * for the given time.
+	 * 
 	 * This flag is only used if this node is a {@link TimerNode}.
 	 */
 	bool _timeDelay;
 
 	/**
-	 * The amount of time to delay in seconds.
+	 * The amount of time that the TimerNode will delay execution of its child
+	 * or prevent its child from running after preemption.
 	 *
 	 * This value is only used if this node is a {@link TimerNode}.
 	 */
@@ -490,7 +493,7 @@ protected:
 	/**
 	 * Removes the child at the given position from this node.
 	 *
-	 * @param pos   The position of the child node which will be removed.
+	 * @param pos   The position of the child node that will be removed.
 	 */
 	void removeChild(unsigned int pos);
 

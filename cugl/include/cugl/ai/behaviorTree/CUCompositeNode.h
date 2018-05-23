@@ -142,8 +142,8 @@ public:
 	 * While children are enumerated in the order by which they were added,
 	 * it is recommended to attempt to retrieve a child by name instead.
 	 *
-	 * As a weak reference, this composite node does not pass ownership of its
-	 * child.
+	 * By returning a weak reference, this composite node does not pass
+	 * ownership of its child.
 	 *
 	 * @param pos	The child position.
 	 *
@@ -163,8 +163,8 @@ public:
 	 * While children are enumerated in the order by which they were added,
 	 * it is recommended to attempt to retrieve a child by name instead.
 	 *
-	 * As a weak reference, this composite node does not pass ownership of its
-	 * child.
+	 * By returning a weak reference, this composite node does not pass
+	 * ownership of its child.
 	 *
 	 * @param pos	The child position.
 	 *
@@ -182,8 +182,8 @@ public:
 	 * If there is more than one child of the given name, it returns the first
 	 * one that is found.
 	 *
-	 * As a weak reference, this composite node does not pass ownership of its
-	 * child. In addition, the value may be a nullptr.
+	 * By returning a weak reference, this composite node does not pass
+	 * ownership of its child. In addition, the value may be a nullptr.
 	 *
 	 * @param name	An identifier to find the child node.
 	 *
@@ -203,8 +203,8 @@ public:
 	 * If there is more than one child of the given name, it returns the first
 	 * one that is found.
 	 *
-	 * As a weak reference, this composite node does not pass ownership of its
-	 * child. In addition, the value may be a nullptr.
+	 * By returning a weak reference, this composite node does not pass
+	 * ownership of its child. In addition, the value may be a nullptr.
 	 *
 	 * @param name	An identifier to find the child node.
 	 *
@@ -223,8 +223,8 @@ public:
 	 * highest priority. Ties are broken by the position of the child  in its
 	 * parent's list.
 	 *
-	 * As a weak reference, this composite node does not pass ownership of its
-	 * child.
+	 * By returning a weak reference, this composite node does not pass
+	 * ownership of its child.
 	 *
 	 * @param index	The child's priority index.
 	 *
@@ -245,8 +245,8 @@ public:
 	 * highest priority. Ties are broken by the position of the child  in its
 	 * parent's list.
 	 *
-	 * As a weak reference, this composite node does not pass ownership of its
-	 * child.
+	 * By returning a weak reference, this composite node does not pass
+	 * ownership of its child.
 	 *
 	 * @param index	The child's priority index.
 	 *
@@ -261,8 +261,8 @@ public:
 	/**
 	 * Returns a (weak) reference to the child currently running.
 	 *
-	 * As a weak reference, this composite node does not pass ownership of its
-	 * child.
+	 * By returning a weak reference, this composite node does not pass
+	 * ownership of its child.
 	 *
 	 * @return a (weak) reference to the currently active child.
 	 */
@@ -277,8 +277,8 @@ public:
 	 * access them by their specific subclass.  If the child is not an instance
 	 * of type T (or a subclass), this method returns nullptr.
 	 *
-	 * As a weak reference, this composite node does not pass ownership of its
-	 * child.
+	 * By returning a weak reference, this composite node does not pass
+	 * ownership of its child.
 	 *
 	 * @return a (weak) reference to the currently active child, typecast as a
 	 * const T pointer.

@@ -29,7 +29,7 @@ namespace cugl {
 /**
  * This class provides a selector composite node for a behavior tree.
  *
- * A selector node is a composite node which is designed to select and
+ * A selector node is a composite node that is designed to select and
  * run the first child with a non-zero priority and run it. If the selector
  * node is allowed to preempt, a child that is running may be overridden by an
  * earlier child with a non-zero priority during the update function.

@@ -72,7 +72,8 @@ bool BehaviorManager::containsTree(const std::string& name) const {
  * All trees must be stored with a unique names in the BehaviorManager,
  * and thus there cannot be multiple possible return values.
  *
- * As a weak reference, this manager does not pass ownership of the tree.
+ * By returning a weak reference, this manager does not pass ownership of
+ * the tree.
  *
  * @param name	An identifier to find the tree.
  *

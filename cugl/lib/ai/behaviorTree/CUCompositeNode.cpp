@@ -68,8 +68,8 @@ void CompositeNode::dispose() {
  * While children are enumerated in the order by which they were added,
  * it is recommended to attempt to retrieve a child by name instead.
  *
- * As a weak reference, this composite node does not pass ownership of its
- * child.
+ * By returning a weak reference, this composite node does not pass
+ * ownership of its child.
  *
  * @param pos	The child position.
  *
@@ -86,8 +86,8 @@ const BehaviorNode* CompositeNode::getChild(unsigned int pos) const {
  * If there is more than one child of the given name, it returns the first
  * one that is found.
  *
- * As a weak reference, this composite node does not pass ownership of its
- * child. In addition, the value may be a nullptr.
+ * By returning a weak reference, this composite node does not pass
+ * ownership of its child. In addition, the value may be a nullptr.
  *
  * @param name	An identifier to find the child node.
  *
@@ -109,8 +109,8 @@ const BehaviorNode* CompositeNode::getChildByName(const std::string& name) const
  * highest priority. Ties are by the position of the child in its
  * parent's list.
  *
- * As a weak reference, this composite node does not pass ownership of its
- * child.
+ * By returning a weak reference, this composite node does not pass
+ * ownership of its child.
  *
  * @param index	The child's priority index.
  *
@@ -126,8 +126,8 @@ const BehaviorNode* CompositeNode::getChildByPriorityIndex(unsigned int index) c
 /**
  * Returns a (weak) reference to the currently active child.
  *
- * As a weak reference, this composite node does not pass ownership of its
- * child.
+ * By returning a weak reference, this composite node does not pass
+ * ownership of its child.
  *
  * @return a (weak) reference to the currently active child.
  */
