@@ -1,5 +1,7 @@
 # CUGL_AI
-Headers for AI API
+Addition of behavior tree library in CUGL, driving efficient creation of artificial intelligence behavior for future student games.
+<br />
+The code written by Apurv Sethi and Andrew Matsumoto is limited to added AI functionality, found in /cugl/include/cugl/ai/behaviorTree and /cugl/lib/ai/behaviorTree for base code. Additionally, the demo written can be found in /source, with supporting assets written in /assets/json.
 
 ## Resources
 ### Behavior Trees
